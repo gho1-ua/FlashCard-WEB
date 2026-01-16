@@ -1374,70 +1374,6 @@ def mostrar_pregunta_revision(pregunta_data, idx_global, idx_local, numero_caso,
         
         st.markdown("---")
         
-        # Botón para asignar a caso
-        col_asignar_caso, col_spacer_asignar = st.columns([2, 3])
-        with col_asignar_caso:
-            # Obtener lista de casos disponibles
-            casos_disponibles = [None] + [p.get('numero_caso') for p in preguntas if p.get('tipo') == 'caso']
-            caso_actual_pregunta = numero_caso if numero_caso else None
-            indice_caso_actual = casos_disponibles.index(caso_actual_pregunta) if caso_actual_pregunta in casos_disponibles else 0
-            
-            # Usar session_state para rastrear el valor anterior y evitar bucles infinitos
-            key_caso_anterior = f"caso_anterior_{idx_global}"
-            if key_caso_anterior not in st.session_state:
-                st.session_state[key_caso_anterior] = caso_actual_pregunta
-            
-            caso_seleccionado = st.selectbox(
-                "Asignar a caso:",
-                options=range(len(casos_disponibles)),
-                format_func=lambda x: casos_disponibles[x] if casos_disponibles[x] else "Sin caso",
-                index=indice_caso_actual,
-                key=f"select_caso_{idx_global}",
-                help="Selecciona un caso para asignar esta pregunta"
-            )
-            
-            caso_nuevo = casos_disponibles[caso_seleccionado]
-            caso_anterior = st.session_state[key_caso_anterior]
-            
-            # Solo actualizar si realmente cambió el valor (no en cada renderizado)
-            if caso_nuevo != caso_anterior:
-                st.session_state[key_caso_anterior] = caso_nuevo
-                
-                if caso_nuevo is None:
-                    # Quitar del caso actual
-                    if numero_caso and idx_local is not None:
-                        # Buscar y quitar del caso
-                        for item in preguntas:
-                            if item.get('tipo') == 'caso' and item.get('numero_caso') == numero_caso:
-                                item['preguntas_caso'].remove(pregunta_data)
-                                # Insertar como pregunta normal antes del caso
-                                idx_caso = preguntas.index(item)
-                                preguntas.insert(idx_caso, pregunta_data)
-                                break
-                    else:
-                        # Ya es pregunta normal, solo quitar campo caso si existe
-                        if 'caso' in pregunta_data:
-                            del pregunta_data['caso']
-                else:
-                    # Asignar a nuevo caso
-                    # Primero quitar del caso actual si está en uno
-                    if numero_caso and idx_local is not None:
-                        for item in preguntas:
-                            if item.get('tipo') == 'caso' and item.get('numero_caso') == numero_caso:
-                                item['preguntas_caso'].remove(pregunta_data)
-                                break
-                    # Si la pregunta está en la lista normal, quitarla
-                    elif pregunta_data in preguntas:
-                        preguntas.remove(pregunta_data)
-                    # Ahora añadir al nuevo caso
-                    for item in preguntas:
-                        if item.get('tipo') == 'caso' and item.get('numero_caso') == caso_nuevo:
-                            item['preguntas_caso'].append(pregunta_data)
-                            break
-                st.rerun()
-        
-        st.markdown("---")
-        
         # VISUALIZACIÓN: Texto simple por defecto, text_area si se activa edición
         enunciado_actual = pregunta_data.get('pregunta', '')
         
@@ -1534,6 +1470,90 @@ def mostrar_pregunta_revision(pregunta_data, idx_global, idx_local, numero_caso,
                 if respuesta_seleccionada != opciones_labels[respuesta_actual] if respuesta_actual is not None and respuesta_actual < len(opciones_labels) else opciones_labels[0]:
                     nueva_respuesta = opciones_labels.index(respuesta_seleccionada)
                     pregunta_data['correcta'] = nueva_respuesta
+        
+        st.markdown("---")
+        
+        # Botón para asignar a caso (al final para evitar conflictos con otros botones)
+        col_asignar_caso, col_spacer_asignar = st.columns([2, 3])
+        with col_asignar_caso:
+            # Obtener lista de casos disponibles
+            casos_disponibles = [None] + [p.get('numero_caso') for p in preguntas if p.get('tipo') == 'caso']
+            caso_actual_pregunta = numero_caso if numero_caso else None
+            indice_caso_actual = casos_disponibles.index(caso_actual_pregunta) if caso_actual_pregunta in casos_disponibles else 0
+            
+            # Usar session_state para rastrear el valor anterior y evitar bucles infinitos
+            key_caso_anterior = f"caso_anterior_{idx_global}"
+            if key_caso_anterior not in st.session_state:
+                st.session_state[key_caso_anterior] = caso_actual_pregunta
+            
+            caso_seleccionado = st.selectbox(
+                "Asignar a caso:",
+                options=range(len(casos_disponibles)),
+                format_func=lambda x: casos_disponibles[x] if casos_disponibles[x] else "Sin caso",
+                index=indice_caso_actual,
+                key=f"select_caso_{idx_global}",
+                help="Selecciona un caso para asignar esta pregunta"
+            )
+            
+            caso_nuevo = casos_disponibles[caso_seleccionado]
+            caso_anterior = st.session_state[key_caso_anterior]
+            
+            # Solo actualizar si realmente cambió el valor (no en cada renderizado)
+            # Guardar el cambio en session_state para procesarlo después de todos los widgets
+            if caso_nuevo != caso_anterior:
+                st.session_state[key_caso_anterior] = caso_nuevo
+                
+                # Guardar el cambio pendiente (sin procesar todavía)
+                key_cambio_caso = f"cambio_caso_pendiente_{idx_global}"
+                st.session_state[key_cambio_caso] = {
+                    'caso_nuevo': caso_nuevo,
+                    'numero_caso': numero_caso,
+                    'idx_local': idx_local
+                }
+        
+        # Procesar cambios de caso pendientes (después de todos los widgets para evitar conflictos)
+        key_cambio_caso = f"cambio_caso_pendiente_{idx_global}"
+        if key_cambio_caso in st.session_state:
+            cambio = st.session_state[key_cambio_caso]
+            caso_nuevo = cambio['caso_nuevo']
+            numero_caso_cambio = cambio['numero_caso']
+            idx_local_cambio = cambio['idx_local']
+            
+            if caso_nuevo is None:
+                # Quitar del caso actual
+                if numero_caso_cambio and idx_local_cambio is not None:
+                    # Buscar y quitar del caso
+                    for item in preguntas:
+                        if item.get('tipo') == 'caso' and item.get('numero_caso') == numero_caso_cambio:
+                            item['preguntas_caso'].remove(pregunta_data)
+                            # Insertar como pregunta normal antes del caso
+                            idx_caso = preguntas.index(item)
+                            preguntas.insert(idx_caso, pregunta_data)
+                            break
+                else:
+                    # Ya es pregunta normal, solo quitar campo caso si existe
+                    if 'caso' in pregunta_data:
+                        del pregunta_data['caso']
+            else:
+                # Asignar a nuevo caso
+                # Primero quitar del caso actual si está en uno
+                if numero_caso_cambio and idx_local_cambio is not None:
+                    for item in preguntas:
+                        if item.get('tipo') == 'caso' and item.get('numero_caso') == numero_caso_cambio:
+                            item['preguntas_caso'].remove(pregunta_data)
+                            break
+                # Si la pregunta está en la lista normal, quitarla
+                elif pregunta_data in preguntas:
+                    preguntas.remove(pregunta_data)
+                # Ahora añadir al nuevo caso
+                for item in preguntas:
+                    if item.get('tipo') == 'caso' and item.get('numero_caso') == caso_nuevo:
+                        item['preguntas_caso'].append(pregunta_data)
+                        break
+            
+            # Limpiar el flag de cambio pendiente
+            del st.session_state[key_cambio_caso]
+            st.rerun()
         
         st.markdown("---")
 
