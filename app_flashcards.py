@@ -767,11 +767,7 @@ def extraer_texto_con_subrayado(pdf_bytes: bytes):
     estado_actual = "enunciado"  # "enunciado" o "opciones"
     pregunta_cerrada = False  # Indica si la pregunta ya está cerrada
     
-    # Estado para casos: diccionario {numero_caso: texto_caso}
-    casos_detectados = {}  # Almacena los casos detectados
-    caso_actual = None  # Número del caso actual que se está acumulando
-    texto_caso_actual = ""  # Texto acumulado del caso actual
-    caso_activo = None  # Número del caso activo al que pertenecen las preguntas siguientes
+    # Ya no se detectan casos automáticamente - el usuario los creará manualmente
     
     # Procesar cada página
     for page_num in range(len(doc)):
@@ -827,32 +823,6 @@ def extraer_texto_con_subrayado(pdf_bytes: bytes):
             
             # Si alguna parte está marcada, toda la línea está marcada
             marcado_linea = any(span['marcado'] for span in linea_visual)
-            
-            # DETECCIÓN DE CASOS: Verificar si es un caso (ej: "Caso 1:")
-            caso_detectado = detectar_caso(texto_completo)
-            if caso_detectado:
-                numero_caso, texto_caso_inicial = caso_detectado
-                caso_actual = numero_caso
-                texto_caso_actual = texto_caso_inicial
-                # Establecer este caso como activo (todas las preguntas siguientes pertenecerán a él)
-                caso_activo = numero_caso
-                # Continuar acumulando el texto del caso
-                continue
-            
-            # Si estamos acumulando un caso, seguir acumulando hasta encontrar una pregunta
-            if caso_actual is not None:
-                # Verificar si es una pregunta (termina el caso)
-                es_pregunta = patron_pregunta.match(texto_completo)
-                if es_pregunta:
-                    # Guardar el caso y terminar la acumulación
-                    casos_detectados[caso_actual] = texto_caso_actual.strip()
-                    caso_actual = None
-                    texto_caso_actual = ""
-                    # El caso_activo se mantiene para asociar las preguntas siguientes
-                else:
-                    # Continuar acumulando el texto del caso
-                    texto_caso_actual += " " + texto_completo
-                    continue
             
             # Verificar si es pregunta u opción (después de la limpieza)
             es_pregunta = patron_pregunta.match(texto_completo)
@@ -912,10 +882,12 @@ def extraer_texto_con_subrayado(pdf_bytes: bytes):
                             'correcta': respuesta_correcta,
                             'tipo': 'opcion_multiple'
                         }
-                        # Asociar al caso activo si existe
-                        if caso_activo is not None:
-                            pregunta_guardada['caso'] = caso_activo
-                        todas_las_preguntas.append(pregunta_guardada)
+                        todas_las_preguntas.append({
+                            'pregunta': limpiar_texto(pregunta_actual),
+                            'opciones': opciones_limpias,
+                            'correcta': respuesta_correcta,
+                            'tipo': 'opcion_multiple'
+                        })
                         subrayado_por_pregunta[pregunta_idx] = tiene_subrayado
                         pregunta_idx += 1
                     else:
@@ -927,17 +899,13 @@ def extraer_texto_con_subrayado(pdf_bytes: bytes):
                         respuesta_correcta = respuesta_vf if respuesta_vf is not None else 0
                         vf_detectado_enunciado = respuesta_vf is not None
                         
-                        pregunta_guardada = {
+                        todas_las_preguntas.append({
                             'pregunta': enunciado_limpio,
                             'opciones': [],
                             'correcta': respuesta_correcta,
                             'tipo': 'V/F',
                             'vf_detectado_enunciado': vf_detectado_enunciado
-                        }
-                        # Asociar al caso activo si existe
-                        if caso_activo is not None:
-                            pregunta_guardada['caso'] = caso_activo
-                        todas_las_preguntas.append(pregunta_guardada)
+                        })
                         subrayado_por_pregunta[pregunta_idx] = False
                         pregunta_idx += 1
                 
@@ -1084,10 +1052,12 @@ def extraer_texto_con_subrayado(pdf_bytes: bytes):
                 'correcta': respuesta_correcta,
                 'tipo': 'opcion_multiple'
             }
-            # Asociar al caso activo si existe
-            if caso_activo is not None:
-                pregunta_guardada['caso'] = caso_activo
-            todas_las_preguntas.append(pregunta_guardada)
+            todas_las_preguntas.append({
+                'pregunta': limpiar_texto(pregunta_actual),
+                'opciones': opciones_limpias,
+                'correcta': respuesta_correcta,
+                'tipo': 'opcion_multiple'
+            })
             subrayado_por_pregunta[pregunta_idx] = tiene_subrayado
         else:
             # Pregunta sin opciones → Verdadero/Falso
@@ -1098,74 +1068,27 @@ def extraer_texto_con_subrayado(pdf_bytes: bytes):
             respuesta_correcta = respuesta_vf if respuesta_vf is not None else 0
             vf_detectado_enunciado = respuesta_vf is not None
             
-            pregunta_guardada = {
+            todas_las_preguntas.append({
                 'pregunta': enunciado_limpio,
                 'opciones': [],
                 'correcta': respuesta_correcta,
                 'tipo': 'V/F',
                 'vf_detectado_enunciado': vf_detectado_enunciado
-            }
-            # Asociar al caso activo si existe
-            if caso_activo is not None:
-                pregunta_guardada['caso'] = caso_activo
-            todas_las_preguntas.append(pregunta_guardada)
+            })
             subrayado_por_pregunta[pregunta_idx] = False
-    
-    # Guardar último caso si estaba acumulándose
-    if caso_actual is not None and texto_caso_actual:
-        casos_detectados[caso_actual] = texto_caso_actual.strip()
     
     doc.close()
     
-    # Normalizar: asegurar que todas las preguntas tengan un tipo asignado y limpiar prefijos
-    # También asociar preguntas con casos
+    # Normalizar: asegurar que todas las preguntas tengan un tipo asignado
     for pregunta in todas_las_preguntas:
         if 'tipo' not in pregunta:
             if len(pregunta.get('opciones', [])) > 0:
                 pregunta['tipo'] = 'opcion_multiple'
             else:
                 pregunta['tipo'] = 'V/F'
-        
-        # Si la pregunta ya tiene un caso asociado (por caso_activo), mantenerlo
-        # Si no tiene caso pero menciona uno en el texto, asociarlo también
-        if 'caso' not in pregunta:
-            caso_mencionado = detectar_referencia_caso(pregunta.get('pregunta', ''))
-            if caso_mencionado:
-                pregunta['caso'] = caso_mencionado
     
-    # Reorganizar preguntas: agrupar casos con sus preguntas relacionadas
-    preguntas_reorganizadas = []
-    casos_procesados = set()
-    
-    for pregunta in todas_las_preguntas:
-        caso_num = pregunta.get('caso')
-        
-        if caso_num and caso_num not in casos_procesados:
-            # Insertar el caso primero
-            if caso_num in casos_detectados:
-                preguntas_reorganizadas.append({
-                    'tipo': 'caso',
-                    'numero_caso': caso_num,
-                    'texto_caso': casos_detectados[caso_num],
-                    'preguntas_caso': []
-                })
-                casos_procesados.add(caso_num)
-        
-        if caso_num:
-            # Añadir la pregunta al caso correspondiente
-            for item in preguntas_reorganizadas:
-                if item.get('tipo') == 'caso' and item.get('numero_caso') == caso_num:
-                    item['preguntas_caso'].append(pregunta)
-                    break
-        else:
-            # Pregunta sin caso, añadirla normalmente
-            preguntas_reorganizadas.append(pregunta)
-    
-    # Si no se encontraron casos, retornar las preguntas originales
-    if not casos_detectados:
-        return todas_las_preguntas, subrayado_por_pregunta
-    
-    return preguntas_reorganizadas, subrayado_por_pregunta
+    # Ya no se reorganizan casos automáticamente - el usuario los creará y agrupará manualmente
+    return todas_las_preguntas, subrayado_por_pregunta
 
 
 def aplanar_preguntas_con_casos(preguntas_estructuradas):
@@ -1267,22 +1190,25 @@ def mostrar_modo_revision():
                 # Mostrar todas las preguntas del caso
                 for pregunta_idx_local, pregunta_data in enumerate(preguntas_caso):
                     pregunta_global_idx += 1
-                    mostrar_pregunta_revision(pregunta_data, pregunta_global_idx - 1, pregunta_idx_local, numero_caso)
+                    mostrar_pregunta_revision(pregunta_data, pregunta_global_idx - 1, pregunta_idx_local, numero_caso, preguntas)
         else:
             # Pregunta normal (sin caso)
             pregunta_data = item
             pregunta_global_idx += 1
-            mostrar_pregunta_revision(pregunta_data, pregunta_global_idx - 1, None, None)
+            mostrar_pregunta_revision(pregunta_data, pregunta_global_idx - 1, None, None, preguntas)
     
     # Mostrar resumen y acciones finales
     mostrar_modo_revision_completo()
 
 
-def mostrar_pregunta_revision(pregunta_data, idx_global, idx_local, numero_caso):
+def mostrar_pregunta_revision(pregunta_data, idx_global, idx_local, numero_caso, preguntas=None):
     """
     Muestra una pregunta individual en el modo revisión.
     Si idx_local y numero_caso no son None, la pregunta pertenece a un caso.
+    preguntas: referencia a la lista de preguntas para poder modificarla.
     """
+    if preguntas is None:
+        preguntas = st.session_state.preguntas
     # Determinar tipo y estado
     tipo_pregunta = pregunta_data.get('tipo', 'opcion_multiple')
     es_vf = tipo_pregunta == 'V/F' or len(pregunta_data.get('opciones', [])) == 0
@@ -1396,6 +1322,57 @@ def mostrar_pregunta_revision(pregunta_data, idx_global, idx_local, numero_caso)
                     for i, item in enumerate(st.session_state.preguntas):
                         if item.get('tipo') != 'caso' and item == pregunta_data:
                             st.session_state.preguntas.insert(i + 1, nueva_pregunta)
+                            break
+                st.rerun()
+        
+        # Botón para asignar a caso
+        col_asignar_caso, col_spacer_asignar = st.columns([2, 3])
+        with col_asignar_caso:
+            # Obtener lista de casos disponibles
+            casos_disponibles = [None] + [p.get('numero_caso') for p in preguntas if p.get('tipo') == 'caso']
+            caso_actual_pregunta = numero_caso if numero_caso else None
+            indice_caso_actual = casos_disponibles.index(caso_actual_pregunta) if caso_actual_pregunta in casos_disponibles else 0
+            
+            caso_seleccionado = st.selectbox(
+                "Asignar a caso:",
+                options=range(len(casos_disponibles)),
+                format_func=lambda x: casos_disponibles[x] if casos_disponibles[x] else "Sin caso",
+                index=indice_caso_actual,
+                key=f"select_caso_{idx_global}",
+                help="Selecciona un caso para asignar esta pregunta"
+            )
+            
+            caso_nuevo = casos_disponibles[caso_seleccionado]
+            
+            # Si cambió la asignación, actualizar
+            if caso_nuevo != caso_actual_pregunta:
+                if caso_nuevo is None:
+                    # Quitar del caso actual
+                    if numero_caso and idx_local is not None:
+                        # Buscar y quitar del caso
+                        for item in preguntas:
+                            if item.get('tipo') == 'caso' and item.get('numero_caso') == numero_caso:
+                                item['preguntas_caso'].remove(pregunta_data)
+                                # Insertar como pregunta normal antes del caso
+                                idx_caso = preguntas.index(item)
+                                preguntas.insert(idx_caso, pregunta_data)
+                                break
+                    else:
+                        # Ya es pregunta normal, solo quitar campo caso si existe
+                        if 'caso' in pregunta_data:
+                            del pregunta_data['caso']
+                else:
+                    # Asignar a nuevo caso
+                    # Primero quitar del caso actual si está en uno
+                    if numero_caso and idx_local is not None:
+                        for item in preguntas:
+                            if item.get('tipo') == 'caso' and item.get('numero_caso') == numero_caso:
+                                item['preguntas_caso'].remove(pregunta_data)
+                                break
+                    # Ahora añadir al nuevo caso
+                    for item in preguntas:
+                        if item.get('tipo') == 'caso' and item.get('numero_caso') == caso_nuevo:
+                            item['preguntas_caso'].append(pregunta_data)
                             break
                 st.rerun()
         
