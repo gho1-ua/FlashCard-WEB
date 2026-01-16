@@ -1237,8 +1237,8 @@ def mostrar_pregunta_revision(pregunta_data, idx_global, idx_local, numero_caso,
     
     # TODOS LOS EXPANDERS ABIERTOS POR DEFECTO
     with st.expander(titulo_expander, expanded=True):
-        # Botones de acción: Editar, Borrar, Añadir antes, Añadir después
-        col_edit, col_delete, col_add_before, col_add_after, col_spacer = st.columns([1, 1, 1, 1, 2])
+        # Botones de acción: Editar, Borrar, Añadir antes, Añadir después, Crear caso
+        col_edit, col_delete, col_add_before, col_add_after, col_crear_caso, col_spacer = st.columns([1, 1, 1, 1, 1, 1])
         with col_edit:
             edit_mode = st.checkbox(
                 "🔧 Editar contenido",
@@ -1324,6 +1324,37 @@ def mostrar_pregunta_revision(pregunta_data, idx_global, idx_local, numero_caso,
                             st.session_state.preguntas.insert(i + 1, nueva_pregunta)
                             break
                 st.rerun()
+        
+        with col_crear_caso:
+            # Botón para crear un nuevo caso con esta pregunta
+            if st.button(
+                "📋 Crear Caso",
+                key=f"crear_caso_{idx_global}",
+                use_container_width=True,
+                help="Crea un nuevo caso y asigna esta pregunta a él"
+            ):
+                # Contar casos existentes para numerar el nuevo
+                num_casos = len([p for p in preguntas if p.get('tipo') == 'caso'])
+                nuevo_caso = {
+                    'tipo': 'caso',
+                    'numero_caso': f"Caso {num_casos + 1}",
+                    'texto_caso': '',
+                    'preguntas_caso': [pregunta_data]
+                }
+                # Si la pregunta está en un caso, quitarla primero
+                if numero_caso and idx_local is not None:
+                    for item in preguntas:
+                        if item.get('tipo') == 'caso' and item.get('numero_caso') == numero_caso:
+                            item['preguntas_caso'].remove(pregunta_data)
+                            break
+                # Si la pregunta está en la lista normal, quitarla
+                elif pregunta_data in preguntas:
+                    preguntas.remove(pregunta_data)
+                # Insertar el nuevo caso al principio
+                preguntas.insert(0, nuevo_caso)
+                st.rerun()
+        
+        st.markdown("---")
         
         # Botón para asignar a caso
         col_asignar_caso, col_spacer_asignar = st.columns([2, 3])
