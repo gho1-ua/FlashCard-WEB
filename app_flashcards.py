@@ -1944,22 +1944,24 @@ def mostrar_vista_principal():
                     "**Selecciona tu respuesta:**",
                     options=['Verdadero', 'Falso'],
                     key=f"respuesta_{idx_actual}",
-                    index=respuesta_anterior if respuesta_anterior is not None else 0,
+                    index=respuesta_anterior if respuesta_anterior is not None else None,
                     horizontal=True
                 )
                 
-                # Convertir a índice numérico (0 = Verdadero, 1 = Falso)
-                respuesta_idx = 0 if respuesta_seleccionada == 'Verdadero' else 1
-                
-                # Verificar automáticamente si la respuesta cambió
-                if respuesta_anterior != respuesta_idx:
-                    st.session_state.respuestas_usuario[idx_actual] = respuesta_idx
-                    respuesta_correcta_idx = pregunta_data.get('correcta', 0)
-                    es_correcta = respuesta_idx == respuesta_correcta_idx
-                    st.session_state.verificaciones[idx_actual] = es_correcta
-                    st.rerun()
-                else:
-                    st.session_state.respuestas_usuario[idx_actual] = respuesta_idx
+                # Solo procesar si hay una respuesta seleccionada
+                if respuesta_seleccionada is not None:
+                    # Convertir a índice numérico (0 = Verdadero, 1 = Falso)
+                    respuesta_idx = 0 if respuesta_seleccionada == 'Verdadero' else 1
+                    
+                    # Verificar automáticamente si la respuesta cambió
+                    if respuesta_anterior != respuesta_idx:
+                        st.session_state.respuestas_usuario[idx_actual] = respuesta_idx
+                        respuesta_correcta_idx = pregunta_data.get('correcta', 0)
+                        es_correcta = respuesta_idx == respuesta_correcta_idx
+                        st.session_state.verificaciones[idx_actual] = es_correcta
+                        st.rerun()
+                    else:
+                        st.session_state.respuestas_usuario[idx_actual] = respuesta_idx
             else:
                 # Pregunta de opción múltiple - Botones grandes y claros (texto limpio)
                 st.markdown("**Selecciona tu respuesta:**")
@@ -1973,19 +1975,21 @@ def mostrar_vista_principal():
                     options=list(range(len(pregunta_data['opciones']))),
                     format_func=lambda x: opciones_labels[x],
                     key=f"respuesta_{idx_actual}",
-                    index=respuesta_anterior if respuesta_anterior is not None and respuesta_anterior < len(opciones_labels) else 0,
+                    index=respuesta_anterior if respuesta_anterior is not None and respuesta_anterior < len(opciones_labels) else None,
                     label_visibility="collapsed"
                 )
                 
-                # Verificar automáticamente si la respuesta cambió
-                if respuesta_anterior != respuesta_seleccionada:
-                    st.session_state.respuestas_usuario[idx_actual] = respuesta_seleccionada
-                    respuesta_correcta_idx = pregunta_data.get('correcta', 0)
-                    es_correcta = respuesta_seleccionada == respuesta_correcta_idx
-                    st.session_state.verificaciones[idx_actual] = es_correcta
-                    st.rerun()
-                else:
-                    st.session_state.respuestas_usuario[idx_actual] = respuesta_seleccionada
+                # Solo procesar si hay una respuesta seleccionada
+                if respuesta_seleccionada is not None:
+                    # Verificar automáticamente si la respuesta cambió
+                    if respuesta_anterior != respuesta_seleccionada:
+                        st.session_state.respuestas_usuario[idx_actual] = respuesta_seleccionada
+                        respuesta_correcta_idx = pregunta_data.get('correcta', 0)
+                        es_correcta = respuesta_seleccionada == respuesta_correcta_idx
+                        st.session_state.verificaciones[idx_actual] = es_correcta
+                        st.rerun()
+                    else:
+                        st.session_state.respuestas_usuario[idx_actual] = respuesta_seleccionada
             
             # Mostrar resultado de verificación automáticamente
             if idx_actual in st.session_state.verificaciones:
