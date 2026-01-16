@@ -1382,6 +1382,11 @@ def mostrar_pregunta_revision(pregunta_data, idx_global, idx_local, numero_caso,
             caso_actual_pregunta = numero_caso if numero_caso else None
             indice_caso_actual = casos_disponibles.index(caso_actual_pregunta) if caso_actual_pregunta in casos_disponibles else 0
             
+            # Usar session_state para rastrear el valor anterior y evitar bucles infinitos
+            key_caso_anterior = f"caso_anterior_{idx_global}"
+            if key_caso_anterior not in st.session_state:
+                st.session_state[key_caso_anterior] = caso_actual_pregunta
+            
             caso_seleccionado = st.selectbox(
                 "Asignar a caso:",
                 options=range(len(casos_disponibles)),
@@ -1392,9 +1397,12 @@ def mostrar_pregunta_revision(pregunta_data, idx_global, idx_local, numero_caso,
             )
             
             caso_nuevo = casos_disponibles[caso_seleccionado]
+            caso_anterior = st.session_state[key_caso_anterior]
             
-            # Si cambió la asignación, actualizar
-            if caso_nuevo != caso_actual_pregunta:
+            # Solo actualizar si realmente cambió el valor (no en cada renderizado)
+            if caso_nuevo != caso_anterior:
+                st.session_state[key_caso_anterior] = caso_nuevo
+                
                 if caso_nuevo is None:
                     # Quitar del caso actual
                     if numero_caso and idx_local is not None:
@@ -1418,6 +1426,9 @@ def mostrar_pregunta_revision(pregunta_data, idx_global, idx_local, numero_caso,
                             if item.get('tipo') == 'caso' and item.get('numero_caso') == numero_caso:
                                 item['preguntas_caso'].remove(pregunta_data)
                                 break
+                    # Si la pregunta está en la lista normal, quitarla
+                    elif pregunta_data in preguntas:
+                        preguntas.remove(pregunta_data)
                     # Ahora añadir al nuevo caso
                     for item in preguntas:
                         if item.get('tipo') == 'caso' and item.get('numero_caso') == caso_nuevo:
