@@ -33,6 +33,7 @@ if 'subrayado_detectado' not in st.session_state:
 def es_ruido_pagina(texto: str) -> bool:
     """
     Detecta si una línea es ruido de página (header/footer) que debe ignorarse.
+    Incluye detección de "Tema X" que debe ser filtrado.
     """
     if not texto:
         return True
@@ -54,7 +55,39 @@ def es_ruido_pagina(texto: str) -> bool:
         if patron in texto_upper:
             return True
     
+    # Detectar si la línea contiene solo "Tema X" (con o sin espacios adicionales)
+    # Patrón: "Tema" seguido de espacios y un número, posiblemente con otros caracteres de ruido
+    patron_tema = re.compile(r'^\s*Tema\s+\d+\s*$', re.IGNORECASE)
+    if patron_tema.match(texto.strip()):
+        return True
+    
     return False
+
+
+def limpiar_tema_x(texto: str) -> str:
+    """
+    Elimina menciones de "Tema X" (Tema 1, Tema 2, etc.) del texto.
+    Si el texto contiene solo "Tema X", retorna cadena vacía.
+    Si está dentro de una frase, elimina la mención y limpia espacios extra.
+    """
+    if not texto:
+        return texto
+    
+    # Patrón para detectar "Tema X" (case-insensitive)
+    # Captura "Tema" seguido de espacios y uno o más dígitos
+    patron_tema = re.compile(r'(?i)Tema\s+\d+', re.IGNORECASE)
+    
+    # Si el texto completo es solo "Tema X", retornar cadena vacía
+    texto_limpio = texto.strip()
+    if re.match(r'^\s*Tema\s+\d+\s*$', texto_limpio, re.IGNORECASE):
+        return ""
+    
+    # Eliminar "Tema X" del texto y limpiar espacios extra
+    texto_limpio = patron_tema.sub('', texto)
+    # Limpiar espacios múltiples y espacios al inicio/final
+    texto_limpio = re.sub(r'\s+', ' ', texto_limpio).strip()
+    
+    return texto_limpio
 
 
 def detectar_subrayado_resaltado(span: dict) -> bool:
@@ -283,13 +316,17 @@ def extraer_texto_con_subrayado(pdf_bytes: bytes):
             texto_completo = " ".join(textos_linea)
             texto_completo = texto_completo.strip()
             
+            # FILTRADO DE "TEMA X": Limpiar menciones de "Tema X" antes de procesar
+            texto_completo = limpiar_tema_x(texto_completo)
+            
+            # Si después de limpiar el texto está vacío, saltar esta línea
             if not texto_completo:
                 continue
             
             # Si alguna parte está marcada, toda la línea está marcada
             marcado_linea = any(span['marcado'] for span in linea_visual)
             
-            # Verificar si es pregunta u opción
+            # Verificar si es pregunta u opción (después de la limpieza)
             es_pregunta = patron_pregunta.match(texto_completo)
             es_opcion = patron_opcion.match(texto_completo)
             
@@ -662,15 +699,41 @@ def mostrar_modo_revision():
         
         # TODOS LOS EXPANDERS ABIERTOS POR DEFECTO
         with st.expander(titulo_expander, expanded=True):
-            # Checkbox para editar contenido (en la misma línea con columnas)
-            # Streamlit maneja automáticamente el estado del widget mediante la key
-            col_edit, col_spacer = st.columns([1, 4])
+            # Botones de acción: Editar y Borrar (en la misma línea con columnas)
+            col_edit, col_delete, col_spacer = st.columns([1, 1, 3])
             with col_edit:
                 edit_mode = st.checkbox(
                     "🔧 Editar contenido",
                     key=f"edit_content_{idx}",
                     value=False  # Valor por defecto, Streamlit lo maneja automáticamente
                 )
+            with col_delete:
+                # Botón de borrado de pregunta
+                if st.button(
+                    "🗑️ Borrar Pregunta",
+                    key=f"delete_{idx}",
+                    type="secondary",
+                    use_container_width=True
+                ):
+                    # Eliminar la pregunta de la lista usando pop
+                    st.session_state.preguntas.pop(idx)
+                    # Actualizar también el diccionario de subrayado si existe
+                    if 'subrayado_detectado' in st.session_state and st.session_state.subrayado_detectado:
+                        # Reconstruir el diccionario: los índices posteriores al borrado se desplazan
+                        nuevo_subrayado = {}
+                        for i in range(len(st.session_state.preguntas)):
+                            # Si el índice original (antes del borrado) tenía subrayado, mantenerlo
+                            if i < idx:
+                                # Índices anteriores no cambian
+                                if i in st.session_state.subrayado_detectado:
+                                    nuevo_subrayado[i] = st.session_state.subrayado_detectado[i]
+                            elif i >= idx:
+                                # Índices posteriores se desplazan hacia atrás
+                                if (i + 1) in st.session_state.subrayado_detectado:
+                                    nuevo_subrayado[i] = st.session_state.subrayado_detectado[i + 1]
+                        st.session_state.subrayado_detectado = nuevo_subrayado
+                    # Refrescar la página para actualizar los números
+                    st.rerun()
             
             st.markdown("---")
             
