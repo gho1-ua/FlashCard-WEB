@@ -1,0 +1,2011 @@
+{
+  "titulo": "Examen final Dirección de Marketing",
+  "descripcion": "Preguntas tipo test de final de libro + años anteriores",
+  "fecha_creacion": "2026-01-16 13:20:45",
+  "num_preguntas": 220,
+  "preguntas": [
+    {
+      "pregunta": "1. Con relación a la política de fijación de precios de una empresa, se puede decir que:",
+      "opciones": [
+        "la empresa debe analizar tanto condicionantes internos (objetivos, estrategias de marketing y costes) como condicionantes externos (mercado y aspectos legales).",
+        "la empresa debe tener en cuenta que existen cuatro niveles de competencia: competencia general, competencia entre productos, competencia entre marcas y canibalización.",
+        "el conocimiento de la proporción de los costes fijos y variables sobre los costes totales de la empresa (estructura de costes) nos permite conocer si la empresa es sensible al volumen o al precio.",
+        "todas las respuestas anteriores son correctas."
+      ],
+      "correcta": 3,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "2. Con respecto a la promoción de ventas como instrumento de comunicación, se puede decir que:",
+      "opciones": [
+        "las promociones de ventas suelen ser una herramienta eficaz para modificar el rechazo de un producto y modificar la tendencia decreciente de las ventas a largo plazo.",
+        "si un fabricante y un minorista llevan a cabo conjuntamente una promoción de ventas dirigida al consumidor final, se trata de una promoción de ventas integrada verticalmente.",
+        "las promociones de ventas comerciales son aquellas que realizan los fabricantes, mayoristas y minoristas hacia el consumidor final.",
+        "las respuestas a) y b) son correctas."
+      ],
+      "correcta": 1,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "3. Con relación al producto como variable de marketing, se puede afirmar que:",
+      "opciones": [
+        "en la primera etapa del modelo de Eckles para la eliminación de productos, la empresa decide si elimina o no el producto débil.",
+        "la calidad esperada de un producto aparece al comparar la calidad comunicada con la calidad prestada.",
+        "en la etapa de introducción del ciclo de vida estándar del producto, la estrategia de distribución a emplear, en sentido general, es la distribución intensiva.",
+        "ninguna de las respuestas anteriores es correcta."
+      ],
+      "correcta": 3,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "4. Con respecto al precio como variable de marketing, se puede decir que:",
+      "opciones": [
+        "las estrategias de discriminación de precios más comunes son: ofertas, rebajas, descuentos por pronto pago, descuentos por volumen (acumulativo y no acumulativo), precio en dos partes y precio único.",
+        "entre las estrategias competitivas se encuentran: fijación de precios similares, fijación de precios más bajos (con la venta a pérdida como caso particular), fijación de precios más altos y licitación.",
+        "dentro de las estrategias para nuevos productos, la estrategia de precio de introducción es recomendable cuando se trata de una verdadera innovación y la demanda es poco elástica.",
+        "todas las respuestas anteriores son correctas."
+      ],
+      "correcta": 1,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "5. Con respecto a los distintos métodos de evaluación de las alternativas del canal de distribución de que dispone la empresa, se puede afirmar que:",
+      "opciones": [
+        "según el criterio de control, elegiremos aquel canal de distribución que implique un compromiso más a largo plazo, ya que implica una mayor seguridad para la empresa fabricante.",
+        "el criterio adaptativo propone elegir un canal directo si el volumen de ventas es muy elevado y un canal largo si el volumen de ventas es muy reducido.",
+        "el método de puntuación de factores compensatorio consiste en elegir aquella alternativa de canal que haya obtenido la mayor suma de puntuaciones ponderadas.",
+        "las respuestas a) y c) son correctas."
+      ],
+      "correcta": 2,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "6. Con relación a los objetivos de fijación de precios, se puede afirmar que:",
+      "opciones": [
+        "el objetivo de supervivencia es un objetivo centrado en la competencia que implica llevar a cabo una reducción temporal en el precio para reducir el exceso de stock.",
+        "el objetivo centrado en las ventas que persigue explotar al máximo el mercado consiste en fijar inicialmente un precio lo más bajo posible para, posteriormente, ir incrementándolo y acceder a segmentos de mercado menos sensibles al precio. La estrategia de precio de descremación o tamizado gradual sería idónea para alcanzarlo.",
+        "el objetivo centrado en la competencia denominado estabilización de los precios persigue la igualdad de precios entre todas las empresas competidoras.",
+        "las respuestas a) y c) son correctas."
+      ],
+      "correcta": 0,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "7. Con relación a la comunicación digital y otras fórmulas de comunicación, se puede decir que:",
+      "opciones": [
+        "entre los llamados formatos flotantes se encuentran: banner, botón, rascacielos y robapáginas.",
+        "el advertainment es una forma de comunicación digital que consiste en emplear el correo electrónico para realizar acciones de marketing.",
+        "la comunicación viral consiste en incorporar acciones publicitarias en contenidos de entretenimiento.",
+        "ninguna de las respuestas anteriores es correcta."
+      ],
+      "correcta": 0,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "8. Con respecto a la distribución como variable comercial, se puede decir que:",
+      "opciones": [
+        "en una franquicia donde el franquiciador es un fabricante y el franquiciado es un minorista, se está produciendo una integración vertical administrada.",
+        "en las actividades de merchandising, los productos de compra reflexiva deben colocarse distantes entre sí dentro del establecimiento para incentivar a los consumidores a recorrer una mayor superficie de venta.",
+        "en la estrategia de comunicación push (o de presión), el objetivo del fabricante es suscitar la cooperación voluntaria de los intermediarios sobre los que actúa.",
+        "las respuestas a) y c) son correctas."
+      ],
+      "correcta": 2,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "9. Con relación al proceso de creación, desarrollo y lanzamiento de nuevos productos, se puede afirmar que:",
+      "opciones": [
+        "el check list es una técnica utilizada para evaluar las diferentes ideas de producto en la etapa de tamizado de ideas (segunda etapa del proceso de creación y desarrollo de nuevos productos).",
+        "en la etapa de desarrollo y test del producto, se lleva a cabo una prueba funcional para verificar el grado de adecuación entre el producto físico y el concepto de producto.",
+        "el proceso de difusión se define como el conjunto de fases por las que atraviesa un consumidor antes de adoptar un nuevo producto, siendo dichas fases: atención, interés, evaluación y adopción.",
+        "todas las respuestas anteriores son correctas."
+      ],
+      "correcta": 0,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "10. Con relación a la distribución como instrumento del marketing, se puede afirmar que:",
+      "opciones": [
+        "las funciones que se deben llevar a cabo para la correcta distribución de los productos al consumidor final son: transporte, diversificación, fraccionamiento, almacenamiento, servicios y financiación.",
+        "la dimensión vertical o longitud de un canal viene determinada por el número de intermediarios de distinto nivel que intervienen en el canal.",
+        "para la evaluación de las alternativas de canal, la empresa puede recurrir a los criterios económicos, de control y adaptativos, así como a los métodos de puntuación de factores compensatorios y no compensatorios.",
+        "todas las respuestas anteriores son correctas."
+      ],
+      "correcta": 3,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "11. Con relación a la publicidad como instrumento de comunicación, se puede decir que:",
+      "opciones": [
+        "con respecto a los objetivos publicitarios, lo más recomendable es fijarlos en términos de la variable ventas.",
+        "las decisiones que se han de desarrollar dentro de la actividad publicitaria se pueden agrupar en: decisiones de carácter económico, decisiones sobre la planificación de medios publicitarios, decisiones sobre la difusión de la campaña y decisiones sobre la eficiencia de la comunicación.",
+        "dentro del bloque de decisiones sobre la eficacia publicitaria, entre los elementos más comunes para evaluar una campaña publicitaria se encuentra el grado de conocimiento de marca.",
+        "todas las respuestas anteriores son correctas."
+      ],
+      "correcta": 2,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "12. En cuanto a las relaciones públicas como instrumento de comunicación, se puede decir que:",
+      "opciones": [
+        "tanto el patrocinio como el mecenazgo son formas de comunicación por acción; sin embargo, mientras que el mecenazgo busca revalorizar su imagen comercial, el patrocinio persigue potenciar su imagen social.",
+        "algunas de las características de las relaciones públicas son: 1) no hay proposición de venta directa, pero sí indirecta: 2) alta credibilidad del mensaje, y 3) se dirige a un público heterogéneo.",
+        "la publicity es una herramienta de las relaciones públicas en la que el medio de comunicación empleado es personal.",
+        "Todas las respuestas anteriores son correctas."
+      ],
+      "correcta": 1,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "1. La calidad latente de un producto surge al comparar la calidad comunicada con la calidad prestada.",
+      "opciones": [],
+      "correcta": 1,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": true
+    },
+    {
+      "pregunta": "2. Las funciones básicas que debe cumplir el envase de un producto son: protección, preservación, presentación, fácil uso y economía.",
+      "opciones": [],
+      "correcta": 0,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": true
+    },
+    {
+      "pregunta": "3. Entre las ventajas que reporta al distribuidor la comercialización de la marca del distribuidor, se encuentran: una mayor fidelización de la clientela y un mayor control de la oferta.",
+      "opciones": [],
+      "correcta": 0,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": true
+    },
+    {
+      "pregunta": "4. Entre los factores que han favorecido el crecimiento de la marca del distribuidor, en relación con el fabricante, se encuentran: tener capacidad productiva ociosa y ser amenazado con la exclusión del lineal.",
+      "opciones": [],
+      "correcta": 0,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": true
+    },
+    {
+      "pregunta": "5. En la clasificación de productos de consumidores, se encuentra un grupo de productos llamados productos reguladores.",
+      "opciones": [],
+      "correcta": 1,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": true
+    },
+    {
+      "pregunta": "1. En la etapa de madurez del ciclo de vida de un producto estándar, la estrategia de comunicación a emplear, en sentido general, se centra en crear imagen de marca.",
+      "opciones": [],
+      "correcta": 1,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": true
+    },
+    {
+      "pregunta": "2. En la tercera etapa del modelo de Eckles para la eliminación de productos, la empresa decide si elimina o no el producto débil.",
+      "opciones": [],
+      "correcta": 0,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": true
+    },
+    {
+      "pregunta": "3. En la etapa de generación de ideas, dentro del proceso de creación, desarrollo y lanzamiento de nuevos productos, la empresa puede recurrir a diversas técnicas de creatividad, como son: el análisis morfológico y el check list",
+      "opciones": [],
+      "correcta": 1,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": true
+    },
+    {
+      "pregunta": "4. Los denominados productos reguladores son aquellos que sirven para responder a las actuaciones de la competencia .",
+      "opciones": [],
+      "correcta": 1,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": true
+    },
+    {
+      "pregunta": "5. El proceso de difusión se divide en las siguientes fases: atención, interés, evaluación, prueba y adopción efectiva.",
+      "opciones": [],
+      "correcta": 1,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": true
+    },
+    {
+      "pregunta": "6. La aversión al riesgo es mayor en el grupo de primeros adoptantes que en el grupo de mayoría tardía",
+      "opciones": [],
+      "correcta": 1,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": true
+    },
+    {
+      "pregunta": "1. En términos generales, tanto la variable precio como la variable producto se consideran variables tácticas.",
+      "opciones": [],
+      "correcta": 1,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": true
+    },
+    {
+      "pregunta": "2. Mientras que la demanda se considera un condicionante interno en la fijación de precios, la competencia se considera un condicionante externo .",
+      "opciones": [],
+      "correcta": 1,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": true
+    },
+    {
+      "pregunta": "3. Según los factores que afectan a la sensibilidad al precio, el consumidor es menos sensible al precio en aquellos productos que no puede almacenar.",
+      "opciones": [],
+      "correcta": 0,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": true
+    },
+    {
+      "pregunta": "4. Cuando la empresa aplica la técnica del \"coste máximo\" sigue el siguiente proceso: l) diseña el producto, 2) establece el coste, y 3) determina el precio.",
+      "opciones": [],
+      "correcta": 1,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": true
+    },
+    {
+      "pregunta": "5. El objetivo de precios llamado maximización de la cifra de ventas persigue maximizar la cuota de mercado en términos de unidades de venta .",
+      "opciones": [],
+      "correcta": 1,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": true
+    },
+    {
+      "pregunta": "6. El objetivo de precios basado en el beneficio y conocido como supervivencia es un objetivo a corto plazo .",
+      "opciones": [],
+      "correcta": 1,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": true
+    },
+    {
+      "pregunta": "7. En el objetivo de precios explotar al máximo el mercado, la empresa explota al máximo el potencial de compra de varios segmentos del mercado.",
+      "opciones": [],
+      "correcta": 0,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": true
+    },
+    {
+      "pregunta": "8. Los descuentos por pronto pago acumulativos premian la lealtad del Consumidor.",
+      "opciones": [],
+      "correcta": 1,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": false
+    },
+    {
+      "pregunta": "9. En la estrategia de precios primados, los productos de compra habitual se pueden emplear como productos de atracción .",
+      "opciones": [],
+      "correcta": 1,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": true
+    },
+    {
+      "pregunta": "10. En las rebajas, la empresa emplea el efecto sorpresa.",
+      "opciones": [],
+      "correcta": 1,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": true
+    },
+    {
+      "pregunta": "11. El objetivo de precios basado en el beneficio y conocido como alineación con los competidores es un objetivo a corto plazo",
+      "opciones": [],
+      "correcta": 1,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": true
+    },
+    {
+      "pregunta": "1. La franquicia de bienes se caracteriza por constituir una integración vertical administrada.",
+      "opciones": [],
+      "correcta": 1,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": true
+    },
+    {
+      "pregunta": "2. Si un fabricante adquiere la propiedad de los establecimientos minoristas que forman parte de su canal, se produce una integración vertical corporativa hacia adelante.",
+      "opciones": [],
+      "correcta": 0,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": true
+    },
+    {
+      "pregunta": "3. La función de diversificación de la distribución permite adaptar los lotes de producción a los lotes de consumo .",
+      "opciones": [],
+      "correcta": 1,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": true
+    },
+    {
+      "pregunta": "4. Los brokers y los agentes comerciales no constituyen un nivel en el canal, dado que el flujo físico no pasa por ellos .",
+      "opciones": [],
+      "correcta": 1,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": true
+    },
+    {
+      "pregunta": "5. Si la empresa busca tener un elevado control de su política comercial, la distribución intensiva es poco adecuada.",
+      "opciones": [],
+      "correcta": 0,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": true
+    },
+    {
+      "pregunta": "1.Entre los elementos del proceso de comunicación comercial, \"interpretación\" es el proceso de traducción del mensaje recibido por el receptor .",
+      "opciones": [],
+      "correcta": 0,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": true
+    },
+    {
+      "pregunta": "2. En la venta personal, al tratarse de una comunicación interpersonal, existe gran inclinación a un error de código.",
+      "opciones": [],
+      "correcta": 1,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": true
+    },
+    {
+      "pregunta": "3. En la fase de persuasión del proceso de venta personal, destacan dos actividades: preparación del contacto y presentación de la venta .",
+      "opciones": [],
+      "correcta": 1,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": true
+    },
+    {
+      "pregunta": "4. La eficacia de las promociones de venta reside en que el valor añadido sea: conocido, comprendido, incentivador y posible de alcanzar para el público objetivo .",
+      "opciones": [],
+      "correcta": 0,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": true
+    },
+    {
+      "pregunta": "5. Cuando un mayorista realiza promociones de venta a sus clientes, éstas se denominan promociones de venta comerciales.",
+      "opciones": [],
+      "correcta": 0,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": true
+    },
+    {
+      "pregunta": "6. Tanto el patrocinio como el mecenazgo son formas de \"comunicación por acción\", pero el mecenazgo busca revalorizar la imagen comercial de la empresa y el patrocinio la imagen social.",
+      "opciones": [],
+      "correcta": 1,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": true
+    },
+    {
+      "pregunta": "7. Tanto en el caso de la publicidad como en la publicity, se emplean medios de comunicación de masas",
+      "opciones": [],
+      "correcta": 0,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": true
+    },
+    {
+      "pregunta": "8. Una ventaja de fijar los objetivos publicitarios en función de la variable ventas es que los efectos de la publicidad se manifiestan con carácter retardado en el tiempo.",
+      "opciones": [],
+      "correcta": 1,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": true
+    },
+    {
+      "pregunta": "9. El mix-publicitario se compone de cuatro grupos de decisiones: decisiones de carácter económico, decisiones sobre la creatividad del mensaje, decisiones sobre difusión de medios y decisiones sobre eficacia publicitaria.",
+      "opciones": [],
+      "correcta": 0,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": true
+    },
+    {
+      "pregunta": "10. El marketing directo es una herramienta fundamental para la consecución de una relación a largo plazo entre los clientes y la empresa.",
+      "opciones": [],
+      "correcta": 0,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": true
+    },
+    {
+      "pregunta": "11. Los rascacielos y los robapáginas son formatos integrados de publicidad on-line.",
+      "opciones": [],
+      "correcta": 0,
+      "tipo": "V/F"
+    },
+    {
+      "pregunta": "12. La comunicación en 360° se soporta en un modelo integral que entiende a la empresa como un sistema vivo, dinámico y cambiante, relacionado con el entorno y con el objetivo de mantener un monólogo constante y permanente en el tiempo.",
+      "opciones": [],
+      "correcta": 0,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": true
+    },
+    {
+      "pregunta": "1. La cartera de productos de la empresa BURBUJAS está formada inicialmente por una única línea de ropa infantil compuesta por pantalones para niños bajo la marca BLUE. Sin embargo, a lo largo del tiempo y por el orden establecido, su cartera de productos sufre los siguientes cambios: Cambio 1: la empresa añade a su línea de ropa infantil, bañadores para niños bajo la marca SOL. Cambio 2: la empresa añade a su cartera una nueva línea de complementos, incorporando zapatillas de baño para niños bajo la marca MAR. Cambio 3: la empresa añade a su línea de complementos toallas de baño bajo la marca PLAYA. Ante la anterior situación, en materia de marcas, se puede decir que:",
+      "opciones": [
+        "En el cambio 1 la empresa aplica las siguientes estrategias de marca: marca nueva y multimarca. Además dentro de multimarca estamos ante un caso de rango de marcas.",
+        "En el cambio 2 la empresa aplica las siguientes estrategias de marca: extensión de línea y multimarca.",
+        "En el cambio 3 la empresa aplica una estrategia de marcas individuales y corporativas, y en consecuencia, utiliza una alianza de marca.",
+        "Todas las respuestas anteriores son correctas."
+      ],
+      "correcta": 0,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "2. Dado el mismo enunciado que aparece en la pregunta anterior y con relación a las decisiones que una empresa puede llevar a cabo sobre su cartera de productos, se puede decir que:",
+      "opciones": [
+        "En el cambio 1 la empresa está ampliando su línea de ropa infantil hacia arriba, dado que está incorporando nuevos productos, pero dirigidos al segmento masculino (niños).",
+        "En el cambio 2 la empresa está aumentando la anchura (variedad o amplitud) y longitud de su cartera de productos, dado que está incluyendo una nueva línea.",
+        "En el cambio 3 la empresa está completando su línea de complementos y por tanto aumentando la profundidad de dicha línea.",
+        "Las respuestas b) y c) son correctas."
+      ],
+      "correcta": 3,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "3. Con relación al producto como instrumento del marketing-mix, se puede afirmar que:",
+      "opciones": [
+        "la identidad de marca se define como un conjunto de asociaciones entorno a la proposición de valor de la marca que se produce en la mente del cliente cuando éste entra en contacto con la misma a través de cualquier vía.",
+        "si la empresa incrementa la ventaja relativa, la compatibilidad, la divisibilidad y la comunicabilidad del nuevo producto que va a lanzar, mayor será la velocidad de adopción y antes aparecerán los innovadores, término con el que se denomina a la primera de las categorías de adoptantes.",
+        "el proceso de difusión se define como el conjunto de fases por las que atraviesa un consumidor antes de adoptar un nuevo producto, siendo dichas fases: atención, interés, evaluación y adopción.",
+        "las respuestas a) y b) son correctas."
+      ],
+      "correcta": 1,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "4. Con relación al producto como instrumento del marketing-mix, se puede afirmar que:",
+      "opciones": [
+        "la calidad latente aparece al comparar la calidad comunicada con la calidad prestada",
+        "en la etapa de madurez del ciclo de vida estándar del producto, la estrategia de comunicación a emplear, en sentido general, se centra en crear una imagen de marca.",
+        "en el modelo de Eckles para eliminación de productos, la empresa decide si elimina o no el producto débil en la tercera etapa.",
+        "las respuestas a) y c) son correctas."
+      ],
+      "correcta": 2,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "5. Con relación al producto como instrumento del marketing-mix, se puede afirmar que:",
+      "opciones": [
+        "el producto aumentado o ampliado de Kotler consiste en añadir al producto esperado un conjunto de prestaciones adicionales a las que el consumidor está habituado a recibir.",
+        "en la clasificación de productos de consumidores se encuentran con los llamados productos reguladores.",
+        "las funciones básicas que debe cumplir el envase son: protección, preservación, presentación, fácil uso y economía.",
+        "las respuestas a) y c) son correctas."
+      ],
+      "correcta": 2,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "6. Con respecto a la marca del distribuidor, se puede afirmar que:",
+      "opciones": [
+        "una de las diferencias entre la marca del distribuidor y la marca del fabricante es que la marca del distribuidor es la única que puede estar presenten en toda la superficie de venta.",
+        "entre los factores que han favorecido el crecimiento de la marca del distribuidor, en relación con el fabricante, se encuentran: tener capacidad productiva ociosa y ser amenazado con la exclusión del lineal.",
+        "entre los factores que han favorecido el crecimiento de la marca del distribuidor en relación con el distribuidor, se encuentran: disponer de una mayor cuota de mercado y mayor control de la oferta.",
+        "todas las respuestas anteriores son correctas."
+      ],
+      "correcta": 3,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "7. Con relación a la distribución como instrumento del marketing-mix, se puede afirmar que:",
+      "opciones": [
+        "la franquicia de bienes se caracteriza por constituir una integración vertical administrada.",
+        "la cooperativa de consumidores se puede considerar una integración vertical administrada.",
+        "si un fabricante adquiere la propiedad de los establecimientos minoristas que forman parte de su canal, se produce una integración vertical corporativa hacia adelante.",
+        "las respuestas a) y c) son correctas."
+      ],
+      "correcta": 2,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "8. Con relación a la distribución como instrumento del marketing-mix, se puede afirmar",
+      "opciones": [
+        "la función de diversificación permite adaptar los lotes de producción a los lotes de consumo.",
+        "la tienda de descuento además de seguir el régimen de venta de libre servicio, se caracteriza por ofrecer un elevado porcentaje de productos con marcas poco conocidas y por minimizar los servicios que presta al consumidor.",
+        "los brokers y los agentes comerciales no constituyen un nivel en el canal dado que el flujo físico no pasa por ellos.",
+        "todas las respuestas anteriores son correctas."
+      ],
+      "correcta": 1,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "9. En cuanto a la elección del canal de distribución y según el objetivo de cobertura, se puede afirmar que:",
+      "opciones": [
+        "si la empresa busca tener un elevado control de su política comercial, la distribución intensiva es poco adecuada.",
+        "la distribución selectiva implica ofrecer los productos en un número de puntos de venta menor que en la distribución intensiva, pero mayor que en la distribución exclusiva.",
+        "la distribución exclusiva geográfica consiste en ofrecer el producto en un único punto de venta dentro de un área geográfica.",
+        "todas las respuestas anteriores son correctas."
+      ],
+      "correcta": 3,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "10. Con relación a la distribución como instrumento del marketing-mix, se puede afirmar que:",
+      "opciones": [
+        "los factores que condicionan la elección del canal de distribución son: características de los consumidores, del producto, de la competencia y control del programa de marketing-mix.",
+        "la etapa de madurez del ciclo de vida estándar del producto se relaciona con la distribución selectiva.",
+        "en la estrategia de comunicación de presión (o estrategia push) los esfuerzos de comunicación del fabricante se concentran sobre los intermediarios, persiguiendo la colaboración voluntaria de los mismos.",
+        "todas las respuestas anteriores son correctas."
+      ],
+      "correcta": 2,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "11. Con respecto al precio como variable del marketing-mix, se puede afirmar que:",
+      "opciones": [
+        "el objetivo llamado \"maximización de la cifra de ventas\" persigue maximizar la cuota de mercado en términos de unidades de venta.",
+        "el objetivo basado en el beneficio llamado \"supervivencia\" es un objetivo a corto plazo.",
+        "en el objetivo de precios \"explotar al máximo el mercado\", la empresa explota al máximo el potencial de compra de varios segmentos del mercado.",
+        "las respuestas a) y b) son correctas."
+      ],
+      "correcta": 2,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "12. Con respecto al precio como variable del marketing-mix, se puede afirmar que:",
+      "opciones": [
+        "los descuentos por pronto pago acumulativos premian la lealtad del consumidor.",
+        "en la estrategia de precios primados, los productos de compra habitual se pueden emplear como productos de atracción.",
+        "en las rebajas la empresa emplea el \"efecto sorpresa\".",
+        "uno de los inconvenientes del método del precio objetivo es que no tiene en cuenta la competencia."
+      ],
+      "correcta": 3,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "13. Si un supermercado comunica el día 08/01/24 que desde el 08/01/24 al 04/02/24 por la compra de 2 envases de champú Pantene se recibirá un descuento directo sobre el precio del 10%, está:",
+      "opciones": [
+        "llevando a cabo una estrategia de discriminación de precios, argumentando como motivo el tiempo; es decir, estaría aplicando una oferta.",
+        "aplicando una promoción de ventas, en concreto un incentivo monetario del minorista al consumidor.",
+        "llevando a cabo una estrategia de discriminación de precios, argumentando como motivo \"un descuento de segundo mercado\".",
+        "las respuestas a) y b) son correctas."
+      ],
+      "correcta": 3,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "14. Con respecto al precio como variable del marketing-mix, se puede afirmar que:",
+      "opciones": [
+        "en términos generales, la variable precio, así como la variable producto, se consideran variables tácticas.",
+        "mientras la demanda se considera un condicionante interno en la fijación de precios, la competencia es un condicionante externo.",
+        "según los factores que afectan a la sensibilidad al precio, el consumidor es menos sensible al precio en aquellos productos que no puede almacenar.",
+        "cuando la empresa aplica la técnica del \"coste máximo\", sigue el siguiente proceso: 1) diseña el producto, 2) establece el coste, y 3) determina el precio."
+      ],
+      "correcta": 2,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "16. En cuanto al proceso de creación, desarrollo y lanzamiento de nuevos productos, se puede afirmar que:",
+      "opciones": [
+        "en la etapa de generación de ideas, la empresa puede recurrir a diversas técnicas de creatividad como son: el análisis morfológico y el check list.",
+        "el proceso de difusión se divide en las siguientes fases: atención, interés, evaluación, prueba y adopción efectiva.",
+        "la aversión al riesgo es mayor en el grupo de primeros adoptantes que en grupo de mayoría tardía.",
+        "ninguna de las respuestas anteriores es correcta."
+      ],
+      "correcta": 3,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "17. Con relación a la venta personal como instrumento de comunicación, se puede afirmar que:",
+      "opciones": [
+        "al tratarse de una comunicación interpersonal existe gran inclinación a un error de código.",
+        "según el vínculo laboral con la empresa, se distinguen tres grupos de vendedores: propios, ajenos y representantes comerciales.",
+        "en la fase de persuasión destacan dos actividades: preparación del contacto y presentación de la venta.",
+        "ninguna de las respuestas anteriores es correcta."
+      ],
+      "correcta": 3,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "18. Con relación a la comunicación como instrumento del marketing-mix, se puede afirmar que:",
+      "opciones": [
+        "los fines básicos de la comunicación son: informar, promocionar y recordar.",
+        "los instrumentos de comunicación son: venta personal, promoción de ventas, relaciones públicas, publicity y marketing directo.",
+        "entre los elementos del proceso de comunicación comercial, \"interpretación\" es el proceso de traducción del mensaje recibido por el receptor.",
+        "ninguna de las respuestas anteriores es correcta."
+      ],
+      "correcta": 2,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "19. Con relación a la promoción de ventas como instrumento de comunicación, se puede afirmar que:",
+      "opciones": [
+        "la eficacia de las promociones de venta reside en que el valor añadido sea: conocido, comprendido, incentivador y posible de alcanzar para el público objetivo.",
+        "cuando un mayorista realizar promociones de venta a sus clientes, éstas se denominan promociones de venta comerciales.",
+        "las promociones de venta resultan ineficaces para premiar la lealtad hacia la marca.",
+        "las respuestas a) y b) son correctas."
+      ],
+      "correcta": 3,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "20. Con relación a la publicidad como instrumento de comunicación, se puede afirmar que:",
+      "opciones": [
+        "una ventaja de fijar los objetivos publicitarios en función de la variable ventas es que los efectos de la publicidad se manifiestan con carácter retardado en el tiempo.",
+        "el mix-publicitario se compone de cuatro grupos de decisiones: de carácter económico, sobre la creatividad del mensaje, sobre difusión de medios y sobre eficacia publicitaria.",
+        "tanto en el caso de la publicidad, en las promociones de venta como en la publicity, se emplean medios de comunicación de masas.",
+        "las respuestas b) y c) son correctas. 3"
+      ],
+      "correcta": 3,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "1. El producto aumentado o ampliado de Kotler consiste en añadir al producto esperado un conjunto de prestaciones adicionales a las que el consumidor está habituado a recibir.",
+      "opciones": [],
+      "correcta": 1,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": false
+    },
+    {
+      "pregunta": "2. La calidad latente de un producto aparece al comparar la calidad comunicada con la calidad prestada.",
+      "opciones": [],
+      "correcta": 1,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": false
+    },
+    {
+      "pregunta": "3. Las funciones básicas que debe cumplir el envase de un producto son: protección, preservación, presentación, fácil uso y economía.",
+      "opciones": [],
+      "correcta": 0,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": false
+    },
+    {
+      "pregunta": "4. En la etapa de madurez del ciclo de vida estándar del producto, la estrategia de comunicación a emplear, en sentido general, se centra en crear imagen de marca.",
+      "opciones": [],
+      "correcta": 1,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": false
+    },
+    {
+      "pregunta": "5. En la tercera etapa del modelo de Eckles para eliminación de productos, la empresa decide si elimina o no el producto débil.",
+      "opciones": [],
+      "correcta": 0,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": false
+    },
+    {
+      "pregunta": "6. En la clasificación de productos de consumidores se encuentra un grupo de productos llamados productos reguladores.",
+      "opciones": [],
+      "correcta": 1,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": false
+    },
+    {
+      "pregunta": "7. Ante la situación planteada en el “Caso 1”, se puede afirmar que la empresa está empleando una acción de cobranding.",
+      "opciones": [],
+      "correcta": 0,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": false
+    },
+    {
+      "pregunta": "8. Ante la situación planteada en el “Caso 1”, se puede afirmar que la empresa está empleando una acción de alianza de marca.",
+      "opciones": [],
+      "correcta": 1,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": false
+    },
+    {
+      "pregunta": "9. Ante la situación planteada en el “Caso 1”, se puede afirmar que la empresa está empleando una acción de licencia de marca.",
+      "opciones": [],
+      "correcta": 1,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": false
+    },
+    {
+      "pregunta": "10. Entre los factores que han favorecido el crecimiento de la marca del distribuidor, en relación con el fabricante, se encuentran: tener capacidad productiva ociosa y ser amenazado con la exclusión del lineal.",
+      "opciones": [],
+      "correcta": 0,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": false
+    },
+    {
+      "pregunta": "11. Entre las ventajas que reporta al distribuidor la comercialización de la marca del distribuidor, se encuentran: una mayor fidelización de la clientela y un mayor control de la oferta.",
+      "opciones": [],
+      "correcta": 0,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": false
+    },
+    {
+      "pregunta": "12. Ante la situación planteada en el “Caso 2” y respecto a las estrategias de marca, se puede afirmar que en el cambio 1 la empresa aplica la estrategia de extensión de marca.",
+      "opciones": [],
+      "correcta": 1,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": false
+    },
+    {
+      "pregunta": "13. Ante la situación planteada en el “Caso 2” y respecto a las estrategias de marca, se puede afirmar que en el cambio 2 la empresa aplica la estrategia de nueva marca y de rango de marcas.",
+      "opciones": [],
+      "correcta": 1,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": false
+    },
+    {
+      "pregunta": "14. Ante la situación planteada en el “Caso 2” y respecto a las estrategias de marca, se puede afirmar que en el cambio 3 la empresa aplica las estrategias de nueva marca y multimarca.",
+      "opciones": [],
+      "correcta": 0,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": false
+    },
+    {
+      "pregunta": "15. Ante la situación planteada en el “Caso 2” y con relación a las decisiones que una empresa puede llevar a cabo sobre su cartera de productos, se puede afirmar que en el cambio 1 la empresa está aumentando la profundidad de una de sus líneas y, en concreto, está ampliando dicha línea.",
+      "opciones": [],
+      "correcta": 1,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": false
+    },
+    {
+      "pregunta": "16. Ante la situación planteada en el “Caso 2” y con relación a las decisiones que una empresa puede llevar a cabo sobre su cartera de productos, se puede afirmar que en el cambio 2 la empresa está aumentando la anchura (variedad o amplitud) de su cartera de productos.",
+      "opciones": [],
+      "correcta": 0,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": false
+    },
+    {
+      "pregunta": "17. Ante la situación planteada en el “Caso 2” y con relación a las decisiones que una empresa puede llevar a cabo sobre su cartera de productos, se puede afirmar que en el cambio 3 la empresa está completando la línea de conservas de verduras.",
+      "opciones": [],
+      "correcta": 1,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": false
+    },
+    {
+      "pregunta": "18. En la etapa de generación de ideas, dentro del proceso de creación, desarrollo y lanzamiento de nuevos productos, la empresa puede recurrir a diversas técnicas de creatividad, como son: el análisis morfológico y el check list.",
+      "opciones": [],
+      "correcta": 1,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": false
+    },
+    {
+      "pregunta": "19. El proceso de difusión se divide en las siguientes fases: atención, interés, evaluación, prueba y adopción efectiva.",
+      "opciones": [],
+      "correcta": 1,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": false
+    },
+    {
+      "pregunta": "20. La aversión al riesgo es mayor en el grupo de primeros adoptantes que en el grupo de mayoría tardía.",
+      "opciones": [],
+      "correcta": 1,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": false
+    },
+    {
+      "pregunta": "1. En términos generales, tanto la variable precio como la variable producto se consideran variables tácticas.",
+      "opciones": [],
+      "correcta": 1,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": false
+    },
+    {
+      "pregunta": "2. Mientras que la demanda se considera un condicionante interno en la fijación de precios, la competencia se considera un condicionante externo.",
+      "opciones": [],
+      "correcta": 1,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": false
+    },
+    {
+      "pregunta": "3. Según los factores que afectan a la sensibilidad al precio, el consumidor es menos sensible al precio en aquellos productos que no puede almacenar.",
+      "opciones": [],
+      "correcta": 0,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": false
+    },
+    {
+      "pregunta": "4. Cuando la empresa aplica la técnica del “coste máximo”, sigue el siguiente proceso: 1) diseña el producto, 2) establece el coste, y 3) determina el precio.",
+      "opciones": [],
+      "correcta": 1,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": false
+    },
+    {
+      "pregunta": "5. El objetivo de precios llamado “maximización de la cifra de ventas” persigue maximizar la cuota de mercado en términos de unidades de venta.",
+      "opciones": [],
+      "correcta": 1,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": false
+    },
+    {
+      "pregunta": "6. El objetivo de precios basado en el beneficio y conocido como “supervivencia” es un objetivo a corto plazo.",
+      "opciones": [],
+      "correcta": 1,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": false
+    },
+    {
+      "pregunta": "7. En el objetivo de precios “explotar al máximo el mercado”, la empresa explota al máximo el potencial de compra de varios segmentos del mercado.",
+      "opciones": [],
+      "correcta": 0,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": false
+    },
+    {
+      "pregunta": "8. Los descuentos por pronto pago acumulativos premian la lealtad del consumidor.",
+      "opciones": [],
+      "correcta": 1,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": false
+    },
+    {
+      "pregunta": "9. En la estrategia de precios primados, los productos de compra habitual se pueden emplear como productos de atracción.",
+      "opciones": [],
+      "correcta": 1,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": false
+    },
+    {
+      "pregunta": "10. En las rebajas la empresa emplea el “efecto sorpresa”.",
+      "opciones": [],
+      "correcta": 1,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": false
+    },
+    {
+      "pregunta": "11. Uno de los inconvenientes del método del precio objetivo es que no tiene en cuenta la competencia.",
+      "opciones": [],
+      "correcta": 0,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": false
+    },
+    {
+      "pregunta": "12. En el “Caso 1” se está llevando a cabo una estrategia de discriminación de precios, argumentando como motivo el tiempo; es decir, se estaría aplicando una oferta.",
+      "opciones": [],
+      "correcta": 0,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": false
+    },
+    {
+      "pregunta": "13. En el “Caso 1” se está aplicando una promoción de ventas; en concreto, se está aplicando un incentivo monetario del minorista al consumidor.",
+      "opciones": [],
+      "correcta": 0,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": false
+    },
+    {
+      "pregunta": "14. En el “Caso 1” se está llevando a cabo una estrategia de discriminación de precios, argumentando como motivo “un descuento de segundo mercado”.",
+      "opciones": [],
+      "correcta": 1,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": false
+    },
+    {
+      "pregunta": "1. La franquicia de bienes se caracteriza por constituir una integración vertical administrada.",
+      "opciones": [],
+      "correcta": 1,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": false
+    },
+    {
+      "pregunta": "2. La cooperativa de consumidores se puede considerar una integración vertical administrada.",
+      "opciones": [],
+      "correcta": 1,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": false
+    },
+    {
+      "pregunta": "3. Si un fabricante adquiere la propiedad de los establecimientos minoristas que forman parte de su canal, se produce una integración vertical corporativa hacia adelante.",
+      "opciones": [],
+      "correcta": 0,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": false
+    },
+    {
+      "pregunta": "4. La función de diversificación permite adaptar los lotes de producción a los lotes de consumo.",
+      "opciones": [],
+      "correcta": 1,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": false
+    },
+    {
+      "pregunta": "5. La tienda de descuento además de seguir el régimen de venta de libre servicio, se caracteriza por ofrecer un elevado porcentaje de productos con marcas poco conocidas y por minimizar los servicios que presta al consumidor.",
+      "opciones": [],
+      "correcta": 0,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": false
+    },
+    {
+      "pregunta": "6. Los brokers y los agentes comerciales no constituyen un nivel en el canal dado que el flujo físico no pasa por ellos.",
+      "opciones": [],
+      "correcta": 1,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": false
+    },
+    {
+      "pregunta": "7. Ante la situación planteada en el “Caso 1”, se puede afirmar que el fabricante está empleando un canal de distribución con dimensión vertical 3.",
+      "opciones": [],
+      "correcta": 0,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": false
+    },
+    {
+      "pregunta": "8. Ante la situación planteada en el “Caso 1”, se puede afirmar que el fabricante está empleando un sistema de distribución multicanal. Uno de los canales tiene una dimensión horizontal 1 a nivel de agente comercial, 5 a nivel mayorista y 20 a nivel minorista.",
+      "opciones": [],
+      "correcta": 1,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": false
+    },
+    {
+      "pregunta": "9. Ante la situación planteada en el “Caso 1”, se puede afirmar que la cadena de minoristas patrocinada por un mayorista se define como una forma de integración vertical administrada.",
+      "opciones": [],
+      "correcta": 1,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": false
+    },
+    {
+      "pregunta": "10. Si la empresa busca tener un elevado control de su política comercial, la distribución intensiva es poco adecuada.",
+      "opciones": [],
+      "correcta": 0,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": false
+    },
+    {
+      "pregunta": "11. La distribución selectiva implica ofrecer los productos en un número de puntos de venta menor que en la distribución intensiva, pero mayor que en la distribución exclusiva.",
+      "opciones": [],
+      "correcta": 0,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": false
+    },
+    {
+      "pregunta": "12. La distribución exclusiva geográfica consiste en ofrecer el producto en un único punto de venta dentro de un área geográfica.",
+      "opciones": [],
+      "correcta": 0,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": false
+    },
+    {
+      "pregunta": "13. Los factores que condicionan la elección del canal de distribución son: características de los consumidores, características del producto, características de la competencia y control del programa de marketing-mix.",
+      "opciones": [],
+      "correcta": 1,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": false
+    },
+    {
+      "pregunta": "14. La etapa de madurez del ciclo de vida estándar del producto se relaciona con la distribución selectiva.",
+      "opciones": [],
+      "correcta": 1,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": false
+    },
+    {
+      "pregunta": "15. En la estrategia de comunicación de presión (o estrategia push) los esfuerzos de comunicación del fabricante se concentran sobre los intermediarios, persiguiendo la colaboración voluntaria de los mismos.",
+      "opciones": [],
+      "correcta": 0,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": false
+    },
+    {
+      "pregunta": "16. Los productos de compra reflexiva deben colocarse distantes entre sí dentro del establecimiento para incentivar a los consumidores a recorrer más superficie de venta.",
+      "opciones": [],
+      "correcta": 1,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": false
+    },
+    {
+      "pregunta": "17. Un conflicto entre un supermercado de un canal y una tienda de conveniencia de otro canal implicaría un conflicto vertical intertipo.",
+      "opciones": [],
+      "correcta": 1,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": false
+    },
+    {
+      "pregunta": "18. Cuando un fabricante emplea el poder de experto con sus intermediarios, se produce una integración vertical administrada.",
+      "opciones": [],
+      "correcta": 0,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": false
+    },
+    {
+      "pregunta": "1. Los fines básicos de la comunicación son: informar, promocionar y recordar.",
+      "opciones": [],
+      "correcta": 1,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": false
+    },
+    {
+      "pregunta": "2. Los instrumentos de comunicación son: venta personal, promoción de ventas, relaciones públicas, publicity y marketing directo.",
+      "opciones": [],
+      "correcta": 1,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": false
+    },
+    {
+      "pregunta": "3. Entre los elementos del proceso de comunicación comercial, “interpretación” es el proceso de traducción del mensaje recibido por el receptor.",
+      "opciones": [],
+      "correcta": 0,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": false
+    },
+    {
+      "pregunta": "4. En la venta personal, al tratarse de una comunicación interpersonal, existe gran inclinación a un error de código.",
+      "opciones": [],
+      "correcta": 1,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": false
+    },
+    {
+      "pregunta": "5. Con relación a la venta personal y según el vínculo laboral con la empresa, se distinguen tres grupos de vendedores: propios, ajenos y representantes comerciales.",
+      "opciones": [],
+      "correcta": 1,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": false
+    },
+    {
+      "pregunta": "6. En la fase de persuasión del proceso de venta personal destacan dos actividades: preparación del contacto y presentación de la venta.",
+      "opciones": [],
+      "correcta": 1,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": false
+    },
+    {
+      "pregunta": "7. Un supermercado comunica el día 22/01/11 que desde el 22/01/11 al 4/02/11 por la compra de 2 botes de ColaCao Classic se recibirá́ un descuento directo sobre el precio del 10%. Este supermercado está aplicando una promoción de ventas, en concreto un incentivo monetario del minorista al consumidor.",
+      "opciones": [],
+      "correcta": 0,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": false
+    },
+    {
+      "pregunta": "8. La eficacia de las promociones de venta reside en que el valor añadido sea: conocido, comprendido, incentivador y posible de alcanzar para el público objetivo.",
+      "opciones": [],
+      "correcta": 0,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": false
+    },
+    {
+      "pregunta": "9. Cuando un mayorista realizar promociones de venta a sus",
+      "opciones": [],
+      "correcta": 0,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": false
+    },
+    {
+      "pregunta": "10. Las promociones de venta resultan ineficaces para premiar la lealtad hacia la marca.",
+      "opciones": [],
+      "correcta": 1,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": false
+    },
+    {
+      "pregunta": "11. Una ventaja de fijar los objetivos publicitarios en función de la variable ventas es que los efectos de la publicidad se manifiestan con carácter retardado en el tiempo.",
+      "opciones": [],
+      "correcta": 1,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": false
+    },
+    {
+      "pregunta": "12. El mix-publicitario se compone de cuatro grupos de decisiones: decisiones de carácter económico, decisiones sobre la creatividad del mensaje, decisiones sobre difusión de medios y decisiones sobre eficacia publicitaria.",
+      "opciones": [],
+      "correcta": 0,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": false
+    },
+    {
+      "pregunta": "13. Tanto en el caso de la publicidad, en las promociones de venta como en la publicity, se emplean medios de comunicación de masas.",
+      "opciones": [],
+      "correcta": 0,
+      "tipo": "V/F",
+      "vf_detectado_enunciado": false
+    },
+    {
+      "pregunta": "1. Con relación a la dirección de marketing, se puede afirmar que:",
+      "opciones": [
+        "entre los cambios fundamentales de la dirección de marketing, según Kotler y Keller, están desarrollando las empresas, se encuentra el de confiar en fortalezas pasadas en lugar de descubrir otras fortalezas.",
+        "Kotler y Keller definen dirección de marketing como el arte y la ciencia de seleccionar los mercados objetivo y lograr conquistar, mantener e incrementar el número de clientes mediante la generación, la comunicación y la entrega de un mayor valor para el cliente.",
+        "una de las tareas básicas de la dirección de marketing consiste en analizar las necesidades del mercado, pero no de la propia empresa, dado que de esto se encarga la dirección financiera.",
+        "todas las respuestas anteriores son correctas."
+      ],
+      "correcta": 1,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "2. Con relación al producto como variable comercial, se puede afirmar que:",
+      "opciones": [
+        "entre los elementos constitutivos del producto, las características funcionales son todos aquellos servicios y/o bienes que se incorporan al producto y que suponen un valor añadido para el consumidor.",
+        "entre las características de los servicios se encuentra la caducidad, dado que los servicios no se pueden almacenar para venderse o usarse posteriormente.",
+        "en la clasificación de productos de consumidores, se encuentra un grupo de productos llamados productos de comparación.",
+        "las respuestas b) y c) son correctas."
+      ],
+      "correcta": 0,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "3. Con relación al producto como variable comercial, se puede afirmar que:",
+      "opciones": [
+        "entre las principales funciones de la garantia destacan: ofrecer seguridad al consumidor, constituir un elemento de protección frente a defectos de fabricación y poder ser utilizada como arma de comunicación por la empresa.",
+        "las dimensiones del producto son: diseño, estilo, color, calidad, garantía, envase, empaque, etiqueta, marca y precio.",
+        "el proceso de elección del posicionamiento para un nuevo producto se desglosa en cinco fases: atributos principales, puntuación de los atributos, posicionamiento de las marcas competidoras, posicionamiento para el nuevo producto y presentación del posicionamiento elegido.",
+        "las respuestas a) y c) son correctas"
+      ],
+      "correcta": 3,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "4. Con relación al producto como variable comercial, se puede afirmar que:",
+      "opciones": [
+        "si una empresa decide marcar los productos puede optar entre la marca propia, la alianza de marca o la licencia de marca.",
+        "uno de los motivos por los cuales al fabricante le puede interesar vender sin marca al distribuidor es porque tenga déficit de capacidad productiva.",
+        "entre las marcas que pueden ser utilizadas por varias empresas, la marca de garantía se utiliza para distinguir en el mercado los productos de los miembros de la asociación titular de la marca de los productos de otras empresas.",
+        "todas las respuestas anteriores son correctas."
+      ],
+      "correcta": 0,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "5. La cartera de productos de la empresa BURBUJAS está formada inicialmente por una única linea de ropa infantil compuesta por pantalones para niños bajo la marca TÚ. Sin embargo, a lo largo del tiempo y por el orden establecido, su cartera de productos sufre los siguientes cambios: Cambio 1: la empresa añade a su linea de ropa infantil, bañadores para niños bajo la marca SOL. Cambio 2: la empresa añade a su cartera una nueva linea de complementos, incorporando zapatillas de baño para niños bajo la marca MAR. Cambio 3: la empresa añade a su línea de complementos toallas de baño bajo la marca PLAYA. Ante la anterior situación, en materia de marcas, se puede decir que:",
+      "opciones": [
+        "En el cambio 1 la empresa aplica las siguientes estrategias de marca: marca nueva, multimarca. Además dentro de multimarca estamos ante un caso de rango de marcas.",
+        "En el cambio 2 la empresa aplica las siguientes estrategias de marca: extensión de línea y multimarca.",
+        "En el cambio 3 la empresa aplica una estrategia de marcas individuales y corporativas y en consecuencia, utiliza una alianza de marca.",
+        "Todas las respuestas anteriores son correctas"
+      ],
+      "correcta": 0,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "6. Dado el mismo enunciado que aparece en la pregunta anterior y con relación a las decisiones que una empresa puede llevar a cabo sobre su cartera de productos, se puede decir que:",
+      "opciones": [
+        "En el cambio 1 la empresa está ampliando su línea de ropa infantil hacia arriba, dado que esta incorporando nuevos productos, pero dirigidos al segmento masculino (niños).",
+        "En el cambio 2 la empresa esta aumentando la anchura (variedad o amplitud) y longitud de su cartera de productos, dado que está incluyendo una nueva línea.",
+        "En el cambio 3 la empresa está completando su línea de complementos y por tanto aumentando la profundidad de dicha línea.",
+        "Las respuestas b) y c) son correctas"
+      ],
+      "correcta": 3,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "7. Con relación a la gestión de la cartera de productos, se puede afirmar que:",
+      "opciones": [
+        "entre las distintas estrategias que la empresa puede emplear en la etapa de madurez para alargar la permanencia de su producto en el mercado, se encuentran las estrategias centradas en el producto. Estas implican llevar a cabo modificaciones en el producto para estimular su venta",
+        "el proceso de difusión se centra en el mercado y mide el tiempo que requiere la expansión de una nueva ides desde su fuente de creación hasta su usuario final o adoptante.",
+        "entre las decisiones que una empresa puede tomar sobre la profundidad de sus líneas, una empresa puede completar la profundidad de una de sus líneas de dos formas:",
+        "las respuestas b) y c) son correctas"
+      ],
+      "correcta": 0,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "8. Con relación al proceso de creación, desarrollo y lanzamiento de nuevos productos, se puede afirmar que:",
+      "opciones": [
+        "el diagrama de burbujas riesgo-recompensa, que se encuentra dentro de la etapa de análisis económico, es una herramienta para el análisis global de nuevos productos y se emplea en la etapa de análisis económico, en el cuadrante A (cuadrante superior izquierdo) se localizan los productos estrella potenciales.",
+        "entre las ventajas de llevar a cabo un test de concepto se encuentran: probar planes de marketing alternativos, descubrir fallos en el producto y contrastar las previsiones realizadas en la etapa de análisis económico sobre ventas y beneficios",
+        "la identificación de necesidades y problemas es una técnica que se aplica en la etapa de análisis económico",
+        "las respuestas a) y c) son correctas"
+      ],
+      "correcta": 0,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "9. Con relación a las estrategias de precios, se puede afirmar que:",
+      "opciones": [
+        "el tiempo puede ser un motivo de discriminación de precios dado que el momento en que se consume o disfruta un producto puede constituir un elemento de decisión para el consumidor",
+        "la estrategia de precios en dos partes se emplea con productos complementarios, a los que se fija un precio elevado, cuyo uno es absolutamente necesario para el funcionamiento correcto del producto principal, al que se le fija un preció relativamente bajo",
+        "los descuentos funcionales consisten en aplicar un precio al producto dependiendo del fin social del mismo.",
+        "las respuestas a) y c) son correctas"
+      ],
+      "correcta": 0,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "10. Con relación al precio como variable comercial, se puede afirmar que:",
+      "opciones": [
+        "el objetivo de precios centrado en las ventas que persigue maximizar el volumen de ventas requiere de una demanda muy elástica para que se pueda aplicar.",
+        "cuando una empresa seguidora persigue un objetivo de alineación de precios, las empresas líderes marcan las subidas y bajadas del precio del producto en ese mercado",
+        "la estrategia de precios del lote consiste es fijar un precio único a un conjunto de productos distintos pero complementarios, de forma que dicho precio sea estrictamente inferior a la suma de los precios individuales",
+        "las respuestas a) y c) son correctas"
+      ],
+      "correcta": 0,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "11. Con relación a los objetivos que una empresa puede perseguir en materia de precios, se puede afirmar que:",
+      "opciones": [
+        "dentro de los objetivos centrades en la competencia in encuentra el objetivo de estabilización de precios que persigue la igualdad de precios entre todas las empresas competidoras",
+        "dentro de los objetivos centrados en las ventas se encuentra el objetivo de \"explotar\" al máximo el mercado que consiste en maximizar la cuota de mercado fijando el precio más bajo posible.",
+        "dentro de los objetivos centrados en el beneficio se encuentra el objetivo de tasa de rentabilidad suficiente que consiste en fijar un precio tal que, para un nivel lado de actividad, a la empresa le asegure un rendimiento razonable sobre la inversión realizada",
+        "todas las respuestas anteriores son correctas"
+      ],
+      "correcta": 0,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "13. Con relación al precio como variable comercial, se puede decir que: ",
+      "opciones": [
+        "en cuanto a les diferentes comportamientos competitivos que se pueden dar se \nencuentran: el independiente, el dependiente y el anticipativo.",
+        "teniendo en cuenta los factores que afectan a la sensibilidad al precio, el comprador es \nmenos sensibles al precio cuando el producto es utilizado como complemento de otros \ncomprados previamente.",
+        " a la hora de fijar el precio del producto habrá que tener en cuenta, las siguientes \nconsideraciones sobre los costes la evolución de los costes respecto al volumen de \nproducción, la evolución de los costes respecto al volumen de producción acumulada y \nla sensibilidad de la empresa respecto al precio o al volumen.",
+        "las respuestas b) y c) son correctas"
+      ],
+      "correcta": 3,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "14. Con respecto a la elección del canal de distribución, se puede afirmar que:",
+      "opciones": [
+        "los factores que condicionan la elección del canal de distribución son: las características de los consumidores, del producto, de la competencia y del entorno.",
+        "el criterio de control proponen elegir un canal directo si el volumen de ventas es muy elevado y un canal largo si el volumen de ventas as muy reducido.",
+        "ente los objetivos de la distribución, el objetivo de cobertura de mercado implica garantizar el abastecimiento de los productos en el mercado objetivo seleccionado, pudiendo elegir entre tres alternativas distribución intensiva, exclusiva o selectiva.",
+        "las respuestas a) y c) son correctas"
+      ],
+      "correcta": 3,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "15. Con respecto a las actividades de merchandising, se puede afirmar que:",
+      "opciones": [
+        "los aspectos fundamentales son: la disposición del punto de venta, la animación del punto de venta y la gestión del espacio en el lineal.",
+        "el itinerario seguido por los consumidores dentro del establecimiento, viene en gran parte determinado por: la ubicación de las puertas de entrada y salida, la colocación de los productos en las estanterías y la existencia de medios físicos para activar las ventas",
+        "la disposición en espiga es una forma de colocar el mobiliario en el punto de venta que permite aprovechar al máximo la superficie de venta.",
+        "todas las respuestas anteriores son correctas"
+      ],
+      "correcta": 3,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "16. Con respecto a la distribución como variable de marketing, se puede afirmar que:",
+      "opciones": [
+        "en un canal de distribución los flujos que, con carácter general, suelen aparecer, se pueden agrupar en: flujo físico, flujo de control, flujo financiero y flujo de información.",
+        "una forma de evitar o minimizar la aparición de conflictos en el canal de distribución es por medio del establecimiento de relaciones de poder entre los miembros del canal, como sucede en los sistemas de integración vertical administrada,",
+        "para la evaluación de las alternativas de canal, la empresa puede recurrir a los criterios económicos, de control y adaptativos, así como a los métodos de puntuación de factores compensatorios y no compensatorios",
+        "las respuestas b) y c) son correctas."
+      ],
+      "correcta": 3,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "17. Con relación a la dinámica de los canales de distribución, se puede afirmar que:",
+      "opciones": [
+        "una empresa está utilizando un sistema de distribución multicanal cuando emplea dos o más intermediarios, simultáneamente, del mismo nivel.",
+        "en el proceso de elección del canal de distribución, una vez que la empresa ha encontrado la alternativa o alternativas de canal que cumple mejor con los requisitos marcados, debe proceder a seleccionar los intermediarios, motivarlos y evaluarlos.",
+        "la cadena sucursalista es un ejemplo de integración vertical contractual",
+        "las respuestas b) y c) son correctas."
+      ],
+      "correcta": 1,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "18. Con relación a la comunicación como instrumento del marketing-mix, se puede afirmar que:",
+      "opciones": [
+        "los fines básicos de la comunicación son: informar, promocionar y recordar.",
+        "los instrumentos de comunicación son venta personal, promoción de ventas, relaciones públicas, publicity y marketing directo.",
+        "Entre los elementos del proceso de comunicación comercial, \"interpretación\" es el proceso de traducción del mensaje recibido por el receptor",
+        "ninguna de las respuestas anteriores es correcta"
+      ],
+      "correcta": 2,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "19. Con relación a la venta personal como instrumento de comunicación, se puede afirmar que:",
+      "opciones": [
+        "al tratarse de una comunicación interpersonal existe gran inclinación a un error de código.",
+        "según el vínculo laboral con la empresa, se distinguen tres grupos de vendedores: propios, ajenos y representantes comerciales.",
+        "en la fase de persuasión destacan dos actividades: preparación del contacto y presentación de la venta.",
+        "ninguna de las respuestas anteriores es correcta."
+      ],
+      "correcta": 3,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "20. Con relación a la promoción de ventas como instrumento de comunicación, se puede afirmar que:",
+      "opciones": [
+        "la eficacia de las promociones de venta reside en que el valor añadido sea: conocido, comprendido, incentivador y posible de alcanzar para el público objetivo.",
+        "cuando un mayorista realizar promociones de venta a sus cliente, éstas se denominan promociones de venta comerciales.",
+        "las promociones de venta resultan ineficaces para premiar la lealtad hacia la marca.",
+        "las respuestas a) y b) son correctas."
+      ],
+      "correcta": 3,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "21. Con relación a la publicidad como instrumento de comunicación, se puede afirmar que:",
+      "opciones": [
+        "una ventaja de fijar los objetivos publicitarios en función de la variable ventas es que los efectos de la publicidad se manifiestan con carácter retardado en el tiempo.",
+        "el mix-publicitario se compone de cuatro grupos de decisiones: de carácter económico, sobre la creatividad del mensaje, sobre difusión de medios y sobre eficacia publicitaria.",
+        "tanto en el caso de la publicidad, en las promociones de venta como en la publicity, se emplean medios de comunicación de masas.",
+        "las respuestas b) y c) son correctas."
+      ],
+      "correcta": 1,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "1. Una empresa fabricante que va a lanzar un nuevo producto ha detectado que en el mercado que se dirige se encuentra segmentado, y que cada segmento de consumidores presenta una elasticidad demanda-precio distinta. Bajo este supuesto se puede afirmar que:",
+      "opciones": [
+        "Como el mercado está segmentado y las elasticidades demanda precio de dichos segmentos diferentes la empresa podría emplear una estrategia de discriminación de precios.",
+        "La empresa podrá aplicar una estrategia de precios para productos cautivos, incentivando la venta del producto en ambos segmentos.",
+        "La empresa podría llevar a cabo una estrategia de precio de lote, incentivando así la venta del producto en ambos segmentos del mercado.",
+        "Las respuestas a) y c) son correctas"
+      ],
+      "correcta": 0,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "2. Con relación a los objetivos que la empresa puede perseguir en materia de precios, se puede afirmar que:",
+      "opciones": [
+        "Dentro de los objetivos centrados en el beneficio se encuentra el objetivo de tasa de rentabilidad suficiente que consiste en fijar un precio tal que, para un nivel dado de actividad a la empresa le asegure rendimiento razonable sobre la inversión realizada.",
+        "Dentro de los objetivos centrados en la competencia de encuentra el objetivo de estabilización de precios que persigue la igualdad de precios entre todas las empresas competidoras.",
+        "Dentro de los objetivos centrados en las ventas se encuentra el objetivo de explotar al máximo el mercado que consiste en maximizar la cuota de mercado fijando el precio más bajo posible.",
+        "Todas las anteriores son correctas"
+      ],
+      "correcta": 0,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "3. Con relación al precio como variable comercial, se puede decir que:",
+      "opciones": [
+        "En cuanto a los diferentes comportamientos competitivos se pueden dar se encuentran: el independiente, dependiente y anticipativo.",
+        "Teniendo en cuenta los factores que afectan a la sensibilidad del precio, el comprador es menos sensible al precio cuando el producto utilizado como complemento de otros es comprado previamente.",
+        "A la hora de fijar el precio del producto habrá que tener en cuenta las siguientes consideraciones sobre los costes; la evolución de costes respecto al volumen de producción, la evolución de los costes respecto al volumen de producción acumulada y la sensibilidad de la empresa respecto al precio o volumen.",
+        "Las respuestas b) y c) son correctas"
+      ],
+      "correcta": 1,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "4. Con relación al precio como variable comercial, se puede afirmar que:",
+      "opciones": [
+        "El objetivo de precios centrado en las ventas que persigue maximizar el volumen de ventas requiere de una demanda muy elástica ara que se pueda aplicar.",
+        "Cuando una empresa seguidora persigue el objetivo de alineación de precios, las empresas marcan subidas y bajadas del producto en ese mercado.",
+        "La estrategia de precios de lote consiste en fijar un precio único a un conjunto de productos distintos pero complementarios, de forma que dicho precio sea estrictamente inferior a la suma de los precios individuales.",
+        "Las respuestas a) y c) son correctas"
+      ],
+      "correcta": 3,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "5. Con relación a las estrategias de precio, se puede afirmar que:",
+      "opciones": [
+        "La estrategia de precios en dos partes se emplea con productos complementarios, a los que se fija un precio elevado, cuyo uso es absolutamente necesario para el funcionamiento correcto del producto principal, al que se le fija un precio relativamente bajo.",
+        "El tiempo puede ser un motivo de discriminación de precios dado que el momento en que se consume o disfruta un producto puede constituir un elemento de decisión para el consumidor.",
+        "Los descuentos funcionales consisten en aplicar un precio al producto dependiendo del fin social del mismo",
+        "Las respuestas b) y c) son correctas"
+      ],
+      "correcta": 1,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "6. Con relación a las estrategias de precios, se puede afirmar que:",
+      "opciones": [
+        "Una estrategia de precios similares seria adecuada para alcanzar un objetivo de supervivencia",
+        "La estrategia de precio psicológico “precio impar” está relacionada con los objetivos de precios de maximización de cifra de ventas y precio ético",
+        "La estrategia de precio de introducción es recomendable aquellos nuevos productos que constituyan una auténtica novedad y presenten demanda sensible al precio",
+        "Ninguna de las respuestas anteriores es cierta"
+      ],
+      "correcta": 2,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "7. Con respecto a la distribución como variable comercial, se puede afirmar que:",
+      "opciones": [
+        "Los comisionistas y minoristas son miembros intermediarios y participantes del canal de distribución, aunque no posean la propiedad del producto",
+        "Dependiendo de la estrategia de ventas de la empresa, los productos que forman parte de la partera pueden desempeñar diversas funciones, pudiendo distinguir entre: productos cabeza de línea, productos reguladores, productos de atracción y productos que prepara el futuro.",
+        "Entre las ventajas del comercio electrónico frente al tradicional se encuentra el tener acceso a un surtido más amplio",
+        "Las respuestas b) y c) son correctas"
+      ],
+      "correcta": 2,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "8. Con respecto a la elección del canal de distribución, se puede afirmar que:",
+      "opciones": [
+        "Los factores que condicionen la elección del canal de distribución son: las características de los consumidores, del producto, de la competencia y del entorno",
+        "El criterio de control propone elegir un canal directo si el volumen de ventas es muy elevado y un canal largo si el volumen de ventas es muy reducido",
+        "Entre los objetivos de la distribución, el objetivo de cobertura de mercado implica garantizar el abastecimiento de los productos en el mercado objetivo seleccionado, pudiendo elegir entre tres alternativas: distribución intensiva, exclusiva o selectiva",
+        "Las respuestas a) y c) son correctas"
+      ],
+      "correcta": 3,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "9. Con respecto a la distribución como variable comercial, se puede afirmar que:",
+      "opciones": [
+        "En una franquicia donde el franquiciador es un fabricante y el franquiciado es un minorista, se está produciendo una integración vertical contractual",
+        "En la integración vertical corporativa se logra cooperación de los miembros de distinto tipo del canal de distribución gracias a la propiedad total o mayoritaria que uno de ellos tiene sobre el resto.",
+        "En la estrategia de comunicación Pull (o de aspiración) el objetivo del fabricante es suscitar la cooperación voluntaria de los intermediarios sobre los que actúa",
+        "Las respuestas a) y b) son correctas"
+      ],
+      "correcta": 3,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "10. Con respecto a las actividades de merchandaising se puede afirmar que:",
+      "opciones": [
+        "La disposición en espiga es una forma de colocar el mobiliario en el punto de venta que permite aprovechar al máximo la superficie de venta",
+        "Los aspectos fundamentales son: La disposición en punto de venta, la animación del punto de venta y gestión del espacio lineal.",
+        "Viene en gran parte determinado por la ubicación de las puertas de entrada y salida, la colocación de las estanterías y existencia de medios físicos para activar las ventas",
+        "Todas son correctas"
+      ],
+      "correcta": 1,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "11. Con respecto a la distribución como variable de marketing, se puede afirmar que:",
+      "opciones": [
+        "En un canal de distribución los flujos que, con carácter general, suelen aparecer, se pueden agrupar en: flujo físico, flujo de control, flujo financiero y flujo de información.",
+        "Una forma de evitar o minimizar la aparición de conflictos en el canal de distribución es por medio del establecimiento de relaciones de poder entre los miembros del canal, como sucede en los sistemas de integración vertical administrada",
+        "Para la evaluación de las alternativas de canal, la empresa puede recurrir a los criterios económicos, de control y adaptativos; así como a los métodos de puntuación de factores compensatorios y no compensatorios",
+        "Las respuestas b) y c) son correctas"
+      ],
+      "correcta": 2,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "12. Con respecto a la distribución como variable de marketing, se puede afirmar que:",
+      "opciones": [
+        "La dimensión vertical o longitud de un canal viene determinada por el número de intermediarios del mismo nivel que intervienen en el canal",
+        "Las funciones que se deben llevar a cabo para la correcta distribución de los productos al consumidor final son: transporte, diversificación, fraccionamiento, almacenamiento y financiación",
+        "En un canal de distribución si se produce un conflicto entre un hipermercado y una tienda de descuento, se está produciendo un conflicto vertical intertipo",
+        "Las respuestas b) y c) son correctas"
+      ],
+      "correcta": 1,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "13. Con relación a la dinámica de los canales de distribución, se puede afirmar que:",
+      "opciones": [
+        "En el proceso de elección del canal de distribución, una vez que la empresa seleccione alternativa o alternativas de canal que cumple mejor con los requisitos marcados, tendrá que seleccionar los intermediarios, motivarlos y evaluarlos",
+        "Una empresa está utilizando un sistema de distribución multicanal cuando utiliza intermediarios, simultáneamente, del mismo nivel",
+        "La cadena sucursalsta es un ejemplo de integración vertical contractual",
+        "Las respuestas a) y c) son correctas"
+      ],
+      "correcta": 0,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "14. Con relación al producto como variable comercial, se puede afirmar que:",
+      "opciones": [
+        "Entre los elementos constitutivos del producto, las características funcionales son todos aquellos servicios y/o bienes que se incorporan al producto y que suponen un valor añadido para el consumidor.",
+        "Entre las características de los servicios se encuentra la caducidad, dado que los servicios no se pueden almacenar para venderse o usarse posteriormente",
+        "En la clasificación de productos de consumidores, se encuentra un grupo de productos llamados productos de comparación.",
+        "Las respuestas b) y c) son correctas"
+      ],
+      "correcta": 3,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "15. Con relación al producto como variable comercial, se puede afirmar que:",
+      "opciones": [
+        "Uno de los motivos por los cuales al fabricante le puede interesar vender sin marca al distribuidor es porque tenga déficit de capacidad productiva",
+        "Entre las marcas que pueden ser utilizadas por varias empresas, la marca de garantía se utiliza para distinguir en el mercado los productos de los miembros de la asociación titular de la marca de los productos de otras empresas",
+        "Si una empresa decide marcar los productos puede optar entre la marca propia, la alianza de marca o la licencia de marca",
+        "Todas las respuestas anteriores son correctas"
+      ],
+      "correcta": 2,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "16. Con relación al producto como variable comercial, se puede afirmar que:",
+      "opciones": [
+        "Entre las principales funciones de la garantía destacan: ofrecer seguridad al consumidor constituir un elemento de protección frente a defectos de fabricación y poder ser utilizada como arma de comunicación por la empresa",
+        "Las dimensiones del producto son: diseño, estilo, color, calidad, garantía, envase, empaque, etiqueta, marca y precio",
+        "El proceso de elección del posicionamiento para un nuevo producto se desglosa en cinco fases: atributos principales, puntuación de los atributos, posicionamiento de las marcas competidoras, posicionamiento para el nuevo producto y presentación del posicionamiento elegido",
+        "Las respuestas a) y c) son correctas"
+      ],
+      "correcta": 3,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "17. Con relación a la dirección de marketing, se puede afirmar que:",
+      "opciones": [
+        "Kotler y Keller definen dirección de marketing como el arte y la ciencia de seleccionar los mercados objetivo y lograr conquistar, mantener e incrementar el número de clientes mediante la generación, la comunicación y la entrega de un mayor valor para el cliente",
+        "Entre los cambios fundamentales de la dirección de marketing, según Kotler y Keller, que están desarrollando las empresas, se encuentra el de confiar en fortalezas pasadas en lugar de descubrir otras fortalezas",
+        "Una de las tareas básicas de la dirección de marketing consiste en analizar las necesidades del mercado, pero no de la propia empresa, dado que de esto se encarga la dirección financiera",
+        "Todas las respuestas anteriores son correctas"
+      ],
+      "correcta": 0,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "18. Con relación a las estrategias de marca, se puede afirmar que:",
+      "opciones": [
+        "La estrategia de extensión de línea, entre sus ventajas se encuentra el facilitar la introducción de nuevos productos, reduciendo los costes de lanzamiento y agilizando su adopción",
+        "La estrategia de segundas marcas consiste en lanzar el mercado una versión más cara de su producto que ya existe con una marca existente",
+        "La estrategia de rango de marcas es un caso particular de la estrategia multimarca y tiene lugar cuando dentro de una misma categoría existen varias familias de productos y cada una de ellas posee una marca diferente",
+        "Las respuestas a) y c) son correctas"
+      ],
+      "correcta": 3,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "19. Con relación a las dimensiones del producto, se puede afirmar que:",
+      "opciones": [
+        "El estilo es un concepto más reducido que el del diseño, ya que se refiere esencialmente a la apariencia del producto",
+        "Los colores pueden influir en el proceso de decisión de compra del consumidor al poder encerrar un cierto simbolismo e incluso transmitir emociones",
+        "Entre los distintos tipos de pruebas o test a los que se pueden someter a los envases se encuentran: el test de ingeniería, el test industrial, el test de distribución y el test de lanzamiento",
+        "Las respuestas a) y b) son correctas"
+      ],
+      "correcta": 3,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "20. Con relación al proceso de creación, desarrollo y lanzamiento de nuevos productos, se puede afirmar que:",
+      "opciones": [
+        "En la etapa de test de mercado, el test de mercado controlado requiere menor tiempo para su realización y es más difícil que los competidores interfieran en él que en el test de mercado convencional",
+        "En la etapa de test de producto, el test de O’Meara implica la realización de las siguientes tres etapas: seleccionar a los expertos que evalúan los nuevos productos, determinar los factores sobre los que se evalúan; y establecer la calificación para la evaluación de cada nuevo producto",
+        "La prueba funcional que se realiza en la etapa de test de concepto permite a la empresa verificar el grado de adecuación entre la idea y el concepto de producto",
+        "Las respuestas b) y c) son correctas"
+      ],
+      "correcta": 0,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "1. Con relación a la venta personal como variable de comunicación se puede decir que:",
+      "opciones": [
+        "La actividad de aproximación que se encuentra en la segunda fase del proceso de venta personal, consiste en preparar la entrevista en función de los objetivos que se persiguen y atendiendo a distintos tipos de clientes potenciales que se pueden encontrar.",
+        "Las preguntas de control que realiza el vendedor durante la actividad de prospección les permite clasificar a los clientes en función de sus rasgos de personalidad",
+        "En la dirección de ventas se distinguen 3 funciones principales: preparación, persuasión y transacción",
+        "Sus ventajas residen en que la venta personal es: flexible, interactiva, selectiva y puede ejercer un ciclo comercial completo"
+      ],
+      "correcta": 3,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "2. En cuanto a la comunicación como variable comercial, se puede decir que:",
+      "opciones": [
+        "La venta personal es una forma de comunicación interpersonal en la que se produce una comunicación oral y bidireccional entre el vendedor- fabricante o intermediario y/o comprador real o potencial",
+        "La promoción de ventas se basa en incentivos a c/p que refuerzan y vigorizan la oferta normal de la empresa, cuyo propósito es tener un impacto directo sobre el comportamiento de los clientes de la empresa, con la finalidad última de incrementar las ventas, beneficios o cuota de mercado del producto promocionado al menos en el c/p",
+        "La utilización de los medios de comunicación de masas dado que se dirigen a públicos amplios y no delimitados, confieren a la publicidad el carácter de comunicación impersonal",
+        "Todas las respuestas anteriores son correctas"
+      ],
+      "correcta": 3,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "3. En cuanto a la publicidad como variable de comunicación, se puede decir que:",
+      "opciones": [
+        "Con respecto a los objetivos publicitarios, lo más recomendable es fijarlos en términos de la variable ventas dado que es sencillo cuantificar el incremento que estas sufren gracias a la campaña de comunicación",
+        "Las decisiones que se han de desarrollar dentro de la actividad publicitaria se pueden agrupar en : decisiones de carácter económico, decisiones sobre la planificación de medios publicitarios, decisión sobre la difusión de la campaña y decisiones sobre la eficiencia de la comunicación",
+        "El procedimiento a seguir en la elaboración del mensaje de una campaña publicitaria es primero, determinar el o los objetivos publicitarios, segundo, determinar qué se dice o el mensaje publicitario y tercero, determinar cómo se dice o el estilo publicitario",
+        "Todas las respuestas anteriores son correctas"
+      ],
+      "correcta": 2,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "4. En cuanto a la promoción de ventas como variable de la comunicación de puede decir que:",
+      "opciones": [
+        "Para que una promoción de ventas sea eficaz, el valor añadido a la oferta debe ser conocido, comprendido, incentivante y posible de alcanzar por el público objetivo",
+        "Si un fabricante y minorista llevan a cabo conjuntamente una promoción de ventas dirigidas al consumidor final, se trata de una promoción de ventas integradas horizontalmente",
+        "Las promociones comerciales son aquellas que realizan los fabricantes, mayoristas y minoristas hacia el consumidor final",
+        "Todas las respuestas anteriores son correctas"
+      ],
+      "correcta": 0,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "5. En cuanto a las relaciones publicas como variable de comunicación se puede decir que:",
+      "opciones": [
+        "Tanto el patrocinio como el mecenazgo son formas de “comunicación por acción” pero el mecenazgo busca revalorizar su imagen comercial frente a la imagen social perseguida por el patrocinio",
+        "Alguna de las características de las relaciones publicas son: 1. No hay proposición de venta directa, pero si indirecta, 2. Baja credibilidad del mensaje, 3. Se dirige a un público homogéneo",
+        "La comunicación por acción y la publicity son algunas de las técnicas de las relaciones publicas en las que el medio de comunicación empleado es el personal",
+        "Ninguna de las respuestas anteriores es correcta"
+      ],
+      "correcta": 3,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "6. En cuanto a las variables de comunicación se puede decir que:",
+      "opciones": [
+        "El marketing directo implica el uso de uno o más medios publicitarios y permite obtener una respuesta medible y/o una transacción en un determinado lugar",
+        "El producto placement consiste en utilizar como forma de pago del espacio/tiempo empleado en los medios de televisión, los productos de la empresa anunciante, es decir, consiste en un trueque",
+        "Una de las funciones del marketing directo es maximizar la eficacia de los contactos con los clientes",
+        "Las respuestas a) y c) son correctas"
+      ],
+      "correcta": 3,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "7. Con relación a los métodos de fijación de precios se puede decir que:",
+      "opciones": [
+        "Uno de los inconvenientes del método del coste más margen es que no tiene en cuenta el valor que los consumidores otorgan al producto",
+        "Una de las ventajas del precio objetivo es que tiene en cuenta el precio de los productos de la competencia",
+        "Uno de los inconvenientes del método del valor percibido es que es un método que no tiene en cuenta el precio de los productos de la competencia",
+        "Todas las respuestas anteriores son correctas"
+      ],
+      "correcta": 0,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "8. Con respecto a los métodos de fijación de precios se puede decir que:",
+      "opciones": [
+        "El precio psicológico optimo es aquel precio al cual el producto es aceptado por un mayor número de consumidores",
+        "En el método de precios aceptables, la frecuencia acumulada de aceptación nos indica el porcentaje de personas del público objetivo que comprarían el producto para cada nivel de precios",
+        "Para el cálculo del precio objetivo de un producto A necesito conocer el precio medio del mercado de los productos que tengan una elasticidad cruzada igual a cero con el producto A.",
+        "Las respuestas a) y b) son correctas"
+      ],
+      "correcta": 0,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "1. Con relación al precio como variable comercial, se puede afirmar que:",
+      "opciones": [
+        "La estrategia de precios en dos partes se basa en el hecho de que los consumidores son menos sensibles al precio de un producto que es complementario de otro ya comprado",
+        "Todas las respuestas anteriores son correctas",
+        "El objetivo de precios centrado en las ventas que persigue maximizar la cifra de ventas requiere de una demanda muy elástica para que se pueda aplicar",
+        "Cuando una empresa seguidora persigue un objetivo de estabilización de precios, las empresas líderes marcan las subidas y bajadas del precio del producto en ese mercado"
+      ],
+      "correcta": 3,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "2. En cuanto a la publicidad como instrumento del mix de comunicación, se puede afirmar que:",
+      "opciones": [
+        "El procedimiento a seguir en la elaboración del mensaje debe ser: primero, determinar la cantidad de dinero que se va a destinar a crear el mensaje; después, se debe formular el mensaje; y, finalmente, se decide el estilo publicitario",
+        "Mediante la planificación de medios publicitarios se intenta fijar el presupuesto publicitario que se destinará al diseño de la estrategia creativa, la compra de espacios en los medios, y la realización de pruebas o ensayos",
+        "El postest publicitario es una técnica que implica la realización de distintas pruebas de control, una vez lanzada la campaña publicitaria, y que permite conocer el cumplimiento de los objetivos publicitarios fijados para dicha campaña",
+        "El coste útil por mil constituye un criterio de alcance para seleccionar los soportes publicitarios, que constituye las unidades monetarias que le supone al anunciante alcanzar a mil individuos de su audiencia bruta"
+      ],
+      "correcta": 2,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "3. Una empresa fabricante que va a lanzar un nuevo producto ha detectado que el mercado al cual se dirige se encuentra segmentado, y que cada segmento de consumidores presenta una elasticidad demanda-precio distinta. Bajo este supuesto, se puede afirmar que:",
+      "opciones": [
+        "Ninguna de las otras respuestas es correcta",
+        "La empresa podría llevar a cabo una estrategia de precio del lote, incentivando así la venta del producto en ambos segmentos del mercado",
+        "La empresa podría aplicar una estrategia de precios para productos cautivos, incentivando así la venta del producto en ambos segmentos del mercado",
+        "Como el mercado está segmentado y las elasticidades demanda-precio de dichos segmentos son diferentes la empresa podría emplear una estrategia de discriminación de precios"
+      ],
+      "correcta": 3,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "4. Elige la afirmación correcta sobre las afirmaciones de precios para grupos de productos:",
+      "opciones": [
+        "Los tipos de estrategias por grupos de productos son: precio de lanzamiento, precio del lote y precio único",
+        "La estrategia del precio en dos partes, la parte fija es el doble de la parte variable",
+        "La estrategia del líder en pérdidas se produce únicamente en productos comercializados de compra habitual",
+        "Para la estrategia de productos de precio cautivo la demanda del producto líder debe ser inelástica al precio"
+      ],
+      "correcta": 3,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "5. Dentro de los factores externos en la determinación de precios escoger el enunciado correcto:",
+      "opciones": [
+        "Los niveles de competencia son: general, entre productos, entre marcas y entre productos de la misma empresa",
+        "Comportamiento adaptativo implica que la empresa tiene en cuenta el comportamiento de la competencia",
+        "Preguntar al consumidor por la percepción de precio y calidad del producto es una información subjetiva",
+        "Todas las otras respuestas son correctas"
+      ],
+      "correcta": 3,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "6. Determinar la veracidad de las siguientes afirmaciones respecto a la publicidad como instrumento de comunicación",
+      "opciones": [
+        "Las características fundamentales de la publicidad son el control del mensaje y la remuneración",
+        "Las decisiones del mix publicitario son de carácter económico, sobre la creatividad del mensaje, sobre la difusión de la campaña publicitaria y sobre la eficacia de la comunicación",
+        "Los inconvenientes de la publicidad es que no es la única variable que influye en las ventas y los efectos se manifiestan con carácter retardado en el tiempo",
+        "Todas son correctas"
+      ],
+      "correcta": 3,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "7. Con relación a la distribución como instrumento del marketing-mix, se puede afirmar que:",
+      "opciones": [
+        "Las características más relevantes de la distribución comercial son: que resulta imprescindible para la venta de los productos, es una variable estratégica y de difícil control si requiere una gran colaboración externa",
+        "La dimensión vertical o longitud de un canal viene determinada por el número de intermediarios de distinto nivel que intervienen en el canal y la dimensión horizontal o anchura del canal, por el número de intermediarios que hay dentro de un mismo nivel",
+        "Todas las otras respuestas son correctas",
+        "Entre las funciones que se deben llevar a cabo para la correcta distribución de los productos al consumidor final, se encuentran las siguientes: transporte, diversificación, fraccionamiento, almacenamiento, servicios y financiación"
+      ],
+      "correcta": 2,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "8. Con relación a la distribución como instrumento de marketing, se puede afirmar que:",
+      "opciones": [
+        "Las funciones que se deben llevar a cabo para la correcta distribución de los productos al consumidor final son: transporte, diversificación, fraccionamiento, almacenamiento, servicios y financiación",
+        "El flujo típico refleja cómo se transmite la propiedad de los productos a lo largo del canal, desde el fabricante hasta el consumidor final",
+        "En un canal de distribución los flujos que, con carácter general, suelen aparecer, se pueden agrupar en flujo físico, flujo de control, flujo financiero y flujo de información",
+        "Dentro de los sistemas de integración podemos destacar: la integración convencional, la integración vertical y la integración horizontal"
+      ],
+      "correcta": 0,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "9. Elige la respuesta correcta sobre los conceptos de dimensión del canal:",
+      "opciones": [
+        "El flujo físico tiene siempre carácter descendente",
+        "El sentido ascendente implica que el sentido de la comunicación va del fabricante al consumidor",
+        "La dimensión vertical es lo mismo que anchura del canal",
+        "La dimensión horizontal viene determinada por la suma de todos los intermediarios en los diferentes niveles del canal"
+      ],
+      "correcta": 0,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "10. Con relación a las estrategias de precios, se puede afirmar que:",
+      "opciones": [
+        "Una estrategia de precios similares sería adecuada para alcanzar un objetivo de supervivencia",
+        "Los principales motivos que justifican la discriminación de precios son: el cliente, el producto, el lugar y el precio",
+        "La estrategia de precios para productos cautivos se emplea con productos complementarios, a los que se fija un precio elevado y cuyo uso es absolutamente necesario para el funcionamiento correcto del producto principal, al que se le fija un precio relativamente bajo",
+        "Los descuentos funcionales consisten en aplicar un precio al producto dependiendo del fin social del mismo"
+      ],
+      "correcta": 2,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "11. En cuanto a la comunicación como instrumento del marketing-mix, se puede afirmar que:",
+      "opciones": [
+        "Entre otras, dos de las aplicaciones más relevantes de las bases de datos en marketing directo son: seleccionar qué clientes deben recibir una oferta concreta y cuáles no, así como mejorar la lealtad de los clientes hacia la empresa",
+        "El Product placement consiste en una nueva forma de comunicación empresarial que utiliza como forma de pago del espacio/tiempo empleado en los medios de televisión, los productos de la empresa anunciante, es decir, consiste en un trueque",
+        "Todas las respuestas son correctas",
+        "Los fines básicos de la comunicación son: informar, promocionar y recordar"
+      ],
+      "correcta": 0,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "12. Determinar la afirmación correcta sobre la comunicación en el canal de distribución:",
+      "opciones": [
+        "La estrategia tipo push busca resultados a largo plazo",
+        "Los objetivos de la comunicación pull son cortoplacistas",
+        "La estrategia push también es llamada comunicación por aspiración",
+        "La estrategia pull se plantea en sentido ascendente desde el consumidor final hasta el fabricante"
+      ],
+      "correcta": 3,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "13. Determina la afirmación correcta respecto a las relaciones públicas como instrumento de comunicación:",
+      "opciones": [
+        "Las características básicas de las relaciones públicas son la inexistencia de una proposición directa de ventas, la alta credibilidad del mensaje y dirigida a un público heterogéneo",
+        "La principal asemejación con la publicidad es el control del mensaje",
+        "Todas las respuestas son correctas",
+        "Las relaciones públicas constituyen una función directiva encargada de gestionar la imagen, reputación y credibilidad de la empresa en el corto plazo"
+      ],
+      "correcta": 0,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "1. La satisfacción del consumidor es",
+      "opciones": [
+        "El resultado de comparar el valor percibido con las expectativas de valor",
+        "El resultado de comparar el valor percibido y el precio",
+        "El resultado de comparar el mismo producto con otro de la competencia",
+        "El resultado de comparar las expectativas y la información del producto"
+      ],
+      "correcta": 0,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "2. A la hora de elegir una estrategia por parte de la empresa, ¿cuál es el principio bajo el cual la empresa deberá evitar el despilfarro en caso de que los recursos sean escasos?",
+      "opciones": [
+        "Principio de concentración",
+        "Principio de economía",
+        "Principio de seguridad",
+        "Principio de sinergia"
+      ],
+      "correcta": 1,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "3. Los proveedores y los intermediarios son actores que tienen una fuerte influencia en el",
+      "opciones": [
+        "Macroentorno de marketing",
+        "Microentorno de marketing",
+        "Entorno ecológico o natural",
+        "Entorno demográfico"
+      ],
+      "correcta": 1,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "4. A la hora de planificar y llevar a cabo una estrategia, la empresa debe tener en cuenta los siguientes elementos fundamentales",
+      "opciones": [
+        "El precio",
+        "Las ofertas",
+        "Los canales de distribución",
+        "El campo de actuación, las capacidades de la empresa, las ventajas competitivas y las sinergias"
+      ],
+      "correcta": 3,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "5. Señale la afirmación que considere FALSA",
+      "opciones": [
+        "El marketing influye en los deseos a partir de determinados factores sociales",
+        "Las demandas son deseos de productos específicos respaldados por una capacidad de pago",
+        "Una necesidad se produce cuando el ser humano siente falta o privacidad de algo",
+        "El marketing crea necesidades o deseos"
+      ],
+      "correcta": 3,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "6. De los siguientes factores ¿cuál NO influye en la formación de las expectativas de valor de una oferta?",
+      "opciones": [
+        "Experiencias anteriores",
+        "Macroentorno de marketing",
+        "Publicidad",
+        "Información de conocidos"
+      ],
+      "correcta": 1,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "7. ¿Cuál de las siguientes NO es una razón por la que la Planificación es considerada como fundamental en cualquier empresa?",
+      "opciones": [
+        "Porque contribuye a minimizar el riesgo",
+        "Para el aprovechamiento de las oportunidades que surjan",
+        "Para detectar posibles amenazas a los objetivos y actividades de la empresa",
+        "Para controlar a los empleados"
+      ],
+      "correcta": 3,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "8. El factor que determina de forma más directa la capacidad de compra del mercado es",
+      "opciones": [
+        "La renta",
+        "El crecimiento económico",
+        "Los tipos de interés",
+        "El nivel de empleo"
+      ],
+      "correcta": 0,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "9. Atendiendo a la naturaleza del producto se puede establecer una clasificación entre:",
+      "opciones": [
+        "Bienes y servicios",
+        "Productos de consumo y productos industriales",
+        "Productos corrientes, de compra por impulso y de emergencia",
+        "Productos de comparación y productos de especialidad"
+      ],
+      "correcta": 0,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "10.Comprar dos noches de hotel en Londres es",
+      "opciones": [
+        "Un servicio puro",
+        "Un servicio acompañado de algún bien",
+        "Un bien tangible con algún servicio que lo mejora",
+        "Un bien tangible puro"
+      ],
+      "correcta": 1,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "11. Con respecto al ciclo de vida del producto señale la frase correcta",
+      "opciones": [
+        "En la fase de madurez la tasa de crecimiento de las ventas y de los beneficios comienza a ascender",
+        "En la fase de madurez la tasa de crecimiento de las ventas y de los beneficios comienza a descender",
+        "Durante la fase de crecimiento, la tasa de crecimiento de las ventas desciende",
+        "Durante la fase de introducción hay un crecimiento rápido de ventas y beneficios"
+      ],
+      "correcta": 1,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "12.Según la American Marketing Association : “El nombre, término, símbolo o diseño, o bien una combinación de ellos, que trata de identificar los bienes o servicios de un vendedor o un grupo de vendedores y diferenciarlos de los competidores” se denomina",
+      "opciones": [
+        "Logotipo",
+        "Marca",
+        "Identidad corporativa",
+        "Logotipo y lema"
+      ],
+      "correcta": 1,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "13.Los servicios como: revistas, café o aparcamiento gratuito, que al cliente se le ofrece cuando va a cortarse el pelo en una peluquería determinada, son considerados",
+      "opciones": [
+        "Servicios básicos",
+        "Servicios aumentados",
+        "Servicios globales",
+        "Servicios potenciales que deben tener muy en cuenta los expertos en SMO SEO SERM SEM"
+      ],
+      "correcta": 1,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "15.¿En cuál de las siguientes herramientas se incluiría YouTube?",
+      "opciones": [
+        "Un marcador social",
+        "Un microblog",
+        "Una red social vertical",
+        "Un sitio de contenido compartido"
+      ],
+      "correcta": 3,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "16.Juan sólo toma gin-tonics en su casa con tónica Schweppes . Cuando no dispone de tónica Schweppes prefiere beber agua. En este caso concreto, señale cómo clasificaría al producto tónica de entre las siguientes opciones",
+      "opciones": [
+        "Producto corriente",
+        "Producto de conveniencia",
+        "Producto de especialidad o preferencia",
+        "Producto adquirido por motivos racionales"
+      ],
+      "correcta": 2,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "17.De los siguientes tipos de calidad, señale el que hace referencia a la manera en que el consumidor obtiene el servicio durante el proceso de su prestación, en cuanto a factores como el modo en que es recibido el cliente, el trato en general, etc.",
+      "opciones": [
+        "Calidad técnica",
+        "Calidad objetiva",
+        "Calidad subjetiva",
+        "Calidad funcional"
+      ],
+      "correcta": 3,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "18.Señale la afirmación que considere FALSA con respecto a la etiqueta de un producto",
+      "opciones": [
+        "Puede servir de soporte para información publicitaria sobre el producto",
+        "Puede servir de soporte para información técnica sobre el producto",
+        "Puede servir de soporte para información legal sobre el producto",
+        "Nunca debe emplearse como soporte para información publicitaria"
+      ],
+      "correcta": 3,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "19.Las agrupaciones homogéneas de producto que se corresponden con una determinada categoría de necesidad, con un segmento de mercado específico o con una determinada tecnología, es denominado",
+      "opciones": [
+        "Cartera de productos",
+        "Líneas de productos",
+        "Referencias grupales",
+        "Líneas de diversificación"
+      ],
+      "correcta": 1,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "20.Cuando no se altera ni la amplitud de la cartera de productos, ni la profundidad de la línea, es decir, cuando el producto modificado sustituye al de partida, se estaría hablando de una",
+      "opciones": [
+        "Estrategia de canibalización",
+        "Estrategia de modificación",
+        "Estrategia de diferenciación",
+        "Estrategia de diversificación"
+      ],
+      "correcta": 1,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "21.El objetivo genérico a la hora de establecer una política de precios en la empresa es",
+      "opciones": [
+        "El ahorro de costes",
+        "La maximización de beneficio",
+        "El ahorro de recursos humanos",
+        "Cumplir el plan de marketing"
+      ],
+      "correcta": 1,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "22.El proceso por el cual la empresa fija unos precios para alcanzar unos determinados objetivos teniendo en cuenta que a mayor cuota de mercado, mayores serán los beneficios, se le denomina",
+      "opciones": [
+        "Fijación de precios en función de la demanda",
+        "Fijación de precios en función de los costes",
+        "Fijación de precios en función de objetivos de ventas",
+        "Fijación de precios en función de la competencia"
+      ],
+      "correcta": 2,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "23.Señale la alternativa que considere FALSA con respecto al precio",
+      "opciones": [
+        "Es una de las variables que menor efecto e influencia tiene sobre la imagen y percepción del producto o servicio",
+        "La política de precios de la empresa es una de las herramientas más directa frente a la competencia",
+        "Influye directamente sobre el beneficio de la empresa",
+        "Es la única variable capaz de generar ingresos"
+      ],
+      "correcta": 0,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "24.Señale de entre los siguientes factores, aquel que NO influye a la hora de planificar y desarrollar los canales de distribución",
+      "opciones": [
+        "El peso de la figura del distribuidor",
+        "Los cambios en el comportamiento del consumidor",
+        "El resto de variables del marketing",
+        "La homogeneidad de los hábitos de compra"
+      ],
+      "correcta": 3,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "25.Señale la afirmación que considere FALSA con respecto a la promoción de ventas",
+      "opciones": [
+        "Debe ser de duración definida y corta",
+        "Debe ser dirigida únicamente al consumidor final",
+        "El fin último es conseguir un incremento rápido de las ventas",
+        "El principal elemento utilizado debe ser un incentivo en forma de ventaja excepcional ofrecida al destinatario"
+      ],
+      "correcta": 1,
+      "tipo": "opcion_multiple"
+    }
+  ]
+}
