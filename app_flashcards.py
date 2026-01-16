@@ -93,10 +93,45 @@ def es_ruido_pagina(texto: str) -> bool:
     return False
 
 
+def limpiar_ruido_sin_vf(texto: str) -> str:
+    """
+    Limpia texto de ruido EXCEPTO marcas V/F (para no interferir con detección de V/F en enunciados).
+    Se usa para limpiar el texto antes de determinar el tipo de pregunta.
+    
+    Reglas:
+    1. Elimina referencias de página al final (P\d+, P \d+, Página \d+)
+    2. Limpia códigos y referencias de página dentro del texto
+    3. NO elimina V/F (se procesará después según el tipo de pregunta)
+    """
+    if not texto:
+        return texto
+    
+    texto_limpio = texto
+    
+    # 1. Eliminar referencias de página al final del texto (P\d+, P \d+, Página \d+)
+    texto_limpio = re.sub(r'\s+P\s*\d+\s*$', '', texto_limpio, flags=re.IGNORECASE)
+    texto_limpio = re.sub(r'\s+Página\s+\d+\s*$', '', texto_limpio, flags=re.IGNORECASE)
+    
+    # 2. Eliminar códigos dentro del texto (Código: \d+)
+    texto_limpio = re.sub(r'Código:\s*\d+', '', texto_limpio, flags=re.IGNORECASE)
+    
+    # 3. Eliminar referencias de página dentro del texto (PAG.\d+, Página \d+)
+    texto_limpio = re.sub(r'PAG\.\s*\d+', '', texto_limpio, flags=re.IGNORECASE)
+    texto_limpio = re.sub(r'Página\s+\d+', '', texto_limpio, flags=re.IGNORECASE)
+    
+    # 4. Limpiar espacios múltiples y espacios al inicio/final
+    texto_limpio = re.sub(r'\s+', ' ', texto_limpio).strip()
+    
+    return texto_limpio
+
+
 def limpiar_ruido(texto: str) -> str:
     """
     Limpia texto de ruido: referencias de página, marcas V/F en opciones múltiples,
     códigos, y otros elementos basura que no deben aparecer en preguntas/respuestas.
+    
+    IMPORTANTE: Esta función se usa SOLO para opciones de preguntas múltiples.
+    Para enunciados de preguntas V/F, NO usar esta función (usar detectar_vf_en_enunciado).
     
     Reglas:
     1. Elimina referencias de página al final (P\d+, P \d+, Página \d+)
@@ -110,7 +145,6 @@ def limpiar_ruido(texto: str) -> str:
     texto_limpio = texto
     
     # 1. Eliminar referencias de página al final del texto (P\d+, P \d+, Página \d+)
-    # Patrón: P seguido opcionalmente de espacio y uno o más dígitos al final
     texto_limpio = re.sub(r'\s+P\s*\d+\s*$', '', texto_limpio, flags=re.IGNORECASE)
     texto_limpio = re.sub(r'\s+Página\s+\d+\s*$', '', texto_limpio, flags=re.IGNORECASE)
     
@@ -482,6 +516,51 @@ def tiene_patrones_opcion_en_texto(texto: str) -> bool:
     return bool(patron.search(texto))
 
 
+def es_fragmento_texto(texto: str) -> bool:
+    """
+    Detecta si un texto es un fragmento que probablemente pertenece a la opción anterior.
+    Retorna True si el texto parece ser un fragmento (no una pregunta válida).
+    
+    Criterios:
+    - Texto muy corto (menos de 15 caracteres)
+    - No empieza por mayúscula ni número
+    - Es solo una palabra o frase muy corta sin contexto
+    - No contiene signos de puntuación que indiquen inicio de frase
+    """
+    if not texto:
+        return True
+    
+    texto_limpio = texto.strip()
+    
+    # Texto muy corto
+    if len(texto_limpio) < 15:
+        # Verificar si parece continuación de frase anterior
+        # Si no empieza por mayúscula y es corto, probablemente es fragmento
+        primer_caracter = texto_limpio[0] if texto_limpio else ''
+        if not (primer_caracter.isupper() or primer_caracter.isdigit()):
+            # Excepción: si empieza con comillas, paréntesis o guion, puede ser válido
+            if primer_caracter not in ['"', "'", '(', '[', '-']:
+                return True
+    
+    # No empieza por mayúscula ni número (probablemente continuación de frase anterior)
+    primer_caracter = texto_limpio[0] if texto_limpio else ''
+    if not (primer_caracter.isupper() or primer_caracter.isdigit()):
+        # Excepción: si empieza con comillas o paréntesis, puede ser válido
+        if primer_caracter not in ['"', "'", '(', '[', '-']:
+            # Si el texto es corto y no empieza por mayúscula, es probablemente fragmento
+            if len(texto_limpio) < 30:
+                return True
+    
+    # Si es solo una palabra o dos palabras muy cortas, probablemente es fragmento
+    palabras = texto_limpio.split()
+    if len(palabras) <= 3:
+        # Verificar si todas las palabras son muy cortas (probablemente fragmento)
+        if all(len(p) < 8 for p in palabras):
+            return True
+    
+    return False
+
+
 def extraer_spans_con_formato(page):
     """
     Extrae todos los spans de texto de una página con su información de formato.
@@ -608,12 +687,14 @@ def extraer_texto_con_subrayado(pdf_bytes: bytes):
             texto_completo = " ".join(textos_linea)
             texto_completo = texto_completo.strip()
             
-            # FILTRADO DE RUIDO: Aplicar limpieza completa antes de procesar
+            # FILTRADO DE RUIDO: Aplicar limpieza (SIN eliminar V/F) antes de procesar
+            # IMPORTANTE: NO eliminamos V/F aquí porque necesitamos detectarlo después
+            # según el tipo de pregunta (V/F vs opción múltiple)
             # 1. Limpiar "Tema X"
             texto_completo = limpiar_tema_x(texto_completo)
             
-            # 2. Limpiar ruido general (referencias de página, marcas V/F, códigos, etc.)
-            texto_completo = limpiar_ruido(texto_completo)
+            # 2. Limpiar ruido general (referencias de página, códigos, etc.) PERO NO V/F
+            texto_completo = limpiar_ruido_sin_vf(texto_completo)
             
             # Si después de limpiar el texto está vacío, saltar esta línea
             if not texto_completo:
@@ -677,10 +758,12 @@ def extraer_texto_con_subrayado(pdf_bytes: bytes):
                                 tiene_subrayado = True
                                 break
                         
-                        # Limpiar etiquetas y V/F de todas las opciones
+                        # Limpiar etiquetas, V/F y ruido de todas las opciones
                         opciones_limpias = []
                         for op in opciones_actuales:
                             op_limpia = limpiar_etiqueta_opcion(limpiar_texto(op))
+                            # Aplicar limpieza de ruido (P139, V/F, referencias de página, etc.)
+                            op_limpia = limpiar_ruido(op_limpia)
                             # Eliminar V/F al final de opciones (solo para opciones múltiples)
                             op_limpia = re.sub(r'\s*[\(\-\s]*(V|F)[\)\s]*$', '', op_limpia, flags=re.IGNORECASE).strip()
                             opciones_limpias.append(op_limpia)
@@ -696,7 +779,10 @@ def extraer_texto_con_subrayado(pdf_bytes: bytes):
                         pregunta_idx += 1
                     else:
                         # Pregunta sin opciones → Verdadero/Falso
+                        # ORDEN: 1) Detectar V/F, 2) Limpiar ruido del enunciado (sin V/F)
                         enunciado_limpio, respuesta_vf = detectar_vf_en_enunciado(limpiar_texto(pregunta_actual))
+                        # Aplicar limpieza de ruido al enunciado (sin V/F, ya fue eliminado)
+                        enunciado_limpio = limpiar_ruido_sin_vf(enunciado_limpio)
                         respuesta_correcta = respuesta_vf if respuesta_vf is not None else 0
                         vf_detectado_enunciado = respuesta_vf is not None
                         
@@ -770,14 +856,32 @@ def extraer_texto_con_subrayado(pdf_bytes: bytes):
                     # La pregunta solo se cerrará cuando se detecte una nueva pregunta válida
                     continue
             
-            # 3. DETECCIÓN DE PREGUNTA SIN NÚMERO (en bloque sin numeración):
+            # 3. ACUMULACIÓN PRIORITARIA: Si ya tenemos 4 opciones (incluyendo d), acumular a la opción d)
+            # REGLA DE ORO: Todo el texto después de la opción d) se acumula a ella a menos que sea nueva pregunta válida
+            if pregunta_actual and len(opciones_actuales) == 4 and estado_actual == "opciones":
+                # Verificar si es una nueva pregunta válida (patrón de número o frase anclaje)
+                es_nueva_pregunta_valida = es_pregunta or contiene_frase_anclaje
+                
+                # Si NO es nueva pregunta válida, SIEMPRE acumular a la opción d)
+                if not es_nueva_pregunta_valida:
+                    # Acumular a opción d) sin excepciones (fuera o dentro del bloque)
+                    opciones_actuales[3] += " " + texto_completo
+                    # REFUERZO DE SUBRAYADO: Si alguna parte está marcada, marcar toda la opción
+                    if marcado_linea:
+                        opciones_marcadas[3] = True
+                    # La limpieza de ruido se aplicará al guardar la pregunta final
+                    continue
+                # Si es nueva pregunta válida, continuar con la lógica de guardar pregunta anterior
+            
+            # 4. DETECCIÓN DE PREGUNTA SIN NÚMERO (en bloque sin numeración):
             # En el bloque sin numeración, una nueva pregunta se define cuando:
             # - El texto NO empieza por a), b), c) o d)
             # - La pregunta anterior ya tiene sus 4 opciones completas
-            # - No es ruido
+            # - No es ruido ni fragmento
+            # - Es texto significativo (no fragmento)
             if dentro_bloque_sin_numeracion and pregunta_actual and len(opciones_actuales) == 4:
-                if not es_opcion and not es_pregunta and not es_ruido_pagina(texto_completo):
-                    # Nueva pregunta en bloque sin numeración - guardar pregunta anterior primero
+                if not es_opcion and not es_pregunta and not es_ruido_pagina(texto_completo) and not es_fragmento_texto(texto_completo):
+                    # Nueva pregunta válida en bloque sin numeración - guardar pregunta anterior primero
                     respuesta_correcta = 0
                     tiene_subrayado = False
                     for idx, esta_marcada in enumerate(opciones_marcadas):
@@ -786,10 +890,12 @@ def extraer_texto_con_subrayado(pdf_bytes: bytes):
                             tiene_subrayado = True
                             break
                     
-                    # Limpiar etiquetas y V/F de todas las opciones
+                    # Limpiar etiquetas y V/F de todas las opciones antes de guardar
                     opciones_limpias = []
                     for op in opciones_actuales:
                         op_limpia = limpiar_etiqueta_opcion(limpiar_texto(op))
+                        # Aplicar limpieza de ruido (P139, V/F, etc.)
+                        op_limpia = limpiar_ruido(op_limpia)
                         op_limpia = re.sub(r'\s*[\(\-\s]*(V|F)[\)\s]*$', '', op_limpia, flags=re.IGNORECASE).strip()
                         opciones_limpias.append(op_limpia)
                     
@@ -811,26 +917,31 @@ def extraer_texto_con_subrayado(pdf_bytes: bytes):
                     tiene_numero = False
                     continue
             
-            # 4. DETECCIÓN DE PREGUNTA SIN NÚMERO (fuera del bloque):
+            # 5. DETECCIÓN DE PREGUNTA SIN NÚMERO (fuera del bloque):
             # Si detectamos texto que NO es pregunta ni opción y no hay pregunta iniciada,
             # y el texto es significativo, asumir pregunta nueva sin número
             if not pregunta_actual and not es_pregunta and not es_opcion:
-                if len(texto_completo) > 15:  # Texto significativo
+                if len(texto_completo) > 15 and not es_fragmento_texto(texto_completo):  # Texto significativo y no fragmento
                     pregunta_actual = texto_completo
                     tiene_numero = False
                     estado_actual = "enunciado"
                     continue
             
-            # 5. ACUMULACIÓN DE TEXTO: Captura total según estado
+            # 6. ACUMULACIÓN DE TEXTO: Captura total según estado
+            # Solo procesar si no se procesó en las secciones anteriores
             if pregunta_actual and not pregunta_cerrada:
+                # Si ya tenemos 4 opciones, solo acumular si no es nueva pregunta válida
+                # (esto evita duplicar el procesamiento de la sección 3)
                 if estado_actual == "opciones" and len(opciones_actuales) > 0:
                     # Ya encontramos opciones → añadir a la última opción (CAPTURA TOTAL)
                     # Si ya tenemos 4 opciones, añadir a la última (opción d) - FUSIÓN DE HUÉRFANOS
                     if len(opciones_actuales) >= 4:
-                        opciones_actuales[3] += " " + texto_completo
-                        # REFUERZO DE SUBRAYADO: Si alguna parte está marcada, marcar toda la opción
-                        if marcado_linea:
-                            opciones_marcadas[3] = True
+                        # Solo acumular si no es nueva pregunta válida (ya se procesó en sección 3)
+                        if not (es_pregunta or contiene_frase_anclaje):
+                            opciones_actuales[3] += " " + texto_completo
+                            # REFUERZO DE SUBRAYADO: Si alguna parte está marcada, marcar toda la opción
+                            if marcado_linea:
+                                opciones_marcadas[3] = True
                     else:
                         opciones_actuales[-1] += " " + texto_completo
                         # REFUERZO DE SUBRAYADO: Si alguna parte está marcada, marcar toda la opción
@@ -860,11 +971,13 @@ def extraer_texto_con_subrayado(pdf_bytes: bytes):
                     tiene_subrayado = True
                     break
             
-            # Limpiar etiquetas y V/F de todas las opciones
+            # Limpiar etiquetas, V/F y ruido de todas las opciones
             # También detectar V/F al final de cada opción para marcar respuesta correcta
             opciones_limpias = []
             for idx, op in enumerate(opciones_actuales):
                 op_limpia = limpiar_etiqueta_opcion(limpiar_texto(op))
+                # Aplicar limpieza de ruido (P139, V/F, referencias de página, etc.)
+                op_limpia = limpiar_ruido(op_limpia)
                 # Detectar V/F al final de la opción
                 vf_match = re.search(r'\s*[\(\-\s]*(V|F)[\)\s]*$', op_limpia, re.IGNORECASE)
                 if vf_match:
@@ -887,7 +1000,10 @@ def extraer_texto_con_subrayado(pdf_bytes: bytes):
             subrayado_por_pregunta[pregunta_idx] = tiene_subrayado
         else:
             # Pregunta sin opciones → Verdadero/Falso
+            # ORDEN: 1) Detectar V/F, 2) Limpiar ruido del enunciado (sin V/F)
             enunciado_limpio, respuesta_vf = detectar_vf_en_enunciado(limpiar_texto(pregunta_actual))
+            # Aplicar limpieza de ruido al enunciado (sin V/F, ya fue eliminado)
+            enunciado_limpio = limpiar_ruido_sin_vf(enunciado_limpio)
             respuesta_correcta = respuesta_vf if respuesta_vf is not None else 0
             vf_detectado_enunciado = respuesta_vf is not None
             
