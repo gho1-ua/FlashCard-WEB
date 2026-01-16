@@ -105,6 +105,11 @@ def es_ruido_pagina(texto: str) -> bool:
         r'^\s*Página\s+\d+',  # Página seguido de número
         r'^\s*Tema\s+\d+\s*$',  # Solo "Tema X"
         r'^\s*Profesoras?:.*',  # Profesoras: o Profesores: seguido de texto
+        r'^\s*Verdadero\s*$',  # Solo "Verdadero" (encabezado de columna)
+        r'^\s*Falso\s*$',  # Solo "Falso" (encabezado de columna)
+        r'^\s*\d+\s+Verdadero\s+Falso\s*$',  # Número seguido de "Verdadero Falso" (ej: "3 Verdadero Falso")
+        r'^\s*Dirección Comercial I\s+\d+\s+Departamento de Marketing\s+Verdadero\s+Falso\s*$',  # Completo con Verdadero Falso
+        r'^\s*lOMoARcPSD\|.*',  # ID de documento (ej: "lOMoARcPSD|11624338")
     ]
     
     # Detectar sistema de puntuación completo (incluso si está en una sola línea o fragmentado)
@@ -137,6 +142,23 @@ def es_ruido_pagina(texto: str) -> bool:
     
     # Tema: seguido de texto (puede ser parte de ficha o encabezado)
     if re.match(r'^\s*TEMA:\s+', texto_stripped, re.IGNORECASE):
+        return True
+    
+    # Detectar "Verdadero" o "Falso" solos (encabezados de columnas V/F)
+    # Pueden aparecer con o sin espacios, en mayúsculas o minúsculas
+    if re.match(r'^\s*(Verdadero|Falso)\s*$', texto_stripped, re.IGNORECASE):
+        return True
+    
+    # Detectar número seguido de "Verdadero Falso" (ej: "3 Verdadero Falso")
+    if re.match(r'^\s*\d+\s+Verdadero\s+Falso\s*$', texto_stripped, re.IGNORECASE):
+        return True
+    
+    # Detectar "Dirección Comercial I X Departamento de Marketing Verdadero Falso"
+    if re.match(r'^\s*Dirección Comercial I\s+\d+\s+Departamento de Marketing\s+Verdadero\s+Falso\s*$', texto_stripped, re.IGNORECASE):
+        return True
+    
+    # Detectar ID de documento (ej: "lOMoARcPSD|11624338")
+    if re.match(r'^\s*lOMoARcPSD\|.*', texto_stripped, re.IGNORECASE):
         return True
     
     for patron in patrones_regex:
@@ -749,11 +771,7 @@ def extraer_texto_con_subrayado(pdf_bytes: bytes):
     casos_detectados = {}  # Almacena los casos detectados
     caso_actual = None  # Número del caso actual que se está acumulando
     texto_caso_actual = ""  # Texto acumulado del caso actual
-    
-    # Estado para casos: diccionario {numero_caso: texto_caso}
-    casos_detectados = {}  # Almacena los casos detectados
-    caso_actual = None  # Número del caso actual que se está acumulando
-    texto_caso_actual = ""  # Texto acumulado del caso actual
+    caso_activo = None  # Número del caso activo al que pertenecen las preguntas siguientes
     
     # Procesar cada página
     for page_num in range(len(doc)):
@@ -816,6 +834,8 @@ def extraer_texto_con_subrayado(pdf_bytes: bytes):
                 numero_caso, texto_caso_inicial = caso_detectado
                 caso_actual = numero_caso
                 texto_caso_actual = texto_caso_inicial
+                # Establecer este caso como activo (todas las preguntas siguientes pertenecerán a él)
+                caso_activo = numero_caso
                 # Continuar acumulando el texto del caso
                 continue
             
@@ -828,6 +848,7 @@ def extraer_texto_con_subrayado(pdf_bytes: bytes):
                     casos_detectados[caso_actual] = texto_caso_actual.strip()
                     caso_actual = None
                     texto_caso_actual = ""
+                    # El caso_activo se mantiene para asociar las preguntas siguientes
                 else:
                     # Continuar acumulando el texto del caso
                     texto_caso_actual += " " + texto_completo
@@ -885,12 +906,16 @@ def extraer_texto_con_subrayado(pdf_bytes: bytes):
                             op_limpia = re.sub(r'\s*[\(\-\s]*(V|F)[\)\s]*$', '', op_limpia, flags=re.IGNORECASE).strip()
                             opciones_limpias.append(op_limpia)
                         
-                        todas_las_preguntas.append({
+                        pregunta_guardada = {
                             'pregunta': limpiar_texto(pregunta_actual),
                             'opciones': opciones_limpias,
                             'correcta': respuesta_correcta,
-                            'tipo': 'opcion_multiple',
-                        })
+                            'tipo': 'opcion_multiple'
+                        }
+                        # Asociar al caso activo si existe
+                        if caso_activo is not None:
+                            pregunta_guardada['caso'] = caso_activo
+                        todas_las_preguntas.append(pregunta_guardada)
                         subrayado_por_pregunta[pregunta_idx] = tiene_subrayado
                         pregunta_idx += 1
                     else:
@@ -902,13 +927,17 @@ def extraer_texto_con_subrayado(pdf_bytes: bytes):
                         respuesta_correcta = respuesta_vf if respuesta_vf is not None else 0
                         vf_detectado_enunciado = respuesta_vf is not None
                         
-                        todas_las_preguntas.append({
+                        pregunta_guardada = {
                             'pregunta': enunciado_limpio,
                             'opciones': [],
                             'correcta': respuesta_correcta,
                             'tipo': 'V/F',
                             'vf_detectado_enunciado': vf_detectado_enunciado
-                        })
+                        }
+                        # Asociar al caso activo si existe
+                        if caso_activo is not None:
+                            pregunta_guardada['caso'] = caso_activo
+                        todas_las_preguntas.append(pregunta_guardada)
                         subrayado_por_pregunta[pregunta_idx] = False
                         pregunta_idx += 1
                 
@@ -1049,12 +1078,16 @@ def extraer_texto_con_subrayado(pdf_bytes: bytes):
                     op_limpia = re.sub(r'\s*[\(\-\s]*(V|F)[\)\s]*$', '', op_limpia, flags=re.IGNORECASE).strip()
                 opciones_limpias.append(op_limpia)
             
-            todas_las_preguntas.append({
+            pregunta_guardada = {
                 'pregunta': limpiar_texto(pregunta_actual),
                 'opciones': opciones_limpias,
                 'correcta': respuesta_correcta,
                 'tipo': 'opcion_multiple'
-            })
+            }
+            # Asociar al caso activo si existe
+            if caso_activo is not None:
+                pregunta_guardada['caso'] = caso_activo
+            todas_las_preguntas.append(pregunta_guardada)
             subrayado_por_pregunta[pregunta_idx] = tiene_subrayado
         else:
             # Pregunta sin opciones → Verdadero/Falso
@@ -1065,13 +1098,17 @@ def extraer_texto_con_subrayado(pdf_bytes: bytes):
             respuesta_correcta = respuesta_vf if respuesta_vf is not None else 0
             vf_detectado_enunciado = respuesta_vf is not None
             
-            todas_las_preguntas.append({
+            pregunta_guardada = {
                 'pregunta': enunciado_limpio,
                 'opciones': [],
                 'correcta': respuesta_correcta,
                 'tipo': 'V/F',
                 'vf_detectado_enunciado': vf_detectado_enunciado
-            })
+            }
+            # Asociar al caso activo si existe
+            if caso_activo is not None:
+                pregunta_guardada['caso'] = caso_activo
+            todas_las_preguntas.append(pregunta_guardada)
             subrayado_por_pregunta[pregunta_idx] = False
     
     # Guardar último caso si estaba acumulándose
@@ -1089,10 +1126,12 @@ def extraer_texto_con_subrayado(pdf_bytes: bytes):
             else:
                 pregunta['tipo'] = 'V/F'
         
-        # Detectar si la pregunta menciona un caso
-        caso_mencionado = detectar_referencia_caso(pregunta.get('pregunta', ''))
-        if caso_mencionado:
-            pregunta['caso'] = caso_mencionado
+        # Si la pregunta ya tiene un caso asociado (por caso_activo), mantenerlo
+        # Si no tiene caso pero menciona uno en el texto, asociarlo también
+        if 'caso' not in pregunta:
+            caso_mencionado = detectar_referencia_caso(pregunta.get('pregunta', ''))
+            if caso_mencionado:
+                pregunta['caso'] = caso_mencionado
     
     # Reorganizar preguntas: agrupar casos con sus preguntas relacionadas
     preguntas_reorganizadas = []
@@ -1186,7 +1225,43 @@ def mostrar_modo_revision():
             
             # Mostrar el caso en un expander grande
             with st.expander(f"📋 **Caso {numero_caso}**", expanded=True):
-                st.markdown(f"**{texto_caso}**")
+                # Botón para editar el texto del caso
+                col_edit_caso, col_add_pregunta = st.columns([1, 1])
+                with col_edit_caso:
+                    edit_caso_mode = st.checkbox(
+                        "🔧 Editar texto del caso",
+                        key=f"edit_caso_{numero_caso}",
+                        value=False
+                    )
+                with col_add_pregunta:
+                    if st.button(
+                        "➕ Añadir Pregunta al Caso",
+                        key=f"add_pregunta_caso_{numero_caso}",
+                        use_container_width=True,
+                        help="Añade una nueva pregunta al final de este caso"
+                    ):
+                        nueva_pregunta = {
+                            'pregunta': '',
+                            'opciones': [],
+                            'correcta': 0,
+                            'tipo': 'V/F',
+                            'caso': numero_caso
+                        }
+                        preguntas_caso.append(nueva_pregunta)
+                        st.rerun()
+                
+                if edit_caso_mode:
+                    nuevo_texto_caso = st.text_area(
+                        "Texto del caso:",
+                        value=texto_caso,
+                        key=f"texto_caso_{numero_caso}",
+                        height=150,
+                        help="Edita el texto completo del caso"
+                    )
+                    if nuevo_texto_caso != texto_caso:
+                        item['texto_caso'] = nuevo_texto_caso
+                else:
+                    st.markdown(f"**{texto_caso}**")
                 st.markdown("---")
                 
                 # Mostrar todas las preguntas del caso
@@ -1236,8 +1311,8 @@ def mostrar_pregunta_revision(pregunta_data, idx_global, idx_local, numero_caso)
     
     # TODOS LOS EXPANDERS ABIERTOS POR DEFECTO
     with st.expander(titulo_expander, expanded=True):
-        # Botones de acción: Editar y Borrar (en la misma línea con columnas)
-        col_edit, col_delete, col_spacer = st.columns([1, 1, 3])
+        # Botones de acción: Editar, Borrar, Añadir antes, Añadir después
+        col_edit, col_delete, col_add_before, col_add_after, col_spacer = st.columns([1, 1, 1, 1, 2])
         with col_edit:
             edit_mode = st.checkbox(
                 "🔧 Editar contenido",
@@ -1247,7 +1322,7 @@ def mostrar_pregunta_revision(pregunta_data, idx_global, idx_local, numero_caso)
         with col_delete:
             # Botón de borrado de pregunta
             if st.button(
-                "🗑️ Borrar Pregunta",
+                "🗑️ Borrar",
                 key=f"delete_{idx_global}",
                 type="secondary",
                 use_container_width=True
@@ -1265,6 +1340,64 @@ def mostrar_pregunta_revision(pregunta_data, idx_global, idx_local, numero_caso)
                             st.session_state.preguntas.remove(item)
                             break
                     st.rerun()
+        
+        with col_add_before:
+            # Botón para añadir pregunta antes
+            if st.button(
+                "➕ Antes",
+                key=f"add_before_{idx_global}",
+                use_container_width=True,
+                help="Añade una nueva pregunta antes de esta"
+            ):
+                nueva_pregunta = {
+                    'pregunta': '',
+                    'opciones': [],
+                    'correcta': 0,
+                    'tipo': 'V/F'
+                }
+                # Buscar la posición y añadir
+                if numero_caso and idx_local is not None:
+                    # Es una pregunta dentro de un caso
+                    for item in st.session_state.preguntas:
+                        if item.get('tipo') == 'caso' and item.get('numero_caso') == numero_caso:
+                            item['preguntas_caso'].insert(idx_local, nueva_pregunta)
+                            break
+                else:
+                    # Es una pregunta normal
+                    for i, item in enumerate(st.session_state.preguntas):
+                        if item.get('tipo') != 'caso' and item == pregunta_data:
+                            st.session_state.preguntas.insert(i, nueva_pregunta)
+                            break
+                st.rerun()
+        
+        with col_add_after:
+            # Botón para añadir pregunta después
+            if st.button(
+                "➕ Después",
+                key=f"add_after_{idx_global}",
+                use_container_width=True,
+                help="Añade una nueva pregunta después de esta"
+            ):
+                nueva_pregunta = {
+                    'pregunta': '',
+                    'opciones': [],
+                    'correcta': 0,
+                    'tipo': 'V/F'
+                }
+                # Buscar la posición y añadir
+                if numero_caso and idx_local is not None:
+                    # Es una pregunta dentro de un caso
+                    for item in st.session_state.preguntas:
+                        if item.get('tipo') == 'caso' and item.get('numero_caso') == numero_caso:
+                            item['preguntas_caso'].insert(idx_local + 1, nueva_pregunta)
+                            break
+                else:
+                    # Es una pregunta normal
+                    for i, item in enumerate(st.session_state.preguntas):
+                        if item.get('tipo') != 'caso' and item == pregunta_data:
+                            st.session_state.preguntas.insert(i + 1, nueva_pregunta)
+                            break
+                st.rerun()
         
         st.markdown("---")
         
