@@ -1341,17 +1341,35 @@ def mostrar_pregunta_revision(pregunta_data, idx_global, idx_local, numero_caso,
                     'texto_caso': '',
                     'preguntas_caso': [pregunta_data]
                 }
-                # Si la pregunta está en un caso, quitarla primero
+                
+                # Encontrar la posición donde insertar el caso (justo antes de esta pregunta)
+                posicion_insercion = None
+                
+                # Si la pregunta está en un caso, quitarla primero y encontrar la posición
                 if numero_caso and idx_local is not None:
-                    for item in preguntas:
+                    for i, item in enumerate(preguntas):
                         if item.get('tipo') == 'caso' and item.get('numero_caso') == numero_caso:
                             item['preguntas_caso'].remove(pregunta_data)
+                            # Si es la primera pregunta del caso, insertar antes del caso
+                            if idx_local == 0:
+                                posicion_insercion = i
+                            else:
+                                # Si no es la primera, insertar después del caso (que contiene otras preguntas)
+                                posicion_insercion = i + 1
                             break
-                # Si la pregunta está en la lista normal, quitarla
-                elif pregunta_data in preguntas:
-                    preguntas.remove(pregunta_data)
-                # Insertar el nuevo caso al principio
-                preguntas.insert(0, nuevo_caso)
+                else:
+                    # Si la pregunta está en la lista normal, encontrar su posición
+                    for i, item in enumerate(preguntas):
+                        if item.get('tipo') != 'caso' and item == pregunta_data:
+                            posicion_insercion = i
+                            preguntas.remove(pregunta_data)
+                            break
+                
+                # Insertar el nuevo caso en la posición encontrada (o al principio si no se encontró)
+                if posicion_insercion is not None:
+                    preguntas.insert(posicion_insercion, nuevo_caso)
+                else:
+                    preguntas.insert(0, nuevo_caso)
                 st.rerun()
         
         st.markdown("---")
