@@ -30,6 +30,8 @@ if 'pdf_cargado' not in st.session_state:
     st.session_state.pdf_cargado = False
 if 'modo_revision' not in st.session_state:
     st.session_state.modo_revision = True  # Inicia en modo revisión
+if 'mostrar_formulario_guardado' not in st.session_state:
+    st.session_state.mostrar_formulario_guardado = False
 if 'revision_completada' not in st.session_state:
     st.session_state.revision_completada = False
 if 'subrayado_detectado' not in st.session_state:
@@ -1576,6 +1578,22 @@ def mostrar_vista_principal():
         # Mostrar modo de revisión
         mostrar_modo_revision()
     else:
+        # Modo test - Añadir botón para volver a revisión y guardar
+        if not st.session_state.modo_revision:
+            col_volver, col_guardar = st.columns([1, 1])
+            with col_volver:
+                if st.button("✏️ Volver a Revisión", use_container_width=True, 
+                           help="Vuelve al modo revisión para editar o guardar el examen"):
+                    st.session_state.modo_revision = True
+                    st.rerun()
+            with col_guardar:
+                if st.button("💾 Guardar Examen", use_container_width=True, type="secondary",
+                           help="Guarda el examen en la biblioteca de GitHub"):
+                    # Mostrar formulario de guardado en un expander
+                    st.session_state.mostrar_formulario_guardado = True
+                    st.rerun()
+            st.markdown("---")
+        
         preguntas = st.session_state.preguntas
         idx_actual = st.session_state.pregunta_actual
         
@@ -1694,6 +1712,57 @@ def mostrar_vista_principal():
                     porcentaje = (respuestas_correctas / respuestas_verificadas) * 100
                     st.metric("Respuestas correctas", f"{respuestas_correctas}/{respuestas_verificadas}")
                     st.metric("Porcentaje de aciertos", f"{porcentaje:.1f}%")
+                
+                # Formulario de guardado al final del examen
+                st.markdown("---")
+                st.subheader("📚 Guardar Examen en Biblioteca")
+                st.info("💾 ¿Olvidaste guardar? No te preocupes, puedes guardar el examen ahora para consultarlo más tarde.")
+                
+                with st.expander("📤 Guardar en Biblioteca", expanded=st.session_state.get('mostrar_formulario_guardado', False)):
+                    with st.form("form_guardar_examen_test", clear_on_submit=True):
+                        titulo = st.text_input(
+                            "Título del Examen *",
+                            placeholder="Ej: Examen Final Marketing 2024",
+                            help="Nombre descriptivo del examen"
+                        )
+                        descripcion = st.text_area(
+                            "Descripción/Tema *",
+                            placeholder="Ej: Examen de Dirección de Marketing - Tema 1: Producto",
+                            height=100,
+                            help="Descripción detallada del contenido del examen"
+                        )
+                        
+                        col_submit, col_spacer = st.columns([1, 3])
+                        with col_submit:
+                            publicar = st.form_submit_button("📤 Publicar en la Biblioteca", type="primary", use_container_width=True)
+                        
+                        if publicar:
+                            if not titulo or not descripcion:
+                                st.error("❌ Por favor, completa todos los campos obligatorios (Título y Descripción).")
+                            elif len(preguntas) == 0:
+                                st.error("❌ No hay preguntas para guardar.")
+                            else:
+                                with st.spinner("📤 Subiendo examen a GitHub..."):
+                                    if guardar_examen_github(titulo, descripcion, preguntas):
+                                        st.success(f"✅ Examen '{titulo}' guardado exitosamente en GitHub!")
+                                        st.balloons()
+                                        st.info("💡 El examen se ha subido a la carpeta /biblioteca de tu repositorio de GitHub.")
+                                        st.session_state.mostrar_formulario_guardado = False
+                                    else:
+                                        st.error("❌ Error al guardar el examen en GitHub. Verifica la configuración de st.secrets.")
+                
+                # Botón de exportación JSON
+                st.markdown("---")
+                if st.button("📥 Descargar JSON", use_container_width=True,
+                            help="Descarga una copia local del examen en formato JSON"):
+                    preguntas_json = json.dumps(preguntas, ensure_ascii=False, indent=2)
+                    st.download_button(
+                        label="⬇️ Descargar archivo JSON",
+                        data=preguntas_json,
+                        file_name=f"examen_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json",
+                        mime="application/json",
+                        use_container_width=True
+                    )
         
         else:
             st.info("No hay más preguntas disponibles.")
