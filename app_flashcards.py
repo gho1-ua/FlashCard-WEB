@@ -3,6 +3,12 @@ import fitz  # PyMuPDF
 import re
 from typing import List, Dict, Optional
 import io
+import json
+from datetime import datetime
+import os
+import base64
+from github import Github
+from github.GithubException import GithubException
 
 # Configuración de la página
 st.set_page_config(
@@ -28,17 +34,22 @@ if 'revision_completada' not in st.session_state:
     st.session_state.revision_completada = False
 if 'subrayado_detectado' not in st.session_state:
     st.session_state.subrayado_detectado = {}  # Dict para rastrear qué preguntas tienen subrayado
+if 'vista_actual' not in st.session_state:
+    st.session_state.vista_actual = 'revision'  # 'revision', 'test', 'biblioteca'
 
 
 def es_ruido_pagina(texto: str) -> bool:
     """
-    Detecta si una línea es ruido de página (header/footer) que debe ignorarse.
-    Incluye detección de "Tema X" que debe ser filtrado.
+    Detecta si una línea es ruido de página (header/footer) que debe ignorarse completamente.
+    Incluye detección de encabezados de examen, profesores, departamentos, etc.
     """
     if not texto:
         return True
     
     texto_upper = texto.upper()
+    texto_stripped = texto.strip()
+    
+    # Patrones de ruido simples (búsqueda en mayúsculas)
     patrones_ruido = [
         "PAG.",
         "PÁGINA",
@@ -49,19 +60,91 @@ def es_ruido_pagina(texto: str) -> bool:
         "DIRECCIÓN COMERCIAL",
         "SISTEMA DE PUNTUACIÓN",
         "□",  # Símbolo de cuadro
+        "JOSEFA PARREÑO SELVA",
+        "ENAR RUIZ CONDE",
+        "ADEGO!",
+        "VERDADERO FALSO",
     ]
     
     for patron in patrones_ruido:
         if patron in texto_upper:
             return True
     
-    # Detectar si la línea contiene solo "Tema X" (con o sin espacios adicionales)
-    # Patrón: "Tema" seguido de espacios y un número, posiblemente con otros caracteres de ruido
-    patron_tema = re.compile(r'^\s*Tema\s+\d+\s*$', re.IGNORECASE)
-    if patron_tema.match(texto.strip()):
-        return True
+    # Patrones regex para ruido más complejo
+    patrones_regex = [
+        r'^\s*SISTEMA DE PUNTUACIÓN.*',  # Sistema de puntuación (captura todo el párrafo)
+        r'^\s*Las preguntas tienen una única respuesta correcta.*',  # Continuación del sistema de puntuación
+        r'^\s*EXAMEN.*DIRECCIÓN DE MARKETING.*',  # Encabezados de examen
+        r'^\s*PREGUNTAS EXÁMENES TIPO TEST',  # Título de preguntas
+        r'^\s*EXAMEN FINAL.*DIRECCIÓN DE MARKETING.*',  # Examen final
+        r'^\s*EXAMEN ENERO \d{4}',  # Examen enero año
+        r'^\s*Ficha de autoevaluación Tema:.*',  # Ficha de autoevaluación
+        r'^\s*Dirección Comercial I\s+\d+\s+Departamento de Marketing',  # Departamento con número
+        r'^\s*Código:\s*\d+',  # Código con número
+        r'^\s*PAG\.\d+',  # PAG. seguido de número
+        r'^\s*Página\s+\d+',  # Página seguido de número
+        r'^\s*Tema\s+\d+\s*$',  # Solo "Tema X"
+    ]
+    
+    for patron in patrones_regex:
+        if re.match(patron, texto_stripped, re.IGNORECASE):
+            return True
     
     return False
+
+
+def limpiar_ruido(texto: str) -> str:
+    """
+    Limpia texto de ruido: referencias de página, marcas V/F en opciones múltiples,
+    códigos, y otros elementos basura que no deben aparecer en preguntas/respuestas.
+    
+    Reglas:
+    1. Elimina referencias de página al final (P\d+, P \d+, Página \d+)
+    2. Elimina marcas V/F aisladas al final de opciones múltiples
+    3. Elimina todo el contenido después de V/F si hay texto adicional
+    4. Limpia códigos y referencias de página dentro del texto
+    """
+    if not texto:
+        return texto
+    
+    texto_limpio = texto
+    
+    # 1. Eliminar referencias de página al final del texto (P\d+, P \d+, Página \d+)
+    # Patrón: P seguido opcionalmente de espacio y uno o más dígitos al final
+    texto_limpio = re.sub(r'\s+P\s*\d+\s*$', '', texto_limpio, flags=re.IGNORECASE)
+    texto_limpio = re.sub(r'\s+Página\s+\d+\s*$', '', texto_limpio, flags=re.IGNORECASE)
+    
+    # 2. Eliminar marcas V/F aisladas al final de opciones múltiples
+    # Regla estricta: Si una opción termina en V o F aislada, eliminarla
+    # Si después de V/F hay más texto, eliminar todo desde V/F hasta el final
+    # Caso 1: V/F seguido de punto y más texto (ej: "F. Ver libro", "V. texto adicional")
+    patron_vf_punto = re.compile(r'\s+[VF]\.\s+.*$', re.IGNORECASE)
+    match_vf_punto = patron_vf_punto.search(texto_limpio)
+    if match_vf_punto:
+        # Eliminar desde la V/F hasta el final
+        texto_limpio = texto_limpio[:match_vf_punto.start()].strip()
+    else:
+        # Caso 2: V/F seguido de espacio y más texto (ej: "F Ver libro")
+        patron_vf_espacio = re.compile(r'\s+[VF]\s+[A-Za-z].*$', re.IGNORECASE)
+        match_vf_espacio = patron_vf_espacio.search(texto_limpio)
+        if match_vf_espacio:
+            texto_limpio = texto_limpio[:match_vf_espacio.start()].strip()
+        else:
+            # Caso 3: Solo V/F aislada al final (sin más texto)
+            texto_limpio = re.sub(r'\s+[VF]\.?\s*$', '', texto_limpio, flags=re.IGNORECASE)
+            texto_limpio = re.sub(r'\s+\([VF]\)\s*$', '', texto_limpio, flags=re.IGNORECASE)
+    
+    # 3. Eliminar códigos dentro del texto (Código: \d+)
+    texto_limpio = re.sub(r'Código:\s*\d+', '', texto_limpio, flags=re.IGNORECASE)
+    
+    # 4. Eliminar referencias de página dentro del texto (PAG.\d+, Página \d+)
+    texto_limpio = re.sub(r'PAG\.\s*\d+', '', texto_limpio, flags=re.IGNORECASE)
+    texto_limpio = re.sub(r'Página\s+\d+', '', texto_limpio, flags=re.IGNORECASE)
+    
+    # 5. Limpiar espacios múltiples y espacios al inicio/final
+    texto_limpio = re.sub(r'\s+', ' ', texto_limpio).strip()
+    
+    return texto_limpio
 
 
 def limpiar_tema_x(texto: str) -> str:
@@ -180,6 +263,213 @@ def detectar_vf_en_enunciado(enunciado: str) -> tuple[str, Optional[int]]:
     return enunciado, None
 
 
+def obtener_repositorio_github():
+    """
+    Obtiene el repositorio de GitHub usando las credenciales de st.secrets.
+    Retorna el objeto Repository o None si hay error.
+    """
+    try:
+        token = st.secrets.get("GITHUB_TOKEN")
+        repo_name = st.secrets.get("REPO_NAME")
+        
+        if not token or not repo_name:
+            st.error("❌ Configuración incompleta: GITHUB_TOKEN o REPO_NAME no están definidos en st.secrets")
+            return None
+        
+        g = Github(token)
+        repo = g.get_repo(repo_name)
+        return repo
+    except GithubException as e:
+        st.error(f"❌ Error de GitHub API: {str(e)}")
+        return None
+    except Exception as e:
+        st.error(f"❌ Error al conectar con GitHub: {str(e)}")
+        return None
+
+
+def sanitizar_nombre_archivo(titulo: str) -> str:
+    """
+    Sanitiza el título para usarlo como nombre de archivo.
+    Elimina caracteres especiales y espacios.
+    """
+    # Reemplazar espacios y caracteres especiales
+    nombre = re.sub(r'[^\w\s-]', '', titulo)
+    nombre = re.sub(r'[-\s]+', '_', nombre)
+    return nombre.strip('_')
+
+
+def guardar_examen_github(titulo: str, descripcion: str, preguntas: List[Dict]) -> bool:
+    """
+    Guarda un examen en GitHub como archivo JSON en la carpeta /biblioteca.
+    Retorna True si se guardó correctamente, False en caso contrario.
+    """
+    try:
+        repo = obtener_repositorio_github()
+        if not repo:
+            return False
+        
+        # Crear estructura del examen con metadata
+        examen_data = {
+            'titulo': titulo,
+            'descripcion': descripcion,
+            'fecha_creacion': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+            'num_preguntas': len(preguntas),
+            'preguntas': preguntas
+        }
+        
+        # Convertir a JSON
+        examen_json = json.dumps(examen_data, ensure_ascii=False, indent=2)
+        
+        # Sanitizar nombre de archivo
+        nombre_archivo = sanitizar_nombre_archivo(titulo)
+        if not nombre_archivo:
+            nombre_archivo = f"examen_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+        
+        ruta_archivo = f"biblioteca/{nombre_archivo}.json"
+        
+        # Verificar si el archivo ya existe
+        try:
+            contenido_actual = repo.get_contents(ruta_archivo)
+            # Si existe, actualizarlo
+            repo.update_file(
+                path=ruta_archivo,
+                message=f"Actualizar examen: {titulo}",
+                content=examen_json,
+                sha=contenido_actual.sha
+            )
+        except GithubException:
+            # Si no existe, crearlo
+            try:
+                # Verificar si la carpeta biblioteca existe, si no, crearla
+                try:
+                    repo.get_contents("biblioteca")
+                except GithubException:
+                    # Crear carpeta biblioteca con un archivo README
+                    repo.create_file(
+                        path="biblioteca/README.md",
+                        message="Crear carpeta biblioteca",
+                        content="# Biblioteca de Exámenes\n\nEsta carpeta contiene los exámenes guardados."
+                    )
+                
+                # Crear el archivo del examen
+                repo.create_file(
+                    path=ruta_archivo,
+                    message=f"Agregar examen: {titulo}",
+                    content=examen_json
+                )
+            except Exception as e:
+                st.error(f"❌ Error al crear el archivo: {str(e)}")
+                return False
+        
+        return True
+    except Exception as e:
+        st.error(f"❌ Error al guardar el examen en GitHub: {str(e)}")
+        return False
+
+
+def obtener_examenes_github() -> List[Dict]:
+    """
+    Obtiene todos los exámenes guardados en GitHub desde la carpeta /biblioteca.
+    """
+    try:
+        repo = obtener_repositorio_github()
+        if not repo:
+            return []
+        
+        examenes = []
+        
+        try:
+            # Obtener contenido de la carpeta biblioteca
+            contenido = repo.get_contents("biblioteca")
+            
+            # Si es un solo archivo, convertirlo a lista
+            if not isinstance(contenido, list):
+                contenido = [contenido]
+            
+            # Filtrar solo archivos JSON (excluir README.md)
+            archivos_json = [f for f in contenido if f.name.endswith('.json') and f.name != 'metadata.json']
+            
+            for archivo in archivos_json:
+                try:
+                    # Obtener contenido del archivo
+                    contenido_archivo = archivo.decoded_content.decode('utf-8')
+                    examen_data = json.loads(contenido_archivo)
+                    
+                    examenes.append({
+                        'nombre_archivo': archivo.name,
+                        'ruta': archivo.path,
+                        'sha': archivo.sha,
+                        'titulo': examen_data.get('titulo', archivo.name.replace('.json', '')),
+                        'descripcion': examen_data.get('descripcion', 'Sin descripción'),
+                        'fecha_creacion': examen_data.get('fecha_creacion', 'Fecha desconocida'),
+                        'num_preguntas': examen_data.get('num_preguntas', len(examen_data.get('preguntas', [])))
+                    })
+                except Exception as e:
+                    # Si hay error al leer un archivo, continuar con los demás
+                    continue
+            
+            # Ordenar por fecha de creación (más recientes primero)
+            examenes.sort(key=lambda x: x['fecha_creacion'], reverse=True)
+            
+        except GithubException as e:
+            if e.status == 404:
+                # La carpeta biblioteca no existe aún
+                return []
+            else:
+                st.error(f"❌ Error al acceder a la carpeta biblioteca: {str(e)}")
+                return []
+        
+        return examenes
+    except Exception as e:
+        st.error(f"❌ Error al obtener exámenes de GitHub: {str(e)}")
+        return []
+
+
+def cargar_examen_github(ruta_archivo: str) -> Optional[List[Dict]]:
+    """
+    Carga un examen específico desde GitHub.
+    Retorna la lista de preguntas o None si hay error.
+    """
+    try:
+        repo = obtener_repositorio_github()
+        if not repo:
+            return None
+        
+        contenido = repo.get_contents(ruta_archivo)
+        examen_data = json.loads(contenido.decoded_content.decode('utf-8'))
+        
+        # Retornar solo las preguntas
+        return examen_data.get('preguntas', [])
+    except Exception as e:
+        st.error(f"❌ Error al cargar el examen desde GitHub: {str(e)}")
+        return None
+
+
+def eliminar_examen_github(ruta_archivo: str, sha: str) -> bool:
+    """
+    Elimina un examen de GitHub.
+    Retorna True si se eliminó correctamente, False en caso contrario.
+    """
+    try:
+        repo = obtener_repositorio_github()
+        if not repo:
+            return False
+        
+        # Obtener el nombre del archivo para el mensaje
+        nombre_archivo = os.path.basename(ruta_archivo)
+        
+        repo.delete_file(
+            path=ruta_archivo,
+            message=f"Eliminar examen: {nombre_archivo}",
+            sha=sha
+        )
+        
+        return True
+    except Exception as e:
+        st.error(f"❌ Error al eliminar el examen de GitHub: {str(e)}")
+        return False
+
+
 def tiene_patrones_opcion_en_texto(texto: str) -> bool:
     """
     Detecta si un texto contiene patrones de opciones (a., b), etc.).
@@ -265,8 +555,9 @@ def extraer_texto_con_subrayado(pdf_bytes: bytes):
     patron_pregunta = re.compile(r'^\s*(\d+)[\.\-\s]')  # Número seguido de punto, guion o espacio
     patron_opcion = re.compile(r'^\s*([a-eA-E])[\.\)\-]\s*')  # Letra a-e seguida de punto, paréntesis o guion
     
-    # Frase anclaje específica para forzar creación de pregunta
-    FRASE_ANCLAJE = "Con relación al producto como instrumento del marketing-mix, se puede afirmar que:"
+    # Frases anclaje para bloque sin numeración
+    FRASE_INICIO_BLOQUE = "Con relación al producto como instrumento del marketing-mix, se puede afirmar que:"
+    FRASE_FIN_BLOQUE = "Con relación a la publicidad como instrumento de comunicación, se puede afirmar que:"
     
     # Estado actual de la pregunta que estamos procesando
     pregunta_actual = None
@@ -275,7 +566,8 @@ def extraer_texto_con_subrayado(pdf_bytes: bytes):
     pregunta_idx = 0
     estado_actual = "enunciado"  # "enunciado" o "opciones"
     tiene_numero = False  # Indica si la pregunta actual tiene número
-    pregunta_cerrada = False  # Indica si la pregunta ya está cerrada (después de opción d)
+    pregunta_cerrada = False  # Indica si la pregunta ya está cerrada
+    dentro_bloque_sin_numeracion = False  # Indica si estamos dentro del bloque sin numeración
     
     # Procesar cada página
     for page_num in range(len(doc)):
@@ -316,8 +608,12 @@ def extraer_texto_con_subrayado(pdf_bytes: bytes):
             texto_completo = " ".join(textos_linea)
             texto_completo = texto_completo.strip()
             
-            # FILTRADO DE "TEMA X": Limpiar menciones de "Tema X" antes de procesar
+            # FILTRADO DE RUIDO: Aplicar limpieza completa antes de procesar
+            # 1. Limpiar "Tema X"
             texto_completo = limpiar_tema_x(texto_completo)
+            
+            # 2. Limpiar ruido general (referencias de página, marcas V/F, códigos, etc.)
+            texto_completo = limpiar_ruido(texto_completo)
             
             # Si después de limpiar el texto está vacío, saltar esta línea
             if not texto_completo:
@@ -330,12 +626,22 @@ def extraer_texto_con_subrayado(pdf_bytes: bytes):
             es_pregunta = patron_pregunta.match(texto_completo)
             es_opcion = patron_opcion.match(texto_completo)
             
-            # DETECCIÓN POR FRASE ANCLAJE: Si contiene la frase específica, forzar nueva pregunta
-            contiene_frase_anclaje = FRASE_ANCLAJE.lower() in texto_completo.lower()
+            # DETECCIÓN DE BLOQUE SIN NUMERACIÓN: Detectar inicio y fin del bloque
+            contiene_frase_inicio = FRASE_INICIO_BLOQUE.lower() in texto_completo.lower()
+            contiene_frase_fin = FRASE_FIN_BLOQUE.lower() in texto_completo.lower()
+            
+            # Actualizar estado del bloque sin numeración
+            if contiene_frase_inicio:
+                dentro_bloque_sin_numeracion = True
+            if contiene_frase_fin:
+                dentro_bloque_sin_numeracion = False
+            
+            # DETECCIÓN POR FRASE ANCLAJE: Si contiene la frase de inicio, forzar nueva pregunta
+            contiene_frase_anclaje = contiene_frase_inicio
             
             # NO DESCARTAR TEXTOS CORTOS - Si es parte de una pregunta/respuesta iniciada, conservarlo siempre
             
-            # Si la pregunta ya está cerrada (después de opción d), descartar texto o iniciar nueva pregunta
+            # Si la pregunta ya está cerrada, solo procesar si es nueva pregunta
             if pregunta_cerrada:
                 # Si es ruido, descartarlo
                 if es_ruido_pagina(texto_completo):
@@ -346,13 +652,7 @@ def extraer_texto_con_subrayado(pdf_bytes: bytes):
                     # Continuar con la lógica de nueva pregunta más abajo
                 else:
                     # Texto después de pregunta cerrada que no es ruido ni nueva pregunta
-                    # Tratarlo como inicio de nueva pregunta sin número
-                    pregunta_cerrada = False
-                    pregunta_actual = texto_completo
-                    opciones_actuales = []
-                    opciones_marcadas = []
-                    estado_actual = "enunciado"
-                    tiene_numero = False
+                    # NO hacer nada, esperar a nueva pregunta
                     continue
             
             # 1. IDENTIFICADOR DE PREGUNTA: Si empieza por número o contiene frase anclaje, crear nueva pregunta
@@ -466,57 +766,52 @@ def extraer_texto_con_subrayado(pdf_bytes: bytes):
                     opciones_actuales.append(opcion_limpia)
                     opciones_marcadas.append(marcado_linea)
                     
-                    # CIERRE DE PREGUNTA: Si es la opción "d", cerrar la pregunta
-                    if letra_opcion == 'd' and len(opciones_actuales) == 4:
-                        pregunta_cerrada = True
-                        # Guardar pregunta inmediatamente después de detectar la opción d
-                        respuesta_correcta = 0
-                        tiene_subrayado = False
-                        
-                        # Primero verificar si hay V/F al final de alguna opción para marcar respuesta correcta
-                        for idx, op in enumerate(opciones_actuales):
-                            vf_match = re.search(r'\s*[\(\-\s]*(V|F)[\)\s]*$', op, re.IGNORECASE)
-                            if vf_match:
-                                # Si encontramos V/F, marcar esta opción como correcta
-                                respuesta_correcta = idx
-                                tiene_subrayado = True
-                                break
-                        
-                        # Si no se encontró V/F, buscar por subrayado/resaltado
-                        if not tiene_subrayado:
-                            for idx, esta_marcada in enumerate(opciones_marcadas):
-                                if esta_marcada:
-                                    respuesta_correcta = idx
-                                    tiene_subrayado = True
-                                    break
-                        
-                        # Limpiar etiquetas y V/F de todas las opciones
-                        opciones_limpias = []
-                        for op in opciones_actuales:
-                            op_limpia = limpiar_etiqueta_opcion(limpiar_texto(op))
-                            # Eliminar V/F al final de opciones
-                            op_limpia = re.sub(r'\s*[\(\-\s]*(V|F)[\)\s]*$', '', op_limpia, flags=re.IGNORECASE).strip()
-                            opciones_limpias.append(op_limpia)
-                        
-                        todas_las_preguntas.append({
-                            'pregunta': limpiar_texto(pregunta_actual),
-                            'opciones': opciones_limpias,
-                            'correcta': respuesta_correcta,
-                            'tipo': 'opcion_multiple',
-                            'tiene_numero': tiene_numero
-                        })
-                        subrayado_por_pregunta[pregunta_idx] = tiene_subrayado
-                        pregunta_idx += 1
-                        
-                        # Resetear para siguiente pregunta
-                        pregunta_actual = None
-                        opciones_actuales = []
-                        opciones_marcadas = []
-                        estado_actual = "enunciado"
-                        tiene_numero = False
+                    # NO CERRAR AUTOMÁTICAMENTE: La opción d) no cierra la pregunta
+                    # La pregunta solo se cerrará cuando se detecte una nueva pregunta válida
                     continue
             
-            # 3. DETECCIÓN DE PREGUNTA SIN NÚMERO:
+            # 3. DETECCIÓN DE PREGUNTA SIN NÚMERO (en bloque sin numeración):
+            # En el bloque sin numeración, una nueva pregunta se define cuando:
+            # - El texto NO empieza por a), b), c) o d)
+            # - La pregunta anterior ya tiene sus 4 opciones completas
+            # - No es ruido
+            if dentro_bloque_sin_numeracion and pregunta_actual and len(opciones_actuales) == 4:
+                if not es_opcion and not es_pregunta and not es_ruido_pagina(texto_completo):
+                    # Nueva pregunta en bloque sin numeración - guardar pregunta anterior primero
+                    respuesta_correcta = 0
+                    tiene_subrayado = False
+                    for idx, esta_marcada in enumerate(opciones_marcadas):
+                        if esta_marcada:
+                            respuesta_correcta = idx
+                            tiene_subrayado = True
+                            break
+                    
+                    # Limpiar etiquetas y V/F de todas las opciones
+                    opciones_limpias = []
+                    for op in opciones_actuales:
+                        op_limpia = limpiar_etiqueta_opcion(limpiar_texto(op))
+                        op_limpia = re.sub(r'\s*[\(\-\s]*(V|F)[\)\s]*$', '', op_limpia, flags=re.IGNORECASE).strip()
+                        opciones_limpias.append(op_limpia)
+                    
+                    todas_las_preguntas.append({
+                        'pregunta': limpiar_texto(pregunta_actual),
+                        'opciones': opciones_limpias,
+                        'correcta': respuesta_correcta,
+                        'tipo': 'opcion_multiple',
+                        'tiene_numero': False
+                    })
+                    subrayado_por_pregunta[pregunta_idx] = tiene_subrayado
+                    pregunta_idx += 1
+                    
+                    # Iniciar nueva pregunta sin número
+                    pregunta_actual = texto_completo
+                    opciones_actuales = []
+                    opciones_marcadas = []
+                    estado_actual = "enunciado"
+                    tiene_numero = False
+                    continue
+            
+            # 4. DETECCIÓN DE PREGUNTA SIN NÚMERO (fuera del bloque):
             # Si detectamos texto que NO es pregunta ni opción y no hay pregunta iniciada,
             # y el texto es significativo, asumir pregunta nueva sin número
             if not pregunta_actual and not es_pregunta and not es_opcion:
@@ -526,11 +821,11 @@ def extraer_texto_con_subrayado(pdf_bytes: bytes):
                     estado_actual = "enunciado"
                     continue
             
-            # 4. ACUMULACIÓN DE TEXTO: Captura total según estado
+            # 5. ACUMULACIÓN DE TEXTO: Captura total según estado
             if pregunta_actual and not pregunta_cerrada:
                 if estado_actual == "opciones" and len(opciones_actuales) > 0:
                     # Ya encontramos opciones → añadir a la última opción (CAPTURA TOTAL)
-                    # Si ya tenemos 4 opciones, añadir a la última (opción d)
+                    # Si ya tenemos 4 opciones, añadir a la última (opción d) - FUSIÓN DE HUÉRFANOS
                     if len(opciones_actuales) >= 4:
                         opciones_actuales[3] += " " + texto_completo
                         # REFUERZO DE SUBRAYADO: Si alguna parte está marcada, marcar toda la opción
@@ -930,12 +1225,166 @@ def mostrar_modo_revision():
         if st.button("🔄 Recargar Vista", use_container_width=True,
                     help="Actualiza la vista de revisión"):
             st.rerun()
+    
+    # Formulario de guardado en biblioteca
+    st.markdown("---")
+    st.subheader("📚 Guardar en Biblioteca")
+    st.info("💾 Guarda este examen revisado para consultarlo más tarde o compartirlo con otros usuarios.")
+    
+    with st.form("form_guardar_examen", clear_on_submit=True):
+        titulo = st.text_input(
+            "Título del Examen *",
+            placeholder="Ej: Examen Final Marketing 2024",
+            help="Nombre descriptivo del examen"
+        )
+        descripcion = st.text_area(
+            "Descripción/Tema *",
+            placeholder="Ej: Examen de Dirección de Marketing - Tema 1: Producto",
+            height=100,
+            help="Descripción detallada del contenido del examen"
+        )
+        
+        col_submit, col_spacer = st.columns([1, 3])
+        with col_submit:
+            publicar = st.form_submit_button("📤 Publicar en la Biblioteca", type="primary", use_container_width=True)
+        
+        if publicar:
+            if not titulo or not descripcion:
+                st.error("❌ Por favor, completa todos los campos obligatorios (Título y Descripción).")
+            elif len(preguntas) == 0:
+                st.error("❌ No hay preguntas para guardar.")
+            else:
+                with st.spinner("📤 Subiendo examen a GitHub..."):
+                    if guardar_examen_github(titulo, descripcion, preguntas):
+                        st.success(f"✅ Examen '{titulo}' guardado exitosamente en GitHub!")
+                        st.balloons()
+                        st.info("💡 El examen se ha subido a la carpeta /biblioteca de tu repositorio de GitHub.")
+                    else:
+                        st.error("❌ Error al guardar el examen en GitHub. Verifica la configuración de st.secrets.")
+    
+    # Botón de exportación JSON
+    st.markdown("---")
+    st.subheader("💾 Exportar Datos")
+    
+    if st.button("📥 Descargar JSON", use_container_width=True,
+                help="Descarga una copia local del examen en formato JSON"):
+        preguntas_json = json.dumps(preguntas, ensure_ascii=False, indent=2)
+        st.download_button(
+            label="⬇️ Descargar archivo JSON",
+            data=preguntas_json,
+            file_name=f"examen_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json",
+            mime="application/json",
+            use_container_width=True
+        )
+
+
+def mostrar_biblioteca():
+    """
+    Muestra la biblioteca de exámenes guardados en GitHub con opción de cargar.
+    """
+    st.header("📚 Biblioteca de Exámenes")
+    st.markdown("---")
+    st.info("💡 Selecciona un examen de la biblioteca para cargarlo y comenzar a estudiar.")
+    
+    # Botón para refrescar la lista
+    if st.button("🔄 Actualizar Lista", help="Actualiza la lista de exámenes desde GitHub"):
+        st.rerun()
+    
+    with st.spinner("📥 Cargando exámenes desde GitHub..."):
+        examenes = obtener_examenes_github()
+    
+    if not examenes:
+        st.warning("📭 No hay exámenes guardados en la biblioteca aún.")
+        st.markdown("""
+        ### ¿Cómo guardar un examen?
+        1. Carga un PDF y revisa las preguntas extraídas
+        2. Completa el formulario al final de la revisión
+        3. Haz clic en "Publicar en la Biblioteca"
+        
+        ### ⚙️ Configuración Requerida
+        Asegúrate de tener configurado en Streamlit Secrets:
+        - `GITHUB_TOKEN`: Tu Personal Access Token de GitHub
+        - `REPO_NAME`: Nombre completo del repositorio (ej: `usuario/repositorio`)
+        """)
+    else:
+        st.success(f"📚 Se encontraron {len(examenes)} examen(es) en la biblioteca de GitHub.")
+        st.markdown("---")
+        
+        # Mostrar cada examen en una tarjeta
+        for idx, examen in enumerate(examenes):
+            with st.expander(f"📄 {examen['titulo']} - {examen['num_preguntas']} preguntas", expanded=False):
+                col_info, col_acciones = st.columns([3, 1])
+                
+                with col_info:
+                    st.markdown(f"**Descripción:** {examen['descripcion']}")
+                    st.markdown(f"**Fecha de creación:** {examen['fecha_creacion']}")
+                    st.markdown(f"**Número de preguntas:** {examen['num_preguntas']}")
+                    st.markdown(f"**Archivo:** `{examen['nombre_archivo']}`")
+                
+                with col_acciones:
+                    if st.button("📥 Cargar Examen", key=f"cargar_{idx}", use_container_width=True):
+                        with st.spinner("Cargando examen..."):
+                            preguntas_cargadas = cargar_examen_github(examen['ruta'])
+                        if preguntas_cargadas:
+                            st.session_state.preguntas = preguntas_cargadas
+                            st.session_state.pregunta_actual = 0
+                            st.session_state.respuestas_usuario = {}
+                            st.session_state.verificaciones = {}
+                            st.session_state.pdf_cargado = True
+                            st.session_state.modo_revision = False
+                            st.session_state.revision_completada = True
+                            st.session_state.vista_actual = 'test'
+                            st.success(f"✅ Examen '{examen['titulo']}' cargado exitosamente!")
+                            st.rerun()
+                        else:
+                            st.error("❌ Error al cargar el examen desde GitHub.")
+                    
+                    if st.button("🗑️ Eliminar", key=f"eliminar_{idx}", use_container_width=True):
+                        if eliminar_examen_github(examen['ruta'], examen['sha']):
+                            st.success(f"✅ Examen '{examen['titulo']}' eliminado de GitHub.")
+                            st.rerun()
+                        else:
+                            st.error("❌ Error al eliminar el examen.")
+            
+            st.markdown("---")
 
 
 def main():
     st.title("📚 Simulador de Exámenes Interactivo")
     st.markdown("---")
     
+    # Navegación principal con tabs
+    tab1, tab2, tab3 = st.tabs(["📝 Revisión y Test", "📚 Biblioteca", "ℹ️ Información"])
+    
+    with tab1:
+        mostrar_vista_principal()
+    
+    with tab2:
+        mostrar_biblioteca()
+    
+    with tab3:
+        st.header("ℹ️ Información")
+        st.markdown("""
+        ### ¿Cómo usar esta aplicación?
+        
+        1. **Cargar PDF**: Usa el panel lateral para subir un archivo PDF con preguntas
+        2. **Revisar**: Revisa y edita las preguntas extraídas en el modo revisión
+        3. **Guardar**: Guarda el examen en la biblioteca para consultarlo más tarde
+        4. **Estudiar**: Usa el simulador para practicar con las preguntas
+        
+        ### Características:
+        - ✅ Detección automática de respuestas correctas (subrayado/resaltado)
+        - ✅ Soporte para preguntas de opción múltiple y Verdadero/Falso
+        - ✅ Biblioteca compartida de exámenes
+        - ✅ Exportación a JSON
+        - ✅ Interfaz intuitiva y rápida
+        """)
+
+
+def mostrar_vista_principal():
+    """
+    Muestra la vista principal con carga de PDF, revisión y test.
+    """
     # Sidebar para cargar archivo
     with st.sidebar:
         st.header("📁 Cargar PDF")
