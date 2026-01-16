@@ -58,35 +58,86 @@ def es_ruido_pagina(texto: str) -> bool:
         "DESCARGADO POR",
         "PROFESORAS:",
         "PROFESORES:",
-        "DEPARTAMENTO DE",
+        "DEPARTAMENTO DE MARKETING",
         "DIRECCIÓN COMERCIAL",
+        "DIRECCIÓN COMERCIAL I",
         "SISTEMA DE PUNTUACIÓN",
         "□",  # Símbolo de cuadro
         "JOSEFA PARREÑO SELVA",
         "ENAR RUIZ CONDE",
         "ADEGO!",
         "VERDADERO FALSO",
+        "FICHA DE AUTOEVALUACIÓN",
     ]
     
     for patron in patrones_ruido:
         if patron in texto_upper:
             return True
     
+    # Detección de nombres de profesores (pueden aparecer solos o con variaciones)
+    if "JOSEFA" in texto_upper and "PARREÑO" in texto_upper:
+        return True
+    if "ENAR" in texto_upper and "RUIZ" in texto_upper and "CONDE" in texto_upper:
+        return True
+    
     # Patrones regex para ruido más complejo
     patrones_regex = [
         r'^\s*SISTEMA DE PUNTUACIÓN.*',  # Sistema de puntuación (captura todo el párrafo)
         r'^\s*Las preguntas tienen una única respuesta correcta.*',  # Continuación del sistema de puntuación
+        r'^\s*Los desaciertos puntúan.*',  # Continuación del sistema de puntuación
+        r'^\s*Para aprobar el examen será necesario obtener.*',  # Final del sistema de puntuación
+        r'^\s*Los desaciertos puntúan -0,2 puntos.*',  # Variante del sistema de puntuación
+        r'^\s*las preguntas no contestadas.*puntos.*',  # Variante del sistema de puntuación
         r'^\s*EXAMEN.*DIRECCIÓN DE MARKETING.*',  # Encabezados de examen
         r'^\s*PREGUNTAS EXÁMENES TIPO TEST',  # Título de preguntas
         r'^\s*EXAMEN FINAL.*DIRECCIÓN DE MARKETING.*',  # Examen final
         r'^\s*EXAMEN ENERO \d{4}',  # Examen enero año
-        r'^\s*Ficha de autoevaluación Tema:.*',  # Ficha de autoevaluación
-        r'^\s*Dirección Comercial I\s+\d+\s+Departamento de Marketing',  # Departamento con número
+        r'^\s*Ficha de autoevaluación.*',  # Ficha de autoevaluación (con o sin Tema:)
+        r'^\s*Ficha de autoevaluación\s+Tema:.*',  # Ficha de autoevaluación con Tema
+        r'^\s*Dirección Comercial I.*',  # Dirección Comercial I (con o sin número y departamento)
+        r'^\s*Dirección Comercial I\s+\d+.*',  # Dirección Comercial I seguido de número
+        r'^\s*Dirección Comercial I\s+\d+\s+Departamento de Marketing.*',  # Completo
+        r'^\s*Departamento de Marketing.*',  # Solo Departamento de Marketing
+        r'^\s*Tema:\s+.*',  # Tema: seguido de cualquier texto
+        r'^\s*Tema\s+\d+.*',  # Tema seguido de número y posiblemente más texto
         r'^\s*Código:\s*\d+',  # Código con número
         r'^\s*PAG\.\d+',  # PAG. seguido de número
         r'^\s*Página\s+\d+',  # Página seguido de número
         r'^\s*Tema\s+\d+\s*$',  # Solo "Tema X"
+        r'^\s*Profesoras?:.*',  # Profesoras: o Profesores: seguido de texto
     ]
+    
+    # Detectar sistema de puntuación completo (incluso si está en una sola línea o fragmentado)
+    texto_upper_stripped = texto_upper.strip()
+    if "SISTEMA DE PUNTUACIÓN" in texto_upper_stripped:
+        # Verificar si contiene partes del sistema de puntuación
+        partes_sistema = [
+            "LAS PREGUNTAS TIENEN UNA ÚNICA RESPUESTA CORRECTA",
+            "LOS DESACIERTOS PUNTÚAN",
+            "LAS PREGUNTAS NO CONTESTADAS",
+            "PARA APROBAR EL EXAMEN",
+            "OBTENER 5 PUNTOS",
+            "0,4 PUNTOS",
+            "-0,2 PUNTOS"
+        ]
+        # Si contiene al menos 2 partes del sistema de puntuación, es ruido
+        partes_encontradas = sum(1 for parte in partes_sistema if parte in texto_upper_stripped)
+        if partes_encontradas >= 2:
+            return True
+    
+    # Detectar combinaciones de frases de ruido (pueden aparecer juntas en una línea)
+    # Dirección Comercial + Departamento de Marketing
+    if ("DIRECCIÓN COMERCIAL" in texto_upper_stripped and 
+        ("DEPARTAMENTO DE MARKETING" in texto_upper_stripped or "DEPARTAMENTO" in texto_upper_stripped)):
+        return True
+    
+    # Ficha de autoevaluación (con o sin Tema)
+    if "FICHA DE AUTOEVALUACIÓN" in texto_upper_stripped:
+        return True
+    
+    # Tema: seguido de texto (puede ser parte de ficha o encabezado)
+    if re.match(r'^\s*TEMA:\s+', texto_stripped, re.IGNORECASE):
+        return True
     
     for patron in patrones_regex:
         if re.match(patron, texto_stripped, re.IGNORECASE):
@@ -111,13 +162,19 @@ def limpiar_ruido_sin_vf(texto: str) -> str:
     texto_limpio = texto
     
     # 1. Eliminar referencias de página al final del texto (P\d+, P \d+, Página \d+)
-    texto_limpio = re.sub(r'\s+P\s*\d+\s*$', '', texto_limpio, flags=re.IGNORECASE)
+    # Incluye casos pegados a ":" o cualquier carácter final
+    # Patrón: P seguido de dígitos al final, con o sin espacio antes, incluso si está pegado a ":"
+    texto_limpio = re.sub(r'[:;]\s*P\s*\d+\s*$', '', texto_limpio, flags=re.IGNORECASE)  # Pegado a : o ;
+    texto_limpio = re.sub(r'\s+P\s*\d+\s*$', '', texto_limpio, flags=re.IGNORECASE)  # Con espacio
+    texto_limpio = re.sub(r'P\s*\d+\s*$', '', texto_limpio, flags=re.IGNORECASE)  # Sin espacio (pegado al final)
     texto_limpio = re.sub(r'\s+Página\s+\d+\s*$', '', texto_limpio, flags=re.IGNORECASE)
     
     # 2. Eliminar códigos dentro del texto (Código: \d+)
     texto_limpio = re.sub(r'Código:\s*\d+', '', texto_limpio, flags=re.IGNORECASE)
     
-    # 3. Eliminar referencias de página dentro del texto (PAG.\d+, Página \d+)
+    # 3. Eliminar referencias de página dentro del texto (PAG.\d+, Página \d+, P\d+)
+    # También eliminar referencias pegadas a ":" dentro del texto
+    texto_limpio = re.sub(r'[:;]\s*P\s*\d+', '', texto_limpio, flags=re.IGNORECASE)  # Pegado a : o ; dentro del texto
     texto_limpio = re.sub(r'PAG\.\s*\d+', '', texto_limpio, flags=re.IGNORECASE)
     texto_limpio = re.sub(r'Página\s+\d+', '', texto_limpio, flags=re.IGNORECASE)
     
@@ -147,7 +204,11 @@ def limpiar_ruido(texto: str) -> str:
     texto_limpio = texto
     
     # 1. Eliminar referencias de página al final del texto (P\d+, P \d+, Página \d+)
-    texto_limpio = re.sub(r'\s+P\s*\d+\s*$', '', texto_limpio, flags=re.IGNORECASE)
+    # Incluye casos pegados a ":" o cualquier carácter final
+    # Patrón: P seguido de dígitos al final, con o sin espacio antes, incluso si está pegado a ":"
+    texto_limpio = re.sub(r'[:;]\s*P\s*\d+\s*$', '', texto_limpio, flags=re.IGNORECASE)  # Pegado a : o ;
+    texto_limpio = re.sub(r'\s+P\s*\d+\s*$', '', texto_limpio, flags=re.IGNORECASE)  # Con espacio
+    texto_limpio = re.sub(r'P\s*\d+\s*$', '', texto_limpio, flags=re.IGNORECASE)  # Sin espacio (pegado al final)
     texto_limpio = re.sub(r'\s+Página\s+\d+\s*$', '', texto_limpio, flags=re.IGNORECASE)
     
     # 2. Eliminar marcas V/F aisladas al final de opciones múltiples
@@ -173,7 +234,9 @@ def limpiar_ruido(texto: str) -> str:
     # 3. Eliminar códigos dentro del texto (Código: \d+)
     texto_limpio = re.sub(r'Código:\s*\d+', '', texto_limpio, flags=re.IGNORECASE)
     
-    # 4. Eliminar referencias de página dentro del texto (PAG.\d+, Página \d+)
+    # 4. Eliminar referencias de página dentro del texto (PAG.\d+, Página \d+, P\d+)
+    # También eliminar referencias pegadas a ":" dentro del texto
+    texto_limpio = re.sub(r'[:;]\s*P\s*\d+', '', texto_limpio, flags=re.IGNORECASE)  # Pegado a : o ; dentro del texto
     texto_limpio = re.sub(r'PAG\.\s*\d+', '', texto_limpio, flags=re.IGNORECASE)
     texto_limpio = re.sub(r'Página\s+\d+', '', texto_limpio, flags=re.IGNORECASE)
     
@@ -518,6 +581,44 @@ def tiene_patrones_opcion_en_texto(texto: str) -> bool:
     return bool(patron.search(texto))
 
 
+def detectar_caso(texto: str) -> Optional[tuple[str, str]]:
+    """
+    Detecta si un texto es un caso (ej: "Caso 1:", "Caso 2:", etc.).
+    Retorna (numero_caso, texto_caso) si es un caso, None en caso contrario.
+    """
+    if not texto:
+        return None
+    
+    # Patrón: "Caso" seguido de número y dos puntos
+    patron_caso = re.compile(r'^\s*Caso\s+(\d+)\s*:\s*(.*)$', re.IGNORECASE)
+    match = patron_caso.match(texto.strip())
+    
+    if match:
+        numero_caso = match.group(1)
+        texto_caso = match.group(2).strip()
+        return (numero_caso, texto_caso)
+    
+    return None
+
+
+def detectar_referencia_caso(texto: str) -> Optional[str]:
+    """
+    Detecta si un texto menciona un caso específico (ej: "Ante la situación planteada en el "Caso 1"").
+    Retorna el número del caso si se menciona, None en caso contrario.
+    """
+    if not texto:
+        return None
+    
+    # Patrón: "Ante la situación planteada en el "Caso X""
+    patron_referencia = re.compile(r'Caso\s+(\d+)', re.IGNORECASE)
+    match = patron_referencia.search(texto)
+    
+    if match:
+        return match.group(1)
+    
+    return None
+
+
 def es_fragmento_texto(texto: str) -> bool:
     """
     Detecta si un texto es un fragmento que probablemente pertenece a la opción anterior.
@@ -636,19 +737,23 @@ def extraer_texto_con_subrayado(pdf_bytes: bytes):
     patron_pregunta = re.compile(r'^\s*(\d+)[\.\-\s]')  # Número seguido de punto, guion o espacio
     patron_opcion = re.compile(r'^\s*([a-eA-E])[\.\)\-]\s*')  # Letra a-e seguida de punto, paréntesis o guion
     
-    # Frases anclaje para bloque sin numeración
-    FRASE_INICIO_BLOQUE = "Con relación al producto como instrumento del marketing-mix, se puede afirmar que:"
-    FRASE_FIN_BLOQUE = "Con relación a la publicidad como instrumento de comunicación, se puede afirmar que:"
-    
     # Estado actual de la pregunta que estamos procesando
     pregunta_actual = None
     opciones_actuales = []
     opciones_marcadas = []  # Lista de booleanos indicando si cada opción está marcada
     pregunta_idx = 0
     estado_actual = "enunciado"  # "enunciado" o "opciones"
-    tiene_numero = False  # Indica si la pregunta actual tiene número
     pregunta_cerrada = False  # Indica si la pregunta ya está cerrada
-    dentro_bloque_sin_numeracion = False  # Indica si estamos dentro del bloque sin numeración
+    
+    # Estado para casos: diccionario {numero_caso: texto_caso}
+    casos_detectados = {}  # Almacena los casos detectados
+    caso_actual = None  # Número del caso actual que se está acumulando
+    texto_caso_actual = ""  # Texto acumulado del caso actual
+    
+    # Estado para casos: diccionario {numero_caso: texto_caso}
+    casos_detectados = {}  # Almacena los casos detectados
+    caso_actual = None  # Número del caso actual que se está acumulando
+    texto_caso_actual = ""  # Texto acumulado del caso actual
     
     # Procesar cada página
     for page_num in range(len(doc)):
@@ -705,22 +810,32 @@ def extraer_texto_con_subrayado(pdf_bytes: bytes):
             # Si alguna parte está marcada, toda la línea está marcada
             marcado_linea = any(span['marcado'] for span in linea_visual)
             
+            # DETECCIÓN DE CASOS: Verificar si es un caso (ej: "Caso 1:")
+            caso_detectado = detectar_caso(texto_completo)
+            if caso_detectado:
+                numero_caso, texto_caso_inicial = caso_detectado
+                caso_actual = numero_caso
+                texto_caso_actual = texto_caso_inicial
+                # Continuar acumulando el texto del caso
+                continue
+            
+            # Si estamos acumulando un caso, seguir acumulando hasta encontrar una pregunta
+            if caso_actual is not None:
+                # Verificar si es una pregunta (termina el caso)
+                es_pregunta = patron_pregunta.match(texto_completo)
+                if es_pregunta:
+                    # Guardar el caso y terminar la acumulación
+                    casos_detectados[caso_actual] = texto_caso_actual.strip()
+                    caso_actual = None
+                    texto_caso_actual = ""
+                else:
+                    # Continuar acumulando el texto del caso
+                    texto_caso_actual += " " + texto_completo
+                    continue
+            
             # Verificar si es pregunta u opción (después de la limpieza)
             es_pregunta = patron_pregunta.match(texto_completo)
             es_opcion = patron_opcion.match(texto_completo)
-            
-            # DETECCIÓN DE BLOQUE SIN NUMERACIÓN: Detectar inicio y fin del bloque
-            contiene_frase_inicio = FRASE_INICIO_BLOQUE.lower() in texto_completo.lower()
-            contiene_frase_fin = FRASE_FIN_BLOQUE.lower() in texto_completo.lower()
-            
-            # Actualizar estado del bloque sin numeración
-            if contiene_frase_inicio:
-                dentro_bloque_sin_numeracion = True
-            if contiene_frase_fin:
-                dentro_bloque_sin_numeracion = False
-            
-            # DETECCIÓN POR FRASE ANCLAJE: Si contiene la frase de inicio, forzar nueva pregunta
-            contiene_frase_anclaje = contiene_frase_inicio
             
             # NO DESCARTAR TEXTOS CORTOS - Si es parte de una pregunta/respuesta iniciada, conservarlo siempre
             
@@ -729,8 +844,8 @@ def extraer_texto_con_subrayado(pdf_bytes: bytes):
                 # Si es ruido, descartarlo
                 if es_ruido_pagina(texto_completo):
                     continue
-                # Si es nueva pregunta o frase anclaje, reiniciar
-                if es_pregunta or contiene_frase_anclaje:
+                # Si es nueva pregunta, reiniciar
+                if es_pregunta:
                     pregunta_cerrada = False
                     # Continuar con la lógica de nueva pregunta más abajo
                 else:
@@ -738,8 +853,8 @@ def extraer_texto_con_subrayado(pdf_bytes: bytes):
                     # NO hacer nada, esperar a nueva pregunta
                     continue
             
-            # 1. IDENTIFICADOR DE PREGUNTA: Si empieza por número o contiene frase anclaje, crear nueva pregunta
-            if es_pregunta or contiene_frase_anclaje:
+            # 1. IDENTIFICADOR DE PREGUNTA: Si empieza por número, crear nueva pregunta
+            if es_pregunta:
                 # Guardar pregunta anterior si existe (CLASIFICACIÓN FINAL)
                 if pregunta_actual and not pregunta_cerrada:
                     if len(opciones_actuales) > 0:
@@ -775,7 +890,6 @@ def extraer_texto_con_subrayado(pdf_bytes: bytes):
                             'opciones': opciones_limpias,
                             'correcta': respuesta_correcta,
                             'tipo': 'opcion_multiple',
-                            'tiene_numero': tiene_numero
                         })
                         subrayado_por_pregunta[pregunta_idx] = tiene_subrayado
                         pregunta_idx += 1
@@ -793,8 +907,7 @@ def extraer_texto_con_subrayado(pdf_bytes: bytes):
                             'opciones': [],
                             'correcta': respuesta_correcta,
                             'tipo': 'V/F',
-                            'vf_detectado_enunciado': vf_detectado_enunciado,
-                            'tiene_numero': tiene_numero
+                            'vf_detectado_enunciado': vf_detectado_enunciado
                         })
                         subrayado_por_pregunta[pregunta_idx] = False
                         pregunta_idx += 1
@@ -804,7 +917,6 @@ def extraer_texto_con_subrayado(pdf_bytes: bytes):
                 opciones_actuales = []
                 opciones_marcadas = []
                 estado_actual = "enunciado"
-                tiene_numero = es_pregunta  # Solo tiene número si empieza con número
                 pregunta_cerrada = False
                 continue
             
@@ -830,11 +942,10 @@ def extraer_texto_con_subrayado(pdf_bytes: bytes):
                     # Cambiar a estado "opciones" si aún estábamos en "enunciado"
                     if estado_actual == "enunciado":
                         estado_actual = "opciones"
-                        # Si no había pregunta iniciada, crear una sin número
-                        # Esto puede pasar si el PDF empieza directamente con opciones
+                        # Si no había pregunta iniciada, ignorar esta opción
+                        # (Todas las preguntas deben empezar con número)
                         if not pregunta_actual:
-                            pregunta_actual = "[S/N]"
-                            tiene_numero = False
+                            continue
                     
                     # Nueva opción - Limpiar etiqueta (a., b), etc.)
                     opcion_limpia = limpiar_etiqueta_opcion(texto_completo)
@@ -861,8 +972,8 @@ def extraer_texto_con_subrayado(pdf_bytes: bytes):
             # 3. ACUMULACIÓN PRIORITARIA: Si ya tenemos 4 opciones (incluyendo d), acumular a la opción d)
             # REGLA DE ORO: Todo el texto después de la opción d) se acumula a ella a menos que sea nueva pregunta válida
             if pregunta_actual and len(opciones_actuales) == 4 and estado_actual == "opciones":
-                # Verificar si es una nueva pregunta válida (patrón de número o frase anclaje)
-                es_nueva_pregunta_valida = es_pregunta or contiene_frase_anclaje
+                # Verificar si es una nueva pregunta válida (patrón de número)
+                es_nueva_pregunta_valida = es_pregunta
                 
                 # Si NO es nueva pregunta válida, SIEMPRE acumular a la opción d)
                 if not es_nueva_pregunta_valida:
@@ -875,61 +986,7 @@ def extraer_texto_con_subrayado(pdf_bytes: bytes):
                     continue
                 # Si es nueva pregunta válida, continuar con la lógica de guardar pregunta anterior
             
-            # 4. DETECCIÓN DE PREGUNTA SIN NÚMERO (en bloque sin numeración):
-            # En el bloque sin numeración, una nueva pregunta se define cuando:
-            # - El texto NO empieza por a), b), c) o d)
-            # - La pregunta anterior ya tiene sus 4 opciones completas
-            # - No es ruido ni fragmento
-            # - Es texto significativo (no fragmento)
-            if dentro_bloque_sin_numeracion and pregunta_actual and len(opciones_actuales) == 4:
-                if not es_opcion and not es_pregunta and not es_ruido_pagina(texto_completo) and not es_fragmento_texto(texto_completo):
-                    # Nueva pregunta válida en bloque sin numeración - guardar pregunta anterior primero
-                    respuesta_correcta = 0
-                    tiene_subrayado = False
-                    for idx, esta_marcada in enumerate(opciones_marcadas):
-                        if esta_marcada:
-                            respuesta_correcta = idx
-                            tiene_subrayado = True
-                            break
-                    
-                    # Limpiar etiquetas y V/F de todas las opciones antes de guardar
-                    opciones_limpias = []
-                    for op in opciones_actuales:
-                        op_limpia = limpiar_etiqueta_opcion(limpiar_texto(op))
-                        # Aplicar limpieza de ruido (P139, V/F, etc.)
-                        op_limpia = limpiar_ruido(op_limpia)
-                        op_limpia = re.sub(r'\s*[\(\-\s]*(V|F)[\)\s]*$', '', op_limpia, flags=re.IGNORECASE).strip()
-                        opciones_limpias.append(op_limpia)
-                    
-                    todas_las_preguntas.append({
-                        'pregunta': limpiar_texto(pregunta_actual),
-                        'opciones': opciones_limpias,
-                        'correcta': respuesta_correcta,
-                        'tipo': 'opcion_multiple',
-                        'tiene_numero': False
-                    })
-                    subrayado_por_pregunta[pregunta_idx] = tiene_subrayado
-                    pregunta_idx += 1
-                    
-                    # Iniciar nueva pregunta sin número
-                    pregunta_actual = texto_completo
-                    opciones_actuales = []
-                    opciones_marcadas = []
-                    estado_actual = "enunciado"
-                    tiene_numero = False
-                    continue
-            
-            # 5. DETECCIÓN DE PREGUNTA SIN NÚMERO (fuera del bloque):
-            # Si detectamos texto que NO es pregunta ni opción y no hay pregunta iniciada,
-            # y el texto es significativo, asumir pregunta nueva sin número
-            if not pregunta_actual and not es_pregunta and not es_opcion:
-                if len(texto_completo) > 15 and not es_fragmento_texto(texto_completo):  # Texto significativo y no fragmento
-                    pregunta_actual = texto_completo
-                    tiene_numero = False
-                    estado_actual = "enunciado"
-                    continue
-            
-            # 6. ACUMULACIÓN DE TEXTO: Captura total según estado
+            # 4. ACUMULACIÓN DE TEXTO: Captura total según estado
             # Solo procesar si no se procesó en las secciones anteriores
             if pregunta_actual and not pregunta_cerrada:
                 # Si ya tenemos 4 opciones, solo acumular si no es nueva pregunta válida
@@ -939,7 +996,7 @@ def extraer_texto_con_subrayado(pdf_bytes: bytes):
                     # Si ya tenemos 4 opciones, añadir a la última (opción d) - FUSIÓN DE HUÉRFANOS
                     if len(opciones_actuales) >= 4:
                         # Solo acumular si no es nueva pregunta válida (ya se procesó en sección 3)
-                        if not (es_pregunta or contiene_frase_anclaje):
+                        if not es_pregunta:
                             opciones_actuales[3] += " " + texto_completo
                             # REFUERZO DE SUBRAYADO: Si alguna parte está marcada, marcar toda la opción
                             if marcado_linea:
@@ -996,8 +1053,7 @@ def extraer_texto_con_subrayado(pdf_bytes: bytes):
                 'pregunta': limpiar_texto(pregunta_actual),
                 'opciones': opciones_limpias,
                 'correcta': respuesta_correcta,
-                'tipo': 'opcion_multiple',
-                'tiene_numero': tiene_numero
+                'tipo': 'opcion_multiple'
             })
             subrayado_por_pregunta[pregunta_idx] = tiene_subrayado
         else:
@@ -1014,14 +1070,18 @@ def extraer_texto_con_subrayado(pdf_bytes: bytes):
                 'opciones': [],
                 'correcta': respuesta_correcta,
                 'tipo': 'V/F',
-                'vf_detectado_enunciado': vf_detectado_enunciado,
-                'tiene_numero': tiene_numero
+                'vf_detectado_enunciado': vf_detectado_enunciado
             })
             subrayado_por_pregunta[pregunta_idx] = False
+    
+    # Guardar último caso si estaba acumulándose
+    if caso_actual is not None and texto_caso_actual:
+        casos_detectados[caso_actual] = texto_caso_actual.strip()
     
     doc.close()
     
     # Normalizar: asegurar que todas las preguntas tengan un tipo asignado y limpiar prefijos
+    # También asociar preguntas con casos
     for pregunta in todas_las_preguntas:
         if 'tipo' not in pregunta:
             if len(pregunta.get('opciones', [])) > 0:
@@ -1029,12 +1089,58 @@ def extraer_texto_con_subrayado(pdf_bytes: bytes):
             else:
                 pregunta['tipo'] = 'V/F'
         
-        # Limpiar prefijo [S/N] del texto almacenado (solo se muestra en el título)
-        if pregunta.get('pregunta', '').startswith("[S/N]"):
-            pregunta['pregunta'] = pregunta['pregunta'].replace("[S/N]", "").strip()
-            pregunta['tiene_numero'] = False
+        # Detectar si la pregunta menciona un caso
+        caso_mencionado = detectar_referencia_caso(pregunta.get('pregunta', ''))
+        if caso_mencionado:
+            pregunta['caso'] = caso_mencionado
     
-    return todas_las_preguntas, subrayado_por_pregunta
+    # Reorganizar preguntas: agrupar casos con sus preguntas relacionadas
+    preguntas_reorganizadas = []
+    casos_procesados = set()
+    
+    for pregunta in todas_las_preguntas:
+        caso_num = pregunta.get('caso')
+        
+        if caso_num and caso_num not in casos_procesados:
+            # Insertar el caso primero
+            if caso_num in casos_detectados:
+                preguntas_reorganizadas.append({
+                    'tipo': 'caso',
+                    'numero_caso': caso_num,
+                    'texto_caso': casos_detectados[caso_num],
+                    'preguntas_caso': []
+                })
+                casos_procesados.add(caso_num)
+        
+        if caso_num:
+            # Añadir la pregunta al caso correspondiente
+            for item in preguntas_reorganizadas:
+                if item.get('tipo') == 'caso' and item.get('numero_caso') == caso_num:
+                    item['preguntas_caso'].append(pregunta)
+                    break
+        else:
+            # Pregunta sin caso, añadirla normalmente
+            preguntas_reorganizadas.append(pregunta)
+    
+    # Si no se encontraron casos, retornar las preguntas originales
+    if not casos_detectados:
+        return todas_las_preguntas, subrayado_por_pregunta
+    
+    return preguntas_reorganizadas, subrayado_por_pregunta
+
+
+def aplanar_preguntas_con_casos(preguntas_estructuradas):
+    """
+    Convierte la estructura de preguntas con casos agrupados en una lista plana.
+    Útil para contar preguntas totales, etc.
+    """
+    preguntas_planas = []
+    for item in preguntas_estructuradas:
+        if item.get('tipo') == 'caso':
+            preguntas_planas.extend(item.get('preguntas_caso', []))
+        else:
+            preguntas_planas.append(item)
+    return preguntas_planas
 
 
 def mostrar_modo_revision():
@@ -1048,264 +1154,239 @@ def mostrar_modo_revision():
     st.info("🎯 **Vista Compacta**: Todas las preguntas están expandidas por defecto. Usa '🔧 Editar contenido' solo cuando necesites corregir el texto.")
     
     preguntas = st.session_state.preguntas
+    preguntas_planas = aplanar_preguntas_con_casos(preguntas)
     
     if not preguntas:
         st.warning("No hay preguntas para revisar.")
         return
     
     # Estadísticas rápidas compactas
-    col1, col2, col3, col4, col5 = st.columns(5)
+    col1, col2, col3 = st.columns(3)
     with col1:
-        st.metric("Total", len(preguntas))
+        st.metric("Total", len(preguntas_planas))
     with col2:
-        sin_respuesta = sum(1 for idx, p in enumerate(preguntas) 
-                           if p.get('correcta', None) is None or 
-                           (p.get('tipo') == 'opcion_multiple' and len(p.get('opciones', [])) > 0 and p.get('correcta', -1) < 0))
-        st.metric("⚠️ Sin respuesta", sin_respuesta, delta=None)
-    with col3:
-        con_respuesta = len(preguntas) - sin_respuesta
-        st.metric("✅ Con respuesta", con_respuesta)
-    with col4:
-        preguntas_vf = sum(1 for p in preguntas if p.get('tipo') == 'V/F' or len(p.get('opciones', [])) == 0)
+        preguntas_vf = sum(1 for p in preguntas_planas if p.get('tipo') == 'V/F' or len(p.get('opciones', [])) == 0)
         st.metric("✓/✗ V/F", preguntas_vf)
-    with col5:
-        preguntas_opcion_multiple = sum(1 for p in preguntas if len(p.get('opciones', [])) > 0)
+    with col3:
+        preguntas_opcion_multiple = sum(1 for p in preguntas_planas if len(p.get('opciones', [])) > 0)
         st.metric("A/B/C/D", preguntas_opcion_multiple)
     
     st.markdown("---")
     
     # Lista de preguntas con diseño compacto usando expanders (todos abiertos por defecto)
     preguntas_sin_respuesta = []
+    pregunta_global_idx = 0  # Índice global para preguntas (ignora casos)
     
-    for idx in range(len(preguntas)):
-        pregunta_data = st.session_state.preguntas[idx]
-        
-        # Determinar tipo y estado
-        tipo_pregunta = pregunta_data.get('tipo', 'opcion_multiple')
-        es_vf = tipo_pregunta == 'V/F' or len(pregunta_data.get('opciones', [])) == 0
-        
-        # Verificar si tiene respuesta marcada
-        tiene_respuesta = False
-        if es_vf:
-            tiene_respuesta = pregunta_data.get('correcta', None) is not None
-        else:
-            tiene_respuesta = (pregunta_data.get('correcta', None) is not None and 
-                             pregunta_data.get('correcta', -1) >= 0 and
-                             pregunta_data.get('correcta', -1) < len(pregunta_data.get('opciones', [])))
-        
-        if not tiene_respuesta:
-            preguntas_sin_respuesta.append(idx)
-        
-        # Título del expander: número + inicio del enunciado
-        enunciado = pregunta_data.get('pregunta', '')
-        enunciado_preview = enunciado[:60] + "..." if len(enunciado) > 60 else enunciado
-        emoji_tipo = "✓/✗" if es_vf else "A/B/C/D"
-        estado_emoji = "✅" if tiene_respuesta else "⚠️"
-        
-        # Manejar preguntas sin número
-        tiene_numero = pregunta_data.get('tiene_numero', True)
-        if not tiene_numero:
-            # Pregunta sin número - usar prefijo S/N en el título
-            titulo_expander = f"{estado_emoji} Pregunta {idx + 1} [S/N] [{emoji_tipo}] - {enunciado_preview}"
-        else:
-            titulo_expander = f"{estado_emoji} Pregunta {idx + 1} [{emoji_tipo}] - {enunciado_preview}"
-        
-        # TODOS LOS EXPANDERS ABIERTOS POR DEFECTO
-        with st.expander(titulo_expander, expanded=True):
-            # Botones de acción: Editar y Borrar (en la misma línea con columnas)
-            col_edit, col_delete, col_spacer = st.columns([1, 1, 3])
-            with col_edit:
-                edit_mode = st.checkbox(
-                    "🔧 Editar contenido",
-                    key=f"edit_content_{idx}",
-                    value=False  # Valor por defecto, Streamlit lo maneja automáticamente
-                )
-            with col_delete:
-                # Botón de borrado de pregunta
-                if st.button(
-                    "🗑️ Borrar Pregunta",
-                    key=f"delete_{idx}",
-                    type="secondary",
-                    use_container_width=True
-                ):
-                    # Eliminar la pregunta de la lista usando pop
-                    st.session_state.preguntas.pop(idx)
-                    # Actualizar también el diccionario de subrayado si existe
-                    if 'subrayado_detectado' in st.session_state and st.session_state.subrayado_detectado:
-                        # Reconstruir el diccionario: los índices posteriores al borrado se desplazan
-                        nuevo_subrayado = {}
-                        for i in range(len(st.session_state.preguntas)):
-                            # Si el índice original (antes del borrado) tenía subrayado, mantenerlo
-                            if i < idx:
-                                # Índices anteriores no cambian
-                                if i in st.session_state.subrayado_detectado:
-                                    nuevo_subrayado[i] = st.session_state.subrayado_detectado[i]
-                            elif i >= idx:
-                                # Índices posteriores se desplazan hacia atrás
-                                if (i + 1) in st.session_state.subrayado_detectado:
-                                    nuevo_subrayado[i] = st.session_state.subrayado_detectado[i + 1]
-                        st.session_state.subrayado_detectado = nuevo_subrayado
-                    # Refrescar la página para actualizar los números
-                    st.rerun()
+    for idx, item in enumerate(preguntas):
+        # Si es un caso, mostrarlo con sus preguntas agrupadas
+        if item.get('tipo') == 'caso':
+            numero_caso = item.get('numero_caso', '')
+            texto_caso = item.get('texto_caso', '')
+            preguntas_caso = item.get('preguntas_caso', [])
             
-            st.markdown("---")
-            
-            # VISUALIZACIÓN: Texto simple por defecto, text_area si se activa edición
-            # El prefijo [S/N] ya se limpia en la normalización, solo se muestra en el título
-            enunciado_actual = pregunta_data.get('pregunta', '')
-            
-            if edit_mode:
-                # Modo edición: text_area
-                nuevo_enunciado = st.text_area(
-                    "**Enunciado:**",
-                    value=enunciado_actual,
-                    key=f"enunciado_{idx}",
-                    height=100,
-                    help="Edita el enunciado completo de la pregunta"
-                )
-                # PERSISTENCIA INSTANTÁNEA
-                if nuevo_enunciado != enunciado_actual:
-                    st.session_state.preguntas[idx]['pregunta'] = nuevo_enunciado
-            else:
-                # Modo visualización: texto simple completo
-                st.markdown("**Enunciado:**")
-                st.write(enunciado_actual)
-            
-            # ALERTAS VISUALES
-            vf_detectado = pregunta_data.get('vf_detectado_enunciado', False)
-            if es_vf and vf_detectado:
-                st.success("✅ Respuesta extraída del enunciado (V/F)")
-            
-            if es_vf and tiene_patrones_opcion_en_texto(enunciado_actual):
-                st.warning("⚠️ Posible error de detección de formato: El enunciado contiene patrones de opciones (a., b.), etc.)")
-            
-            st.markdown("---")
-            
-            # Opciones (si es opción múltiple)
-            if not es_vf:
-                opciones_actuales = pregunta_data.get('opciones', [])
-                if len(opciones_actuales) > 0:
-                    st.markdown("**Opciones:**")
-                    
-                    if edit_mode:
-                        # Modo edición: text_area para cada opción
-                        nuevas_opciones = []
-                        for opcion_idx, opcion_texto in enumerate(opciones_actuales):
-                            nueva_opcion = st.text_area(
-                                f"Opción {chr(65 + opcion_idx)}:",
-                                value=opcion_texto,
-                                key=f"opcion_{idx}_{opcion_idx}",
-                                height=80,
-                                help=f"Edita el texto completo de la opción {chr(65 + opcion_idx)}"
-                            )
-                            nuevas_opciones.append(nueva_opcion)
-                        
-                        # PERSISTENCIA INSTANTÁNEA: Actualizar toda la lista si hay cambios
-                        if nuevas_opciones != opciones_actuales:
-                            st.session_state.preguntas[idx]['opciones'] = nuevas_opciones
-                    else:
-                        # Modo visualización: texto simple completo (sin etiquetas a., b., etc.)
-                        # Las opciones ya están limpias (sin a., b.), solo mostramos el texto
-                        for opcion_idx, opcion_texto in enumerate(opciones_actuales):
-                            letra_opcion = chr(65 + opcion_idx)
-                            st.markdown(f"**{letra_opcion}.** {opcion_texto}")
-                    
-                    st.markdown("---")
-                else:
-                    st.warning("⚠️ No hay opciones detectadas. Activa 'Editar contenido' para agregarlas.")
-            
-            # QUICK-SELECT: Selector rápido de respuesta correcta (siempre visible)
-            col_radio, col_spacer2 = st.columns([3, 1])
-            with col_radio:
-                st.markdown("**Respuesta Correcta:**")
-                if es_vf:
-                    # Verdadero/Falso - Radio horizontal rápido
-                    respuesta_actual = pregunta_data.get('correcta', 0)
-                    respuesta_vf = st.radio(
-                        "Selecciona la respuesta correcta:",  # Label explícito para evitar advertencias
-                        options=['Verdadero', 'Falso'],
-                        index=respuesta_actual if respuesta_actual in [0, 1] else 0,
-                        key=f"quick_vf_{idx}",
-                        horizontal=True,
-                        label_visibility="collapsed"  # Oculto visualmente pero presente internamente
-                    )
-                    # PERSISTENCIA INSTANTÁNEA
-                    nueva_respuesta = 0 if respuesta_vf == 'Verdadero' else 1
-                    if nueva_respuesta != respuesta_actual:
-                        st.session_state.preguntas[idx]['correcta'] = nueva_respuesta
-                        st.session_state.preguntas[idx]['tipo'] = 'V/F'
-                else:
-                    # Opción múltiple - Radio horizontal rápido
-                    opciones_actuales = pregunta_data.get('opciones', [])
-                    respuesta_actual = pregunta_data.get('correcta', -1)
-                    
-                    if len(opciones_actuales) > 0:
-                        # Preparar labels con formato visual (solo letras para radio horizontal)
-                        opciones_labels = []
-                        for opcion_idx in range(len(opciones_actuales)):
-                            letra_opcion = chr(65 + opcion_idx)
-                            es_seleccionada = (respuesta_actual == opcion_idx)
-                            emoji = "✅" if es_seleccionada else "○"
-                            opciones_labels.append(f"{emoji} {letra_opcion}")
-                        
-                        # Radio buttons horizontales compactos
-                        respuesta_seleccionada = st.radio(
-                            "Selecciona la respuesta correcta:",  # Label explícito para evitar advertencias
-                            options=list(range(len(opciones_actuales))),
-                            format_func=lambda x: opciones_labels[x],
-                            index=respuesta_actual if respuesta_actual >= 0 and respuesta_actual < len(opciones_actuales) else 0,
-                            key=f"quick_radio_{idx}",
-                            horizontal=True,
-                            label_visibility="collapsed"  # Oculto visualmente pero presente internamente
-                        )
-                        
-                        # PERSISTENCIA INSTANTÁNEA
-                        if respuesta_seleccionada != respuesta_actual:
-                            st.session_state.preguntas[idx]['correcta'] = respuesta_seleccionada
-            
-            # Editor avanzado (solo si se activa edición y es necesario)
-            if edit_mode:
+            # Mostrar el caso en un expander grande
+            with st.expander(f"📋 **Caso {numero_caso}**", expanded=True):
+                st.markdown(f"**{texto_caso}**")
                 st.markdown("---")
-                st.markdown("**Opciones Avanzadas:**")
                 
-                # Selector de tipo
-                tipo_actual = pregunta_data.get('tipo', 'opcion_multiple')
-                if len(pregunta_data.get('opciones', [])) == 0:
-                    tipo_actual = 'V/F'
+                # Mostrar todas las preguntas del caso
+                for pregunta_idx_local, pregunta_data in enumerate(preguntas_caso):
+                    pregunta_global_idx += 1
+                    mostrar_pregunta_revision(pregunta_data, pregunta_global_idx - 1, pregunta_idx_local, numero_caso)
+        else:
+            # Pregunta normal (sin caso)
+            pregunta_data = item
+            pregunta_global_idx += 1
+            mostrar_pregunta_revision(pregunta_data, pregunta_global_idx - 1, None, None)
+    
+    # Mostrar resumen y acciones finales
+    mostrar_modo_revision_completo()
+
+
+def mostrar_pregunta_revision(pregunta_data, idx_global, idx_local, numero_caso):
+    """
+    Muestra una pregunta individual en el modo revisión.
+    Si idx_local y numero_caso no son None, la pregunta pertenece a un caso.
+    """
+    # Determinar tipo y estado
+    tipo_pregunta = pregunta_data.get('tipo', 'opcion_multiple')
+    es_vf = tipo_pregunta == 'V/F' or len(pregunta_data.get('opciones', [])) == 0
+    
+    # Verificar si tiene respuesta marcada
+    tiene_respuesta = False
+    if es_vf:
+        tiene_respuesta = pregunta_data.get('correcta', None) is not None
+    else:
+        tiene_respuesta = (pregunta_data.get('correcta', None) is not None and 
+                         pregunta_data.get('correcta', -1) >= 0 and
+                         pregunta_data.get('correcta', -1) < len(pregunta_data.get('opciones', [])))
+    
+    # Título del expander
+    enunciado = pregunta_data.get('pregunta', '')
+    enunciado_preview = enunciado[:60] + "..." if len(enunciado) > 60 else enunciado
+    emoji_tipo = "✓/✗" if es_vf else "A/B/C/D"
+    estado_emoji = "✅" if tiene_respuesta else "⚠️"
+    
+    # Si pertenece a un caso, mostrar numeración relativa
+    if numero_caso and idx_local is not None:
+        titulo_expander = f"{estado_emoji} Caso {numero_caso} - Pregunta {idx_local + 1} [{emoji_tipo}] - {enunciado_preview}"
+    else:
+        # Manejar preguntas sin número
+        titulo_expander = f"{estado_emoji} Pregunta {idx_global + 1} [{emoji_tipo}] - {enunciado_preview}"
+    
+    # TODOS LOS EXPANDERS ABIERTOS POR DEFECTO
+    with st.expander(titulo_expander, expanded=True):
+        # Botones de acción: Editar y Borrar (en la misma línea con columnas)
+        col_edit, col_delete, col_spacer = st.columns([1, 1, 3])
+        with col_edit:
+            edit_mode = st.checkbox(
+                "🔧 Editar contenido",
+                key=f"edit_content_{idx_global}",
+                value=False
+            )
+        with col_delete:
+            # Botón de borrado de pregunta
+            if st.button(
+                "🗑️ Borrar Pregunta",
+                key=f"delete_{idx_global}",
+                type="secondary",
+                use_container_width=True
+            ):
+                # Eliminar la pregunta de la lista
+                preguntas_planas = aplanar_preguntas_con_casos(st.session_state.preguntas)
+                if idx_global < len(preguntas_planas):
+                    # Buscar y eliminar la pregunta de la estructura
+                    for item in st.session_state.preguntas:
+                        if item.get('tipo') == 'caso':
+                            if pregunta_data in item.get('preguntas_caso', []):
+                                item['preguntas_caso'].remove(pregunta_data)
+                                break
+                        elif item == pregunta_data:
+                            st.session_state.preguntas.remove(item)
+                            break
+                    st.rerun()
+        
+        st.markdown("---")
+        
+        # VISUALIZACIÓN: Texto simple por defecto, text_area si se activa edición
+        enunciado_actual = pregunta_data.get('pregunta', '')
+        
+        if edit_mode:
+            # Modo edición: text_area para el enunciado
+            nuevo_enunciado = st.text_area(
+                "Enunciado:",
+                value=enunciado_actual,
+                key=f"enunciado_{idx_global}",
+                height=150,
+                help="Edita el texto completo de la pregunta"
+            )
+            # PERSISTENCIA INSTANTÁNEA
+            if nuevo_enunciado != enunciado_actual:
+                pregunta_data['pregunta'] = nuevo_enunciado
+                st.session_state.preguntas = st.session_state.preguntas  # Forzar actualización
+        else:
+            # Modo visualización: texto simple completo
+            st.markdown("**Enunciado:**")
+            st.write(enunciado_actual)
+        
+        # ALERTAS VISUALES
+        vf_detectado = pregunta_data.get('vf_detectado_enunciado', False)
+        if es_vf and vf_detectado:
+            st.success("✅ Respuesta extraída del enunciado (V/F)")
+        
+        if es_vf and tiene_patrones_opcion_en_texto(enunciado_actual):
+            st.warning("⚠️ Posible error de detección de formato: El enunciado contiene patrones de opciones (a., b.), etc.)")
+        
+        st.markdown("---")
+        
+        # Opciones (si es opción múltiple)
+        if not es_vf:
+            opciones_actuales = pregunta_data.get('opciones', [])
+            if len(opciones_actuales) > 0:
+                st.markdown("**Opciones:**")
                 
-                tipo_seleccionado = st.radio(
-                    "Tipo de pregunta:",
-                    options=['opcion_multiple', 'V/F'],
-                    format_func=lambda x: 'Opción Múltiple (A/B/C/D)' if x == 'opcion_multiple' else 'Verdadero/Falso (✓/✗)',
-                    index=0 if tipo_actual == 'opcion_multiple' else 1,
-                    key=f"tipo_pregunta_{idx}",
-                    horizontal=True
+                if edit_mode:
+                    # Modo edición: text_area para cada opción
+                    nuevas_opciones = []
+                    for opcion_idx, opcion_texto in enumerate(opciones_actuales):
+                        nueva_opcion = st.text_area(
+                            f"Opción {chr(65 + opcion_idx)}:",
+                            value=opcion_texto,
+                            key=f"opcion_{idx_global}_{opcion_idx}",
+                            height=80,
+                            help=f"Edita el texto completo de la opción {chr(65 + opcion_idx)}"
+                        )
+                        nuevas_opciones.append(nueva_opcion)
+                    
+                    # PERSISTENCIA INSTANTÁNEA
+                    if nuevas_opciones != opciones_actuales:
+                        pregunta_data['opciones'] = nuevas_opciones
+                else:
+                    # Modo visualización: texto simple completo
+                    for opcion_idx, opcion_texto in enumerate(opciones_actuales):
+                        letra_opcion = chr(65 + opcion_idx)
+                        st.markdown(f"**{letra_opcion}.** {opcion_texto}")
+                
+                st.markdown("---")
+            else:
+                st.warning("⚠️ No hay opciones detectadas. Activa 'Editar contenido' para agregarlas.")
+        
+        # QUICK-SELECT: Selector rápido de respuesta correcta (siempre visible)
+        respuesta_actual = pregunta_data.get('correcta', None)
+        
+        if es_vf:
+            # Pregunta Verdadero/Falso
+            respuesta_seleccionada = st.radio(
+                "Selecciona la respuesta correcta:",
+                options=['Verdadero', 'Falso'],
+                index=respuesta_actual if respuesta_actual is not None else 0,
+                key=f"respuesta_{idx_global}",
+                horizontal=True,
+                label_visibility="collapsed"
+            )
+            
+            # PERSISTENCIA INSTANTÁNEA
+            if respuesta_seleccionada != (['Verdadero', 'Falso'][respuesta_actual] if respuesta_actual is not None else 'Verdadero'):
+                pregunta_data['correcta'] = 0 if respuesta_seleccionada == 'Verdadero' else 1
+        else:
+            # Pregunta de opción múltiple
+            opciones_labels = [f"**{chr(65+i)}.** {opcion}" for i, opcion in enumerate(pregunta_data.get('opciones', []))]
+            if opciones_labels:
+                respuesta_seleccionada = st.radio(
+                    "Selecciona la respuesta correcta:",
+                    options=opciones_labels,
+                    index=respuesta_actual if respuesta_actual is not None and respuesta_actual < len(opciones_labels) else 0,
+                    key=f"respuesta_{idx_global}",
+                    label_visibility="collapsed"
                 )
-                # Actualizar tipo solo si cambió (evitar sobreescritura innecesaria)
-                if tipo_seleccionado != tipo_actual:
-                    st.session_state.preguntas[idx]['tipo'] = tipo_seleccionado
                 
-                # Botones para agregar/eliminar opciones (solo si es opción múltiple)
-                if tipo_seleccionado == 'opcion_multiple':
-                    col_add, col_del = st.columns(2)
-                    with col_add:
-                        if st.button("➕ Agregar Opción", key=f"add_{idx}", use_container_width=True):
-                            opciones_actuales = st.session_state.preguntas[idx].get('opciones', [])
-                            opciones_actuales.append('')
-                            st.session_state.preguntas[idx]['opciones'] = opciones_actuales
-                            st.rerun()
-                    with col_del:
-                        opciones_actuales = st.session_state.preguntas[idx].get('opciones', [])
-                        if len(opciones_actuales) > 2 and st.button("➖ Eliminar Última", key=f"del_{idx}", use_container_width=True):
-                            opciones_actuales.pop()
-                            st.session_state.preguntas[idx]['opciones'] = opciones_actuales
-                            st.rerun()
+                # PERSISTENCIA INSTANTÁNEA
+                if respuesta_seleccionada != opciones_labels[respuesta_actual] if respuesta_actual is not None and respuesta_actual < len(opciones_labels) else opciones_labels[0]:
+                    nueva_respuesta = opciones_labels.index(respuesta_seleccionada)
+                    pregunta_data['correcta'] = nueva_respuesta
+        
+        st.markdown("---")
+
+
+def mostrar_modo_revision_completo():
+    """
+    Función auxiliar que muestra el resumen y acciones finales del modo revisión.
+    """
+    preguntas = st.session_state.preguntas
+    preguntas_planas = aplanar_preguntas_con_casos(preguntas)
+    
+    # Contar preguntas sin respuesta
+    preguntas_sin_respuesta_count = 0
+    for pregunta_data in preguntas_planas:
+        tiene_respuesta = pregunta_data.get('correcta', None) is not None
+        if not tiene_respuesta:
+            preguntas_sin_respuesta_count += 1
     
     st.markdown("---")
     
     # Resumen y acciones finales
-    if preguntas_sin_respuesta:
-        st.warning(f"⚠️ **{len(preguntas_sin_respuesta)} pregunta(s) sin respuesta marcada.** Revisa las preguntas destacadas en amarillo/naranja arriba.")
+    if preguntas_sin_respuesta_count > 0:
+        st.warning(f"⚠️ **{preguntas_sin_respuesta_count} pregunta(s) sin respuesta marcada.** Revisa las preguntas destacadas en amarillo/naranja arriba.")
     
     # Botones de acción rápida
     col1, col2, col3 = st.columns([1, 1, 1])
@@ -1314,13 +1395,13 @@ def mostrar_modo_revision():
         if st.button("✅ Marcar Todas como Revisadas", use_container_width=True, 
                     help="Marca todas las preguntas como revisadas y pasa al test"):
             # Asegurar que todas tengan al menos una respuesta por defecto
-            for idx in range(len(preguntas)):
-                pregunta_data = st.session_state.preguntas[idx]
+            preguntas_planas_para_marcar = aplanar_preguntas_con_casos(st.session_state.preguntas)
+            for pregunta_data in preguntas_planas_para_marcar:
                 if pregunta_data.get('correcta', None) is None:
                     if pregunta_data.get('tipo') == 'V/F' or len(pregunta_data.get('opciones', [])) == 0:
-                        st.session_state.preguntas[idx]['correcta'] = 0
+                        pregunta_data['correcta'] = 0
                     elif len(pregunta_data.get('opciones', [])) > 0:
-                        st.session_state.preguntas[idx]['correcta'] = 0
+                        pregunta_data['correcta'] = 0
             
             st.session_state.modo_revision = False
             st.session_state.revision_completada = True
@@ -1369,11 +1450,11 @@ def mostrar_modo_revision():
         if publicar:
             if not titulo or not descripcion:
                 st.error("❌ Por favor, completa todos los campos obligatorios (Título y Descripción).")
-            elif len(preguntas) == 0:
+            elif len(preguntas_planas) == 0:
                 st.error("❌ No hay preguntas para guardar.")
             else:
                 with st.spinner("📤 Subiendo examen a GitHub..."):
-                    if guardar_examen_github(titulo, descripcion, preguntas):
+                    if guardar_examen_github(titulo, descripcion, preguntas_planas):
                         st.success(f"✅ Examen '{titulo}' guardado exitosamente en GitHub!")
                         st.balloons()
                         st.info("💡 El examen se ha subido a la carpeta /biblioteca de tu repositorio de GitHub.")
@@ -1386,7 +1467,7 @@ def mostrar_modo_revision():
     
     if st.button("📥 Descargar JSON", use_container_width=True,
                 help="Descarga una copia local del examen en formato JSON"):
-        preguntas_json = json.dumps(preguntas, ensure_ascii=False, indent=2)
+        preguntas_json = json.dumps(preguntas_planas, ensure_ascii=False, indent=2)
         st.download_button(
             label="⬇️ Descargar archivo JSON",
             data=preguntas_json,
@@ -1503,13 +1584,13 @@ def mostrar_vista_principal():
     """
     Muestra la vista principal con carga de PDF, revisión y test.
     """
-    # Sidebar para cargar archivo
+    # Sidebar limpio y útil
     with st.sidebar:
         st.header("📁 Cargar PDF")
         uploaded_file = st.file_uploader(
-            "Selecciona un archivo PDF con preguntas",
+            "Selecciona un archivo PDF",
             type=['pdf'],
-            help="El PDF debe contener preguntas de opción múltiple con la respuesta correcta subrayada"
+            help="PDF con preguntas de opción múltiple"
         )
         
         if uploaded_file is not None:
@@ -1525,43 +1606,71 @@ def mostrar_vista_principal():
                         st.session_state.respuestas_usuario = {}
                         st.session_state.verificaciones = {}
                         st.session_state.pdf_cargado = True
-                        st.session_state.modo_revision = True  # Activar modo revisión
+                        st.session_state.modo_revision = True
                         st.session_state.revision_completada = False
-                        st.success(f"✅ Se encontraron {len(preguntas_extraidas)} preguntas")
+                        st.success(f"✅ {len(preguntas_extraidas)} preguntas encontradas")
                         
-                        # Contar preguntas sin subrayado
                         sin_subrayado = sum(1 for idx in range(len(preguntas_extraidas)) 
                                           if not subrayado_info.get(idx, False))
                         if sin_subrayado > 0:
-                            st.warning(f"⚠️ {sin_subrayado} pregunta(s) no tienen subrayado detectado. Revisa manualmente en la fase de revisión.")
-                        else:
-                            st.info("✅ Todas las preguntas tienen subrayado detectado. Revisa y confirma antes de comenzar.")
+                            st.warning(f"⚠️ {sin_subrayado} sin respuesta detectada")
                     else:
-                        st.error("❌ No se pudieron extraer preguntas del PDF. Verifica el formato.")
-            else:
-                st.info(f"📄 PDF cargado: {len(st.session_state.preguntas)} preguntas disponibles")
-                if st.session_state.modo_revision:
-                    st.info("📝 Modo: Revisión")
-                else:
-                    st.info("🎯 Modo: Simulador")
+                        st.error("❌ No se pudieron extraer preguntas")
         
-        st.markdown("---")
+        # Estadísticas útiles (solo si hay preguntas)
         if st.session_state.preguntas:
+            st.markdown("---")
+            st.subheader("📊 Estadísticas")
+            
+            total = len(st.session_state.preguntas)
+            preguntas_vf = sum(1 for p in st.session_state.preguntas 
+                             if p.get('tipo') == 'V/F' or len(p.get('opciones', [])) == 0)
+            preguntas_multiple = total - preguntas_vf
+            
+            st.metric("Total", total)
+            st.metric("Opción Múltiple", preguntas_multiple)
+            st.metric("Verdadero/Falso", preguntas_vf)
+            
+            # Estadísticas del modo test
+            if not st.session_state.modo_revision:
+                st.markdown("---")
+                st.subheader("🎯 Progreso")
+                idx_actual = st.session_state.pregunta_actual
+                st.metric("Pregunta actual", f"{idx_actual + 1}/{total}")
+                
+                respuestas_completadas = len([k for k in st.session_state.respuestas_usuario.keys() 
+                                             if k < total])
+                st.metric("Respondidas", respuestas_completadas)
+                
+                if respuestas_completadas > 0:
+                    verificadas = len(st.session_state.verificaciones)
+                    correctas = sum(1 for v in st.session_state.verificaciones.values() if v)
+                    if verificadas > 0:
+                        porcentaje = (correctas / verificadas) * 100
+                        st.metric("Aciertos", f"{correctas}/{verificadas}")
+                        st.metric("Porcentaje", f"{porcentaje:.1f}%")
+            
+            # Acciones rápidas
+            st.markdown("---")
+            st.subheader("⚡ Acciones")
+            
             if st.session_state.modo_revision:
-                st.info("📝 Modo: Revisión")
+                if st.button("🎮 Ir al Test", use_container_width=True, type="primary"):
+                    st.session_state.modo_revision = False
+                    st.session_state.revision_completada = True
+                    st.session_state.pregunta_actual = 0
+                    st.rerun()
             else:
-                st.info("🎯 Modo: Simulador")
                 if st.button("✏️ Volver a Revisión", use_container_width=True):
                     st.session_state.modo_revision = True
                     st.rerun()
             
-            st.markdown("---")
-            st.metric("Preguntas totales", len(st.session_state.preguntas))
-            if not st.session_state.modo_revision:
-                st.metric("Pregunta actual", st.session_state.pregunta_actual + 1)
-                respuestas_completadas = len([k for k in st.session_state.respuestas_usuario.keys() 
-                                             if k < len(st.session_state.preguntas)])
-                st.metric("Completadas", respuestas_completadas)
+            # Botón para reiniciar
+            if st.button("🔄 Reiniciar Examen", use_container_width=True):
+                st.session_state.pregunta_actual = 0
+                st.session_state.respuestas_usuario = {}
+                st.session_state.verificaciones = {}
+                st.rerun()
     
     # Área principal
     if not st.session_state.preguntas:
@@ -1594,14 +1703,39 @@ def mostrar_vista_principal():
                     st.rerun()
             st.markdown("---")
         
-        preguntas = st.session_state.preguntas
+        preguntas_estructuradas = st.session_state.preguntas
+        # Aplanar preguntas para el test (incluye preguntas de casos)
+        preguntas_planas = aplanar_preguntas_con_casos(preguntas_estructuradas)
         idx_actual = st.session_state.pregunta_actual
         
-        if idx_actual < len(preguntas):
-            pregunta_data = preguntas[idx_actual]
+        if idx_actual < len(preguntas_planas):
+            pregunta_data = preguntas_planas[idx_actual]
+            
+            # Verificar si la pregunta pertenece a un caso
+            caso_num = pregunta_data.get('caso')
+            if caso_num:
+                # Buscar el caso en la estructura
+                caso_info = None
+                for item in preguntas_estructuradas:
+                    if item.get('tipo') == 'caso' and item.get('numero_caso') == caso_num:
+                        caso_info = item
+                        break
+                
+                if caso_info:
+                    # Mostrar el caso primero
+                    st.subheader(f"📋 Caso {caso_num}")
+                    st.markdown(f"**{caso_info.get('texto_caso', '')}**")
+                    st.markdown("---")
             
             # Mostrar pregunta
-            st.subheader(f"Pregunta {idx_actual + 1} de {len(preguntas)}")
+            pregunta_num = idx_actual + 1
+            if caso_num:
+                # Encontrar el índice local dentro del caso
+                preguntas_del_caso = caso_info.get('preguntas_caso', [])
+                pregunta_local_idx = next((i for i, p in enumerate(preguntas_del_caso) if p == pregunta_data), 0)
+                st.subheader(f"Pregunta {pregunta_local_idx + 1} del Caso {caso_num} ({pregunta_num} de {len(preguntas_planas)} total)")
+            else:
+                st.subheader(f"Pregunta {pregunta_num} de {len(preguntas_planas)}")
             st.markdown("---")
             
             # Mostrar el texto de la pregunta (texto limpio, sin etiquetas)
@@ -1615,72 +1749,62 @@ def mostrar_vista_principal():
                 # Pregunta Verdadero/Falso - Interfaz dinámica con botones grandes
                 st.markdown("**Tipo: Verdadero/Falso**")
                 st.markdown("---")
+                respuesta_anterior = st.session_state.respuestas_usuario.get(idx_actual)
                 respuesta_seleccionada = st.radio(
                     "**Selecciona tu respuesta:**",
                     options=['Verdadero', 'Falso'],
                     key=f"respuesta_{idx_actual}",
-                    index=st.session_state.respuestas_usuario.get(idx_actual, None),
+                    index=respuesta_anterior if respuesta_anterior is not None else 0,
                     horizontal=True
                 )
                 
                 # Convertir a índice numérico (0 = Verdadero, 1 = Falso)
                 respuesta_idx = 0 if respuesta_seleccionada == 'Verdadero' else 1
-                st.session_state.respuestas_usuario[idx_actual] = respuesta_idx
+                
+                # Verificar automáticamente si la respuesta cambió
+                if respuesta_anterior != respuesta_idx:
+                    st.session_state.respuestas_usuario[idx_actual] = respuesta_idx
+                    respuesta_correcta_idx = pregunta_data.get('correcta', 0)
+                    es_correcta = respuesta_idx == respuesta_correcta_idx
+                    st.session_state.verificaciones[idx_actual] = es_correcta
+                    st.rerun()
+                else:
+                    st.session_state.respuestas_usuario[idx_actual] = respuesta_idx
             else:
                 # Pregunta de opción múltiple - Botones grandes y claros (texto limpio)
                 st.markdown("**Selecciona tu respuesta:**")
                 st.markdown("---")
                 # Las opciones ya están limpias (sin a., b), etc.)
                 opciones_labels = [f"**{chr(65+i)}.** {opcion}" for i, opcion in enumerate(pregunta_data['opciones'])]
-            
-            respuesta_seleccionada = st.radio(
+                
+                respuesta_anterior = st.session_state.respuestas_usuario.get(idx_actual)
+                respuesta_seleccionada = st.radio(
                     "",
-                options=list(range(len(pregunta_data['opciones']))),
-                format_func=lambda x: opciones_labels[x],
-                key=f"respuesta_{idx_actual}",
-                    index=st.session_state.respuestas_usuario.get(idx_actual, None),
+                    options=list(range(len(pregunta_data['opciones']))),
+                    format_func=lambda x: opciones_labels[x],
+                    key=f"respuesta_{idx_actual}",
+                    index=respuesta_anterior if respuesta_anterior is not None and respuesta_anterior < len(opciones_labels) else 0,
                     label_visibility="collapsed"
-            )
-            
-            # Guardar respuesta del usuario
-            st.session_state.respuestas_usuario[idx_actual] = respuesta_seleccionada
-            
-            col1, col2, col3 = st.columns([1, 1, 2])
-            
-            with col1:
-                if st.button("✅ Verificar", type="primary", use_container_width=True):
-                    # Obtener respuesta seleccionada (ya está guardada en session_state)
-                    respuesta_usuario_idx = st.session_state.respuestas_usuario.get(idx_actual)
+                )
+                
+                # Verificar automáticamente si la respuesta cambió
+                if respuesta_anterior != respuesta_seleccionada:
+                    st.session_state.respuestas_usuario[idx_actual] = respuesta_seleccionada
                     respuesta_correcta_idx = pregunta_data.get('correcta', 0)
-                    
-                    es_correcta = respuesta_usuario_idx == respuesta_correcta_idx
+                    es_correcta = respuesta_seleccionada == respuesta_correcta_idx
                     st.session_state.verificaciones[idx_actual] = es_correcta
-                    
-                    if es_correcta:
-                        st.success("🎉 ¡Correcto!")
-                    else:
-                        if es_vf:
-                            respuesta_correcta_texto = "Verdadero" if respuesta_correcta_idx == 0 else "Falso"
-                            st.error(f"❌ Incorrecto. La respuesta correcta es: **{respuesta_correcta_texto}**")
-                        else:
-                            respuesta_correcta_letra = chr(65 + respuesta_correcta_idx)
-                            st.error(f"❌ Incorrecto. La respuesta correcta es: **{respuesta_correcta_letra}**")
+                    st.rerun()
+                else:
+                    st.session_state.respuestas_usuario[idx_actual] = respuesta_seleccionada
             
-            with col2:
-                if st.button("➡️ Siguiente", use_container_width=True):
-                    if idx_actual < len(preguntas) - 1:
-                        st.session_state.pregunta_actual = idx_actual + 1
-                        st.rerun()
-                    else:
-                        st.info("📝 Has llegado al final del examen.")
-            
-            # Mostrar resultado de verificación si existe
+            # Mostrar resultado de verificación automáticamente
             if idx_actual in st.session_state.verificaciones:
                 es_correcta = st.session_state.verificaciones[idx_actual]
+                respuesta_correcta_idx = pregunta_data.get('correcta', 0)
+                
                 if es_correcta:
-                    st.success("✅ Respuesta correcta")
+                    st.success("🎉 ¡Correcto!")
                 else:
-                    respuesta_correcta_idx = pregunta_data.get('correcta', 0)
                     if es_vf:
                         respuesta_correcta_texto = "Verdadero" if respuesta_correcta_idx == 0 else "Falso"
                         st.error(f"❌ La respuesta correcta es: **{respuesta_correcta_texto}**")
@@ -1688,23 +1812,22 @@ def mostrar_vista_principal():
                         respuesta_correcta_texto = pregunta_data['opciones'][respuesta_correcta_idx]
                         st.error(f"❌ La respuesta correcta es: **{chr(65 + respuesta_correcta_idx)}. {respuesta_correcta_texto}**")
             
-            # Navegación rápida
+            # Botón para siguiente pregunta
             st.markdown("---")
-            st.subheader("Navegación rápida")
-            cols_nav = st.columns(min(10, len(preguntas)))
-            
-            for i in range(min(10, len(preguntas))):
-                with cols_nav[i]:
-                    estado = "✅" if i in st.session_state.verificaciones else "📝"
-                    if st.button(f"{estado} {i+1}", key=f"nav_{i}", use_container_width=True):
-                        st.session_state.pregunta_actual = i
+            col_siguiente, col_spacer = st.columns([1, 3])
+            with col_siguiente:
+                if st.button("➡️ Siguiente", use_container_width=True, type="primary"):
+                    if idx_actual < len(preguntas_planas) - 1:
+                        st.session_state.pregunta_actual = idx_actual + 1
                         st.rerun()
+                    else:
+                        st.info("📝 Has llegado al final del examen.")
             
             # Resumen al final
-            if idx_actual == len(preguntas) - 1:
+            if idx_actual == len(preguntas_planas) - 1:
                 st.markdown("---")
                 st.subheader("📊 Resumen del Examen")
-                total_preguntas = len(preguntas)
+                total_preguntas = len(preguntas_planas)
                 respuestas_verificadas = len(st.session_state.verificaciones)
                 respuestas_correctas = sum(1 for v in st.session_state.verificaciones.values() if v)
                 
@@ -1739,11 +1862,13 @@ def mostrar_vista_principal():
                         if publicar:
                             if not titulo or not descripcion:
                                 st.error("❌ Por favor, completa todos los campos obligatorios (Título y Descripción).")
-                            elif len(preguntas) == 0:
+                            elif len(preguntas_planas) == 0:
                                 st.error("❌ No hay preguntas para guardar.")
                             else:
                                 with st.spinner("📤 Subiendo examen a GitHub..."):
-                                    if guardar_examen_github(titulo, descripcion, preguntas):
+                                    # Aplanar preguntas para guardar (sin estructura de casos)
+                                    preguntas_para_guardar = aplanar_preguntas_con_casos(st.session_state.preguntas)
+                                    if guardar_examen_github(titulo, descripcion, preguntas_para_guardar):
                                         st.success(f"✅ Examen '{titulo}' guardado exitosamente en GitHub!")
                                         st.balloons()
                                         st.info("💡 El examen se ha subido a la carpeta /biblioteca de tu repositorio de GitHub.")
@@ -1755,7 +1880,7 @@ def mostrar_vista_principal():
                 st.markdown("---")
                 if st.button("📥 Descargar JSON", use_container_width=True,
                             help="Descarga una copia local del examen en formato JSON"):
-                    preguntas_json = json.dumps(preguntas, ensure_ascii=False, indent=2)
+                    preguntas_json = json.dumps(preguntas_planas, ensure_ascii=False, indent=2)
                     st.download_button(
                         label="⬇️ Descargar archivo JSON",
                         data=preguntas_json,
