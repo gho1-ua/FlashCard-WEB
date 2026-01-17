@@ -1902,11 +1902,7 @@ def mostrar_vista_test():
                  if p.get('pregunta', '') == texto_pregunta_actual and p.get('caso') == caso_num), 
                 0
             )
-            st.markdown(f"#### 📝 Pregunta {pregunta_local_idx + 1} del Caso {caso_num} ({pregunta_num} de {total_preguntas} total)")
-        else:
-            st.markdown(f"#### 📝 Pregunta {pregunta_num} de {total_preguntas}")
-        
-        st.markdown("---")
+            st.markdown(f"#### 📝 Pregunta {pregunta_local_idx + 1} del {caso_num}")
         
         # Mostrar el texto de la pregunta (texto limpio, sin etiquetas)
         st.markdown(f"**{pregunta_data['pregunta']}**")
@@ -1934,10 +1930,8 @@ def mostrar_vista_test():
                         st.success("✅ **Falso** (Tu respuesta)")
                     else:
                         st.info("Falso")
-                st.caption("💡 Puedes leer la pregunta y ver todas las opciones, pero no puedes cambiar tu respuesta.")
             else:
                 respuesta_seleccionada = st.radio(
-                    "**Selecciona tu respuesta:**",
                     options=['Verdadero', 'Falso'],
                     key=f"test_respuesta_vf_{pregunta_id}",
                     index=None,
@@ -1954,9 +1948,6 @@ def mostrar_vista_test():
                     st.session_state.verificaciones[idx_actual] = es_correcta
                     st.rerun()
         else:
-            # Pregunta de opción múltiple - Botones grandes y claros (texto limpio)
-            st.markdown("**Selecciona tu respuesta:**")
-            st.markdown("---")
             # Las opciones ya están limpias (sin a., b), etc.)
             opciones_labels = [f"**{chr(65+i)}.** {opcion}" for i, opcion in enumerate(pregunta_data['opciones'])]
             
