@@ -1946,6 +1946,9 @@ def mostrar_vista_test():
         if idx_actual < len(preguntas_planas):
             pregunta_data = preguntas_planas[idx_actual]
             
+            # Generar un identificador único para esta pregunta (incluye índice y hash del texto)
+            pregunta_id = f"{idx_actual}_{hash(pregunta_data.get('pregunta', '')) % 10000}"
+            
             # Verificar si la pregunta pertenece a un caso
             caso_num = pregunta_data.get('caso')
             if caso_num:
@@ -2015,7 +2018,7 @@ def mostrar_vista_test():
                     respuesta_seleccionada = st.radio(
                         "**Selecciona tu respuesta:**",
                         options=['Verdadero', 'Falso'],
-                        key=f"test_respuesta_vf_{idx_actual}",
+                        key=f"test_respuesta_vf_{pregunta_id}",
                         index=None,
                         horizontal=True
                     )
@@ -2052,7 +2055,7 @@ def mostrar_vista_test():
                         "",
                         options=list(range(len(pregunta_data['opciones']))),
                         format_func=lambda x: opciones_labels[x],
-                        key=f"test_respuesta_multiple_{idx_actual}",
+                        key=f"test_respuesta_multiple_{pregunta_id}",
                         index=None,
                         label_visibility="collapsed"
                     )

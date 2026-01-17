@@ -660,25 +660,35 @@
       "vf_detectado_enunciado": false
     },
     {
-      "pregunta": "7. Ante la situación planteada en el “Caso 1”, se puede afirmar que la empresa está empleando una acción de cobranding.",
-      "opciones": [],
-      "correcta": 0,
-      "tipo": "V/F",
-      "vf_detectado_enunciado": false
-    },
-    {
-      "pregunta": "8. Ante la situación planteada en el “Caso 1”, se puede afirmar que la empresa está empleando una acción de alianza de marca.",
-      "opciones": [],
-      "correcta": 1,
-      "tipo": "V/F",
-      "vf_detectado_enunciado": false
-    },
-    {
-      "pregunta": "9. Ante la situación planteada en el “Caso 1”, se puede afirmar que la empresa está empleando una acción de licencia de marca.",
-      "opciones": [],
-      "correcta": 1,
-      "tipo": "V/F",
-      "vf_detectado_enunciado": false
+      "tipo": "caso",
+      "numero_caso": "Caso 1 (Marcas)",
+      "texto_caso": "La empresa PTF, propietaria de las marcas SAR y ATO, lanza al mercado un nuevo producto bajo la marca SARATO.",
+      "preguntas_caso": [
+        {
+          "pregunta": "7. Ante la situación planteada en el \"Caso 1\", se puede afirmar que la empresa está empleando una acción de cobranding.",
+          "opciones": [],
+          "correcta": 0,
+          "tipo": "V/F",
+          "vf_detectado_enunciado": false,
+          "caso": "Caso 1 (Marcas)"
+        },
+        {
+          "pregunta": "8. Ante la situación planteada en el \"Caso 1\", se puede afirmar que la empresa está empleando una acción de alianza de marca.",
+          "opciones": [],
+          "correcta": 1,
+          "tipo": "V/F",
+          "vf_detectado_enunciado": false,
+          "caso": "Caso 1 (Marcas)"
+        },
+        {
+          "pregunta": "9. Ante la situación planteada en el \"Caso 1\", se puede afirmar que la empresa está empleando una acción de licencia de marca.",
+          "opciones": [],
+          "correcta": 1,
+          "tipo": "V/F",
+          "vf_detectado_enunciado": false,
+          "caso": "Caso 1 (Marcas)"
+        }
+      ]
     },
     {
       "pregunta": "10. Entre los factores que han favorecido el crecimiento de la marca del distribuidor, en relación con el fabricante, se encuentran: tener capacidad productiva ociosa y ser amenazado con la exclusión del lineal.",
@@ -695,46 +705,59 @@
       "vf_detectado_enunciado": false
     },
     {
-      "pregunta": "12. Ante la situación planteada en el “Caso 2” y respecto a las estrategias de marca, se puede afirmar que en el cambio 1 la empresa aplica la estrategia de extensión de marca.",
-      "opciones": [],
-      "correcta": 1,
-      "tipo": "V/F",
-      "vf_detectado_enunciado": false
-    },
-    {
-      "pregunta": "13. Ante la situación planteada en el “Caso 2” y respecto a las estrategias de marca, se puede afirmar que en el cambio 2 la empresa aplica la estrategia de nueva marca y de rango de marcas.",
-      "opciones": [],
-      "correcta": 1,
-      "tipo": "V/F",
-      "vf_detectado_enunciado": false
-    },
-    {
-      "pregunta": "14. Ante la situación planteada en el “Caso 2” y respecto a las estrategias de marca, se puede afirmar que en el cambio 3 la empresa aplica las estrategias de nueva marca y multimarca.",
-      "opciones": [],
-      "correcta": 0,
-      "tipo": "V/F",
-      "vf_detectado_enunciado": false
-    },
-    {
-      "pregunta": "15. Ante la situación planteada en el “Caso 2” y con relación a las decisiones que una empresa puede llevar a cabo sobre su cartera de productos, se puede afirmar que en el cambio 1 la empresa está aumentando la profundidad de una de sus líneas y, en concreto, está ampliando dicha línea.",
-      "opciones": [],
-      "correcta": 1,
-      "tipo": "V/F",
-      "vf_detectado_enunciado": false
-    },
-    {
-      "pregunta": "16. Ante la situación planteada en el “Caso 2” y con relación a las decisiones que una empresa puede llevar a cabo sobre su cartera de productos, se puede afirmar que en el cambio 2 la empresa está aumentando la anchura (variedad o amplitud) de su cartera de productos.",
-      "opciones": [],
-      "correcta": 0,
-      "tipo": "V/F",
-      "vf_detectado_enunciado": false
-    },
-    {
-      "pregunta": "17. Ante la situación planteada en el “Caso 2” y con relación a las decisiones que una empresa puede llevar a cabo sobre su cartera de productos, se puede afirmar que en el cambio 3 la empresa está completando la línea de conservas de verduras.",
-      "opciones": [],
-      "correcta": 1,
-      "tipo": "V/F",
-      "vf_detectado_enunciado": false
+      "tipo": "caso",
+      "numero_caso": "Caso 2 (Conservas)",
+      "texto_caso": "Suponga que una empresa que inicialmente vende conservas de verduras en latas de 300 gramos bajo la marca 'Verdever' al segmento calidad/precio medio del mercado, sufre a lo largo del tiempo y por el orden establecido los siguientes cambios:\n\nCambio 1: la empresa añade latas de verduras 'Verdever' de 150 y 500 gramos a su cartera de productos.\n\nCambio 2: la empresa introduce una nueva línea o categoría formada por conservas de frutas en latas de 150 y 500 gramos bajo la marca 'Fruver'.\n\nCambio 3: la empresa introduce dentro de la línea de conserva de verduras, latas de 200 gramos de bioverduras dirigidas al segmento calidad/precio alto del mercado bajo la marca 'VerBio'.",
+      "preguntas_caso": [
+        {
+          "pregunta": "12. Ante la situación planteada en el \"Caso 2\" y respecto a las estrategias de marca, se puede afirmar que en el cambio 1 la empresa aplica la estrategia de extensión de marca.",
+          "opciones": [],
+          "correcta": 1,
+          "tipo": "V/F",
+          "vf_detectado_enunciado": false,
+          "caso": "Caso 2 (Conservas)"
+        },
+        {
+          "pregunta": "13. Ante la situación planteada en el \"Caso 2\" y respecto a las estrategias de marca, se puede afirmar que en el cambio 2 la empresa aplica la estrategia de nueva marca y de rango de marcas.",
+          "opciones": [],
+          "correcta": 1,
+          "tipo": "V/F",
+          "vf_detectado_enunciado": false,
+          "caso": "Caso 2 (Conservas)"
+        },
+        {
+          "pregunta": "14. Ante la situación planteada en el \"Caso 2\" y respecto a las estrategias de marca, se puede afirmar que en el cambio 3 la empresa aplica las estrategias de nueva marca y multimarca.",
+          "opciones": [],
+          "correcta": 0,
+          "tipo": "V/F",
+          "vf_detectado_enunciado": false,
+          "caso": "Caso 2 (Conservas)"
+        },
+        {
+          "pregunta": "15. Ante la situación planteada en el \"Caso 2\" y con relación a las decisiones que una empresa puede llevar a cabo sobre su cartera de productos, se puede afirmar que en el cambio 1 la empresa está aumentando la profundidad de una de sus líneas y, en concreto, está ampliando dicha línea.",
+          "opciones": [],
+          "correcta": 1,
+          "tipo": "V/F",
+          "vf_detectado_enunciado": false,
+          "caso": "Caso 2 (Conservas)"
+        },
+        {
+          "pregunta": "16. Ante la situación planteada en el \"Caso 2\" y con relación a las decisiones que una empresa puede llevar a cabo sobre su cartera de productos, se puede afirmar que en el cambio 2 la empresa está aumentando la anchura (variedad o amplitud) de su cartera de productos.",
+          "opciones": [],
+          "correcta": 0,
+          "tipo": "V/F",
+          "vf_detectado_enunciado": false,
+          "caso": "Caso 2 (Conservas)"
+        },
+        {
+          "pregunta": "17. Ante la situación planteada en el \"Caso 2\" y con relación a las decisiones que una empresa puede llevar a cabo sobre su cartera de productos, se puede afirmar que en el cambio 3 la empresa está completando la línea de conservas de verduras.",
+          "opciones": [],
+          "correcta": 1,
+          "tipo": "V/F",
+          "vf_detectado_enunciado": false,
+          "caso": "Caso 2 (Conservas)"
+        }
+      ]
     },
     {
       "pregunta": "18. En la etapa de generación de ideas, dentro del proceso de creación, desarrollo y lanzamiento de nuevos productos, la empresa puede recurrir a diversas técnicas de creatividad, como son: el análisis morfológico y el check list.",
@@ -835,25 +858,35 @@
       "vf_detectado_enunciado": false
     },
     {
-      "pregunta": "12. En el “Caso 1” se está llevando a cabo una estrategia de discriminación de precios, argumentando como motivo el tiempo; es decir, se estaría aplicando una oferta.",
-      "opciones": [],
-      "correcta": 0,
-      "tipo": "V/F",
-      "vf_detectado_enunciado": false
-    },
-    {
-      "pregunta": "13. En el “Caso 1” se está aplicando una promoción de ventas; en concreto, se está aplicando un incentivo monetario del minorista al consumidor.",
-      "opciones": [],
-      "correcta": 0,
-      "tipo": "V/F",
-      "vf_detectado_enunciado": false
-    },
-    {
-      "pregunta": "14. En el “Caso 1” se está llevando a cabo una estrategia de discriminación de precios, argumentando como motivo “un descuento de segundo mercado”.",
-      "opciones": [],
-      "correcta": 1,
-      "tipo": "V/F",
-      "vf_detectado_enunciado": false
+      "tipo": "caso",
+      "numero_caso": "Caso 1 (Supermercado)",
+      "texto_caso": "Un supermercado comunica el día 22/01/11 que desde el 22/01/11 al 4/02/11 por la compra de 2 botes de ColaCao Classic se recibirá un descuento directo sobre el precio del 10%.",
+      "preguntas_caso": [
+        {
+          "pregunta": "12. En el \"Caso 1\" se está llevando a cabo una estrategia de discriminación de precios, argumentando como motivo el tiempo; es decir, se estaría aplicando una oferta.",
+          "opciones": [],
+          "correcta": 0,
+          "tipo": "V/F",
+          "vf_detectado_enunciado": false,
+          "caso": "Caso 1 (Supermercado)"
+        },
+        {
+          "pregunta": "13. En el \"Caso 1\" se está aplicando una promoción de ventas; en concreto, se está aplicando un incentivo monetario del minorista al consumidor.",
+          "opciones": [],
+          "correcta": 0,
+          "tipo": "V/F",
+          "vf_detectado_enunciado": false,
+          "caso": "Caso 1 (Supermercado)"
+        },
+        {
+          "pregunta": "14. En el \"Caso 1\" se está llevando a cabo una estrategia de discriminación de precios, argumentando como motivo \"un descuento de segundo mercado\".",
+          "opciones": [],
+          "correcta": 1,
+          "tipo": "V/F",
+          "vf_detectado_enunciado": false,
+          "caso": "Caso 1 (Supermercado)"
+        }
+      ]
     },
     {
       "pregunta": "1. La franquicia de bienes se caracteriza por constituir una integración vertical administrada.",
@@ -898,25 +931,35 @@
       "vf_detectado_enunciado": false
     },
     {
-      "pregunta": "7. Ante la situación planteada en el “Caso 1”, se puede afirmar que el fabricante está empleando un canal de distribución con dimensión vertical 3.",
-      "opciones": [],
-      "correcta": 0,
-      "tipo": "V/F",
-      "vf_detectado_enunciado": false
-    },
-    {
-      "pregunta": "8. Ante la situación planteada en el “Caso 1”, se puede afirmar que el fabricante está empleando un sistema de distribución multicanal. Uno de los canales tiene una dimensión horizontal 1 a nivel de agente comercial, 5 a nivel mayorista y 20 a nivel minorista.",
-      "opciones": [],
-      "correcta": 1,
-      "tipo": "V/F",
-      "vf_detectado_enunciado": false
-    },
-    {
-      "pregunta": "9. Ante la situación planteada en el “Caso 1”, se puede afirmar que la cadena de minoristas patrocinada por un mayorista se define como una forma de integración vertical administrada.",
-      "opciones": [],
-      "correcta": 1,
-      "tipo": "V/F",
-      "vf_detectado_enunciado": false
+      "tipo": "caso",
+      "numero_caso": "Caso 1 (Distribución)",
+      "texto_caso": "Un fabricante vende productos a través de 3 agentes comerciales. Dos de estos agentes distribuyen a: 4 mayoristas tradicionales y 1 mayorista que patrocina una cadena de minoristas. Todos estos mayoristas distribuyen a: 5 tiendas de descuento y 25 hipermercados. El tercer agente comercial distribuye a: 5 mayoristas cash-and-carry. Estos mayoristas cash-and-carry distribuyen a: 20 tiendas de descuento.",
+      "preguntas_caso": [
+        {
+          "pregunta": "7. Ante la situación planteada en el \"Caso 1\", se puede afirmar que el fabricante está empleando un canal de distribución con dimensión vertical 3.",
+          "opciones": [],
+          "correcta": 0,
+          "tipo": "V/F",
+          "vf_detectado_enunciado": false,
+          "caso": "Caso 1 (Distribución)"
+        },
+        {
+          "pregunta": "8. Ante la situación planteada en el \"Caso 1\", se puede afirmar que el fabricante está empleando un sistema de distribución multicanal. Uno de los canales tiene una dimensión horizontal 1 a nivel de agente comercial, 5 a nivel mayorista y 20 a nivel minorista.",
+          "opciones": [],
+          "correcta": 1,
+          "tipo": "V/F",
+          "vf_detectado_enunciado": false,
+          "caso": "Caso 1 (Distribución)"
+        },
+        {
+          "pregunta": "9. Ante la situación planteada en el \"Caso 1\", se puede afirmar que la cadena de minoristas patrocinada por un mayorista se define como una forma de integración vertical administrada.",
+          "opciones": [],
+          "correcta": 1,
+          "tipo": "V/F",
+          "vf_detectado_enunciado": false,
+          "caso": "Caso 1 (Distribución)"
+        }
+      ]
     },
     {
       "pregunta": "10. Si la empresa busca tener un elevado control de su política comercial, la distribución intensiva es poco adecuada.",
