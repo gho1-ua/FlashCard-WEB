@@ -1734,47 +1734,86 @@ def mostrar_biblioteca():
     """
     Muestra la biblioteca de exámenes guardados en GitHub con opción de cargar.
     """
-    st.header("📚 Biblioteca de Exámenes")
+    st.markdown("### 📚 Biblioteca de Exámenes")
     st.markdown("---")
-    st.info("💡 Selecciona un examen de la biblioteca para cargarlo y comenzar a estudiar.")
     
-    # Botón para refrescar la lista
-    if st.button("🔄 Actualizar Lista", help="Actualiza la lista de exámenes desde GitHub"):
-        st.rerun()
+    # Barra superior con información y botón de actualizar
+    col_info, col_btn = st.columns([3, 1])
+    with col_info:
+        st.info("💡 Selecciona un examen de la biblioteca para cargarlo y comenzar a estudiar.")
+    with col_btn:
+        if st.button("🔄 Actualizar Lista", use_container_width=True, help="Actualiza la lista de exámenes desde GitHub"):
+            st.rerun()
     
     with st.spinner("📥 Cargando exámenes desde GitHub..."):
         examenes = obtener_examenes_github()
     
     if not examenes:
-        st.warning("📭 No hay exámenes guardados en la biblioteca aún.")
-        st.markdown("""
-        ### ¿Cómo guardar un examen?
-        1. Carga un PDF y revisa las preguntas extraídas
-        2. Completa el formulario al final de la revisión
-        3. Haz clic en "Publicar en la Biblioteca"
-        
-        ### ⚙️ Configuración Requerida
-        Asegúrate de tener configurado en Streamlit Secrets:
-        - `GITHUB_TOKEN`: Tu Personal Access Token de GitHub
-        - `REPO_NAME`: Nombre completo del repositorio (ej: `usuario/repositorio`)
-        """)
-    else:
-        st.success(f"📚 Se encontraron {len(examenes)} examen(es) en la biblioteca de GitHub.")
+        st.markdown("---")
+        st.warning("📭 **No hay exámenes guardados en la biblioteca aún.**")
         st.markdown("---")
         
-        # Mostrar cada examen en una tarjeta
+        # Información sobre cómo guardar
+        col_instrucciones, col_config = st.columns(2)
+        
+        with col_instrucciones:
+            st.markdown("### 📝 ¿Cómo guardar un examen?")
+            st.markdown("""
+            1. **Carga un PDF** y revisa las preguntas extraídas
+            2. **Completa el formulario** al final de la revisión
+            3. **Haz clic** en "Publicar en la Biblioteca"
+            """)
+        
+        with col_config:
+            st.markdown("### ⚙️ Configuración Requerida")
+            st.markdown("""
+            Asegúrate de tener configurado en **Streamlit Secrets**:
+            - `GITHUB_TOKEN`: Tu Personal Access Token
+            - `REPO_NAME`: Nombre completo del repositorio
+            """)
+    else:
+        # Estadísticas generales
+        st.markdown("---")
+        col_total, col_preguntas, col_spacer = st.columns([1, 1, 2])
+        with col_total:
+            st.metric("📚 Total de Exámenes", len(examenes))
+        with col_preguntas:
+            total_preguntas = sum(examen.get('num_preguntas', 0) for examen in examenes)
+            st.metric("❓ Total de Preguntas", total_preguntas)
+        st.markdown("---")
+        
+        # Mostrar cada examen en una tarjeta mejorada
         for idx, examen in enumerate(examenes):
-            with st.expander(f"📄 {examen['titulo']} - {examen['num_preguntas']} preguntas", expanded=False):
-                col_info, col_acciones = st.columns([3, 1])
+            # Crear una tarjeta visual con contenedor
+            with st.container():
+                # Encabezado de la tarjeta
+                col_titulo, col_badge = st.columns([4, 1])
+                with col_titulo:
+                    st.markdown(f"#### 📄 {examen['titulo']}")
+                with col_badge:
+                    st.markdown(f"**{examen['num_preguntas']} preguntas**")
                 
-                with col_info:
-                    st.markdown(f"**Descripción:** {examen['descripcion']}")
-                    st.markdown(f"**Fecha de creación:** {examen['fecha_creacion']}")
-                    st.markdown(f"**Número de preguntas:** {examen['num_preguntas']}")
-                    st.markdown(f"**Archivo:** `{examen['nombre_archivo']}`")
+                st.markdown("---")
                 
-                with col_acciones:
-                    if st.button("📥 Cargar Examen", key=f"cargar_{idx}", use_container_width=True):
+                # Información del examen en columnas
+                col_desc, col_meta = st.columns([2, 1])
+                
+                with col_desc:
+                    st.markdown(f"**📝 Descripción:**")
+                    st.markdown(f"{examen['descripcion']}")
+                
+                with col_meta:
+                    st.markdown("**📊 Información:**")
+                    st.caption(f"📅 {examen['fecha_creacion']}")
+                    st.caption(f"📁 `{examen['nombre_archivo']}`")
+                
+                st.markdown("---")
+                
+                # Botones de acción
+                col_cargar, col_eliminar, col_spacer = st.columns([1, 1, 2])
+                
+                with col_cargar:
+                    if st.button("📥 Cargar Examen", key=f"cargar_{idx}", use_container_width=True, type="primary"):
                         with st.spinner("Cargando examen..."):
                             preguntas_cargadas = cargar_examen_github(examen['ruta'])
                         if preguntas_cargadas:
@@ -1790,7 +1829,8 @@ def mostrar_biblioteca():
                             st.rerun()
                         else:
                             st.error("❌ Error al cargar el examen desde GitHub.")
-                    
+                
+                with col_eliminar:
                     if st.button("🗑️ Eliminar", key=f"eliminar_{idx}", use_container_width=True):
                         if eliminar_examen_github(examen['ruta'], examen['sha']):
                             st.success(f"✅ Examen '{examen['titulo']}' eliminado de GitHub.")
@@ -1798,7 +1838,11 @@ def mostrar_biblioteca():
                         else:
                             st.error("❌ Error al eliminar el examen.")
             
-            st.markdown("---")
+            # Separador entre exámenes (excepto el último)
+            if idx < len(examenes) - 1:
+                st.markdown("")
+                st.markdown("---")
+                st.markdown("")
 
 
 def main():
