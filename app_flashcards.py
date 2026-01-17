@@ -1883,7 +1883,6 @@ def mostrar_vista_test():
             if caso_info:
                 # Mostrar el caso primero
                 st.markdown("---")
-                st.markdown(f"### 📋 Caso {caso_num}")
                 st.info(f"{caso_info.get('texto_caso', '')}")
         st.markdown("---")
         
@@ -1902,7 +1901,6 @@ def mostrar_vista_test():
                  if p.get('pregunta', '') == texto_pregunta_actual and p.get('caso') == caso_num), 
                 0
             )
-            st.markdown(f"#### 📝 Pregunta {pregunta_local_idx + 1} del {caso_num}")
         
         # Mostrar el texto de la pregunta (texto limpio, sin etiquetas)
         st.markdown(f"**{pregunta_data['pregunta']}**")
