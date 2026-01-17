@@ -38,7 +38,7 @@ if 'revision_completada' not in st.session_state:
 if 'subrayado_detectado' not in st.session_state:
     st.session_state.subrayado_detectado = {}  # Dict para rastrear qué preguntas tienen subrayado
 if 'vista_actual' not in st.session_state:
-    st.session_state.vista_actual = 'revision'  # 'revision', 'test', 'biblioteca'
+    st.session_state.vista_actual = 'inicio'  # 'inicio', 'revision', 'test', 'biblioteca'
 if 'examen_guardado_exitosamente' not in st.session_state:
     st.session_state.examen_guardado_exitosamente = False
 if 'examen_subido_por_usuario' not in st.session_state:
@@ -1642,8 +1642,19 @@ def mostrar_modo_revision_completo():
                         st.success(f"✅ Examen '{titulo}' guardado exitosamente en GitHub!")
                         st.balloons()
                         st.info("💡 El examen se ha subido a la carpeta /biblioteca de tu repositorio de GitHub.")
-                        # Marcar que el examen se guardó exitosamente
+                        # Marcar que el examen se guardó exitosamente y volver al inicio
                         st.session_state.examen_guardado_exitosamente = True
+                        # Limpiar estado y volver al inicio
+                        st.session_state.preguntas = []
+                        st.session_state.pregunta_actual = 0
+                        st.session_state.respuestas_usuario = {}
+                        st.session_state.verificaciones = {}
+                        st.session_state.pdf_cargado = False
+                        st.session_state.examen_subido_por_usuario = False
+                        st.session_state.revision_completada = False
+                        st.session_state.preguntas_desordenadas_test = []
+                        st.session_state.vista_actual = 'inicio'
+                        st.rerun()
                     else:
                         st.error("❌ Error al guardar el examen en GitHub. Verifica la configuración de st.secrets.")
                         st.session_state.examen_guardado_exitosamente = False
@@ -1740,59 +1751,11 @@ def mostrar_biblioteca():
                         st.session_state.preguntas_desordenadas_test = preguntas_desordenadas
                         st.session_state.mapeo_indices_preguntas = mapeo_indices
                         st.session_state.mapeo_opciones_preguntas = mapeo_opciones
-                        st.success(f"✅ Examen '{examen['titulo']}' cargado exitosamente! Ve a la pestaña 'Test' para comenzar.")
+                        st.success(f"✅ Examen '{examen['titulo']}' cargado exitosamente!")
+                        st.session_state.vista_actual = 'test'
                         st.rerun()
                     else:
                         st.error("❌ Error al cargar el examen desde GitHub.")
-
-
-def mostrar_sidebar_comun():
-    """
-    Muestra el sidebar común con carga de PDF y estadísticas.
-    """
-    with st.sidebar:
-        st.header("📁 Cargar PDF")
-        uploaded_file = st.file_uploader(
-            "Selecciona un archivo PDF",
-            type=['pdf'],
-            help="PDF con preguntas de opción múltiple"
-        )
-        
-        # Detectar si se eliminó el archivo (había preguntas pero ahora uploaded_file es None)
-        if uploaded_file is None and st.session_state.preguntas and st.session_state.examen_subido_por_usuario:
-            # El usuario eliminó el archivo, limpiar el estado
-            st.session_state.preguntas = []
-            st.session_state.pregunta_actual = 0
-            st.session_state.respuestas_usuario = {}
-            st.session_state.verificaciones = {}
-            st.session_state.pdf_cargado = False
-            st.session_state.examen_subido_por_usuario = False
-            st.session_state.modo_revision = True
-            st.session_state.revision_completada = False
-            st.session_state.examen_guardado_exitosamente = False
-            st.session_state.preguntas_desordenadas_test = []
-            st.rerun()
-        
-        if uploaded_file is not None:
-            if not st.session_state.pdf_cargado or st.session_state.preguntas == []:
-                with st.spinner("Procesando PDF..."):
-                    pdf_bytes = uploaded_file.read()
-                    preguntas_extraidas, subrayado_info = extraer_texto_con_subrayado(pdf_bytes)
-                    
-                    if preguntas_extraidas:
-                        st.session_state.preguntas = preguntas_extraidas
-                        st.session_state.subrayado_detectado = subrayado_info
-                        st.session_state.pregunta_actual = 0
-                        st.session_state.respuestas_usuario = {}
-                        st.session_state.verificaciones = {}
-                        st.session_state.pdf_cargado = True
-                        st.session_state.examen_subido_por_usuario = True  # Marcado como subido por usuario
-                        st.session_state.modo_revision = True
-                        st.session_state.revision_completada = False
-                        st.session_state.examen_guardado_exitosamente = False
-                        st.session_state.preguntas_desordenadas_test = []
-                    else:
-                        st.error("❌ No se pudieron extraer preguntas")
 
 
 def mostrar_vista_revision():
@@ -1820,19 +1783,8 @@ def mostrar_vista_revision():
         - **Subir tu PDF**: Si quieres revisar y editar, sube tu propio PDF desde el panel lateral
         """)
     else:
-        # Verificar si el examen ya fue guardado
-        if st.session_state.get('examen_guardado_exitosamente', False):
-            st.success("✅ **Examen guardado exitosamente en la biblioteca**")
-            st.info("""
-            **El examen ya ha sido publicado y guardado.**
-            
-            - **Ir a Test**: Ve a la pestaña "🎮 Test" para responder las preguntas
-            - **Cargar otro examen**: Usa la biblioteca para cargar otro examen
-            - **Subir nuevo PDF**: Si quieres revisar otro examen, sube un nuevo PDF desde el panel lateral
-            """)
-        else:
-            # Mostrar modo de revisión (solo para exámenes subidos por el usuario que aún no están guardados)
-            mostrar_modo_revision()
+        # Mostrar modo de revisión (solo para exámenes subidos por el usuario que aún no están guardados)
+        mostrar_modo_revision()
 
 
 def mostrar_vista_test():
@@ -1841,45 +1793,14 @@ def mostrar_vista_test():
     """
     # Área principal
     if not st.session_state.preguntas:
-        st.markdown("""
-        ### Instrucciones:
-        1. **Carga tu PDF**: Usa el panel lateral para seleccionar un archivo PDF
-        2. **Revisa primero**: Ve a la pestaña "Revisión" para revisar y guardar el examen
-        3. **Comienza el test**: Una vez guardado, podrás responder las preguntas aquí
+        st.warning("⚠️ **No hay preguntas disponibles**")
+        st.info("""
+        **Para realizar el test:**
+        1. Ve a la pantalla inicial
+        2. Selecciona "📚 Ver Biblioteca"
+        3. Carga un examen guardado
         """)
-    else:
-        # Verificar si se puede realizar el test
-        examen_subido_por_usuario = st.session_state.get('examen_subido_por_usuario', False)
-        examen_guardado_exitosamente = st.session_state.get('examen_guardado_exitosamente', False)
-        revision_completada = st.session_state.get('revision_completada', False)
-        
-        # Si el examen fue subido por el usuario, debe estar guardado exitosamente
-        # Si el examen fue cargado desde biblioteca, debe estar completado (revision_completada = True)
-        puede_realizar_test = False
-        if examen_subido_por_usuario:
-            # Examen subido por usuario: requiere que esté guardado
-            puede_realizar_test = examen_guardado_exitosamente
-        else:
-            # Examen cargado desde biblioteca: ya está listo para test
-            puede_realizar_test = revision_completada
-        
-        if not puede_realizar_test:
-            if examen_subido_por_usuario:
-                st.warning("⚠️ **No puedes realizar el test aún**")
-                st.info("""
-                **Para realizar el test, primero debes:**
-                1. Revisar todas las preguntas en la pestaña "📝 Revisión"
-                2. Guardar el examen en la biblioteca usando el formulario al final de la revisión
-                3. Una vez guardado, podrás responder las preguntas aquí
-                """)
-            else:
-                st.warning("⚠️ **No puedes realizar el test aún**")
-                st.info("""
-                **Para realizar el test:**
-                1. Carga un examen desde la pestaña "📚 Biblioteca"
-                2. O sube tu propio PDF y guárdalo en la biblioteca
-                """)
-            return
+        return
         
         # Actualizar estadísticas del progreso en el sidebar (solo si se puede realizar el test)
         with st.sidebar:
@@ -1944,8 +1865,11 @@ def mostrar_vista_test():
             pregunta_data = preguntas_planas[idx_actual]
             
             # Generar un identificador único para esta pregunta
-            # Usar solo el índice actual ya que cada pregunta tiene un índice único
-            pregunta_id = f"test_pregunta_{idx_actual}"
+            # Usar índice, tipo y un identificador único del contenido
+            tipo_pregunta = pregunta_data.get('tipo', 'opcion_multiple')
+            texto_pregunta = str(pregunta_data.get('pregunta', ''))[:50]  # Primeros 50 caracteres
+            hash_texto = abs(hash(texto_pregunta)) % 1000000
+            pregunta_id = f"test_{idx_actual}_{tipo_pregunta}_{hash_texto}"
             
             # Verificar si la pregunta pertenece a un caso
             caso_num = pregunta_data.get('caso')
@@ -2149,41 +2073,146 @@ def mostrar_vista_test():
             st.info("No hay más preguntas disponibles.")
 
 
-def main():
+def mostrar_pantalla_inicial():
+    """
+    Muestra la pantalla inicial con opciones para cargar PDF o desde biblioteca.
+    """
     st.title("📚 Simulador de Exámenes Interactivo")
+    st.markdown("---")
     
-    # Mostrar sidebar común una sola vez (fuera de las pestañas para evitar duplicados)
-    mostrar_sidebar_comun()
+    col1, col2 = st.columns(2)
     
-    # Navegación principal con tabs
-    tab1, tab2, tab3, tab4 = st.tabs(["📝 Revisión", "🎮 Test", "📚 Biblioteca", "ℹ️ Información"])
-    
-    with tab1:
-        mostrar_vista_revision()
-    
-    with tab2:
-        mostrar_vista_test()
-    
-    with tab3:
-        mostrar_biblioteca()
-    
-    with tab4:
-        st.header("ℹ️ Información")
+    with col1:
+        st.markdown("### 📄 Cargar PDF para Revisión")
         st.markdown("""
-        ### ¿Cómo usar esta aplicación?
-        
-        1. **Cargar PDF**: Usa el panel lateral para subir un archivo PDF con preguntas
-        2. **Revisar**: Ve a la pestaña "Revisión" para revisar y editar las preguntas extraídas
-        3. **Guardar**: Guarda el examen en la biblioteca para consultarlo más tarde
-        4. **Estudiar**: Ve a la pestaña "Test" para practicar con las preguntas
-        
-        ### Características:
-        - ✅ Detección automática de respuestas correctas (subrayado/resaltado)
-        - ✅ Soporte para preguntas de opción múltiple y Verdadero/Falso
-        - ✅ Biblioteca compartida de exámenes
-        - ✅ Exportación a JSON
-        - ✅ Interfaz intuitiva y rápida
+        Sube un PDF con preguntas para:
+        - Revisar y editar las preguntas extraídas
+        - Guardar el examen en la biblioteca
+        - Después podrás realizar el test
         """)
+        if st.button("📁 Cargar PDF", use_container_width=True, type="primary", key="btn_cargar_pdf"):
+            st.session_state.vista_actual = 'revision'
+            st.rerun()
+    
+    with col2:
+        st.markdown("### 📚 Cargar desde Biblioteca")
+        st.markdown("""
+        Selecciona un examen guardado para:
+        - Realizar el test directamente
+        - Practicar con preguntas ya revisadas
+        """)
+        if st.button("📚 Ver Biblioteca", use_container_width=True, type="primary", key="btn_ver_biblioteca"):
+            st.session_state.vista_actual = 'biblioteca'
+            st.rerun()
+    
+    st.markdown("---")
+    st.markdown("### ℹ️ Información")
+    st.markdown("""
+    **Características:**
+    - ✅ Detección automática de respuestas correctas (subrayado/resaltado)
+    - ✅ Soporte para preguntas de opción múltiple y Verdadero/Falso
+    - ✅ Biblioteca compartida de exámenes
+    - ✅ Exportación a JSON
+    - ✅ Interfaz intuitiva y rápida
+    """)
+
+
+def main():
+    # Determinar qué vista mostrar según el estado
+    vista_actual = st.session_state.get('vista_actual', 'inicio')
+    
+    if vista_actual == 'inicio':
+        # Pantalla inicial: elegir entre cargar PDF o biblioteca
+        mostrar_pantalla_inicial()
+        
+        # Si hay un PDF cargado pero no se ha iniciado revisión, no mostrar sidebar
+        if not st.session_state.preguntas:
+            return
+    
+    elif vista_actual == 'revision':
+        # Vista de revisión: cargar PDF y revisar
+        st.title("📝 Revisión de Examen")
+        
+        # Sidebar solo para cargar PDF
+        with st.sidebar:
+            st.header("📁 Cargar PDF")
+            uploaded_file = st.file_uploader(
+                "Selecciona un archivo PDF",
+                type=['pdf'],
+                help="PDF con preguntas de opción múltiple",
+                key="file_uploader_revision"
+            )
+            
+            if uploaded_file is not None:
+                if not st.session_state.pdf_cargado or st.session_state.preguntas == []:
+                    with st.spinner("Procesando PDF..."):
+                        pdf_bytes = uploaded_file.read()
+                        preguntas_extraidas, subrayado_info = extraer_texto_con_subrayado(pdf_bytes)
+                        
+                        if preguntas_extraidas:
+                            st.session_state.preguntas = preguntas_extraidas
+                            st.session_state.subrayado_detectado = subrayado_info
+                            st.session_state.pregunta_actual = 0
+                            st.session_state.respuestas_usuario = {}
+                            st.session_state.verificaciones = {}
+                            st.session_state.pdf_cargado = True
+                            st.session_state.examen_subido_por_usuario = True
+                            st.session_state.modo_revision = True
+                            st.session_state.revision_completada = False
+                            st.session_state.examen_guardado_exitosamente = False
+                            st.session_state.preguntas_desordenadas_test = []
+                            st.rerun()
+                        else:
+                            st.error("❌ No se pudieron extraer preguntas")
+            
+            # Botón para volver al inicio
+            if st.button("🏠 Volver al Inicio", use_container_width=True, key="btn_volver_inicio_revision"):
+                st.session_state.vista_actual = 'inicio'
+                st.session_state.preguntas = []
+                st.session_state.pregunta_actual = 0
+                st.session_state.respuestas_usuario = {}
+                st.session_state.verificaciones = {}
+                st.session_state.pdf_cargado = False
+                st.session_state.examen_subido_por_usuario = False
+                st.session_state.revision_completada = False
+                st.session_state.examen_guardado_exitosamente = False
+                st.session_state.preguntas_desordenadas_test = []
+                st.rerun()
+        
+        # Mostrar vista de revisión
+        mostrar_vista_revision()
+        return
+    
+    elif vista_actual == 'biblioteca':
+        # Vista de biblioteca: seleccionar examen para cargar
+        st.title("📚 Biblioteca de Exámenes")
+        
+        # Botón para volver al inicio
+        if st.button("🏠 Volver al Inicio", key="btn_volver_inicio_biblioteca"):
+            st.session_state.vista_actual = 'inicio'
+            st.rerun()
+        
+        st.markdown("---")
+        mostrar_biblioteca()
+        return
+    
+    elif vista_actual == 'test':
+        # Vista de test: realizar el examen
+        st.title("🎮 Modo Test")
+        
+        # Botón para volver al inicio
+        if st.button("🏠 Volver al Inicio", key="btn_volver_inicio_test"):
+            st.session_state.vista_actual = 'inicio'
+            st.session_state.preguntas = []
+            st.session_state.pregunta_actual = 0
+            st.session_state.respuestas_usuario = {}
+            st.session_state.verificaciones = {}
+            st.session_state.preguntas_desordenadas_test = []
+            st.rerun()
+        
+        st.markdown("---")
+        mostrar_vista_test()
+        return
 
 
 if __name__ == "__main__":
