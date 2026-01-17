@@ -1947,14 +1947,8 @@ def mostrar_vista_principal():
         # Mostrar modo de revisión
         mostrar_modo_revision()
     else:
-        # Modo test - Solo mostrar progreso
+        # Modo test - Sin mostrar progreso arriba
         if not st.session_state.modo_revision:
-            preguntas_planas_temp = st.session_state.preguntas_desordenadas_test if len(st.session_state.preguntas_desordenadas_test) > 0 else aplanar_preguntas_con_casos(st.session_state.preguntas)
-            total_preguntas_temp = len(preguntas_planas_temp)
-            respuestas_completadas_temp = len(st.session_state.respuestas_usuario)
-            porcentaje_progreso = (respuestas_completadas_temp / total_preguntas_temp * 100) if total_preguntas_temp > 0 else 0
-            st.progress(porcentaje_progreso / 100)
-            st.caption(f"📊 {respuestas_completadas_temp}/{total_preguntas_temp} preguntas contestadas ({porcentaje_progreso:.0f}%)")
             st.markdown("---")
         
         preguntas_estructuradas = st.session_state.preguntas
@@ -2017,8 +2011,6 @@ def mostrar_vista_principal():
             
             if es_vf:
                 # Pregunta Verdadero/Falso - Interfaz dinámica con botones grandes
-                st.markdown("**Tipo:** Verdadero/Falso")
-                st.markdown("---")
                 respuesta_anterior = st.session_state.respuestas_usuario.get(idx_actual)
                 
                 # Si ya hay una respuesta guardada, mostrar todas las opciones pero sin permitir cambiar
@@ -2138,9 +2130,6 @@ def mostrar_vista_principal():
                         else:
                             st.info("📝 Has llegado al final del examen.")
                 
-                # Mostrar progreso
-                with col_spacer:
-                    st.caption(f"📊 Progreso: {respuestas_completadas}/{total_preguntas} preguntas contestadas")
             
             # Resumen al final (solo si todas las preguntas están contestadas)
             if todas_contestadas and idx_actual == len(preguntas_planas) - 1:
