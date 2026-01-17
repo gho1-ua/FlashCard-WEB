@@ -1861,8 +1861,6 @@ def mostrar_vista_revision():
     Muestra la vista de revisión de preguntas.
     Solo disponible para exámenes subidos por el usuario, no para los cargados desde biblioteca.
     """
-    mostrar_sidebar_comun()
-    
     # Área principal
     if not st.session_state.preguntas:
         st.markdown("""
@@ -1891,8 +1889,6 @@ def mostrar_vista_test():
     """
     Muestra la vista del modo test.
     """
-    mostrar_sidebar_comun()
-    
     # Actualizar estadísticas del progreso en el sidebar
     if st.session_state.preguntas:
         with st.sidebar:
@@ -2134,6 +2130,9 @@ def mostrar_vista_test():
 
 def main():
     st.title("📚 Simulador de Exámenes Interactivo")
+    
+    # Mostrar sidebar común una sola vez (fuera de las pestañas para evitar duplicados)
+    mostrar_sidebar_comun()
     
     # Navegación principal con tabs
     tab1, tab2, tab3, tab4 = st.tabs(["📝 Revisión", "🎮 Test", "📚 Biblioteca", "ℹ️ Información"])
