@@ -1931,6 +1931,7 @@ def mostrar_vista_test():
                         st.info("Falso")
             else:
                 respuesta_seleccionada = st.radio(
+                    "**Selecciona tu respuesta:**",
                     options=['Verdadero', 'Falso'],
                     key=f"test_respuesta_vf_{pregunta_id}",
                     index=None,
