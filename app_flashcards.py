@@ -732,12 +732,12 @@ def extraer_spans_con_formato(page):
                             'y': y_pos,
                             'x': x_pos
                         })
-        
-        # Filtrar ruido de página (solo si toda la línea es ruido)
-        texto_linea_completo = texto_linea_completo.strip()
-        if texto_linea_completo and not es_ruido_pagina(texto_linea_completo):
-            # Agregar todos los spans de la línea (sin descartar textos cortos)
-            spans_info.extend(spans_linea)
+                
+                # Filtrar ruido de página (solo si toda la línea es ruido)
+                texto_linea_completo = texto_linea_completo.strip()
+                if texto_linea_completo and not es_ruido_pagina(texto_linea_completo):
+                    # Agregar todos los spans de la línea (sin descartar textos cortos)
+                    spans_info.extend(spans_linea)
     
     # Ordenar por Y (arriba a abajo) y luego por X (izquierda a derecha)
     spans_info.sort(key=lambda s: (s['y'], s['x']))
@@ -1900,20 +1900,7 @@ def mostrar_vista_principal():
                     st.session_state.respuestas_usuario = {}
                     st.session_state.verificaciones = {}
                     st.rerun()
-            else:
-                if st.button("✏️ Volver a Revisión", use_container_width=True):
-                    st.session_state.modo_revision = True
-                    # Limpiar preguntas desordenadas al volver a revisión
-                    st.session_state.preguntas_desordenadas_test = []
-                    st.session_state.mapeo_indices_preguntas = {}
-                    st.session_state.mapeo_opciones_preguntas = {}
-                    st.rerun()
-                
-                if st.button("💾 Guardar Examen", use_container_width=True, type="secondary",
-                           help="Guarda el examen en la biblioteca de GitHub"):
-                    # Mostrar formulario de guardado en un expander
-                    st.session_state.mostrar_formulario_guardado = True
-                    st.rerun()
+            # En modo test no se permite volver a revisión ni guardar examen
             
             # Botón para reiniciar
             if st.button("🔄 Reiniciar Examen", use_container_width=True):
@@ -1924,7 +1911,6 @@ def mostrar_vista_principal():
     
     # Área principal
     if not st.session_state.preguntas:
-        st.info("👆 Por favor, carga un archivo PDF desde el panel lateral para comenzar.")
         st.markdown("""
         ### Instrucciones:
         1. **Carga tu PDF**: Usa el panel lateral para seleccionar un archivo PDF
@@ -2132,45 +2118,7 @@ def mostrar_vista_principal():
                     with col_metric2:
                         st.metric("📈 Porcentaje de aciertos", f"{porcentaje:.1f}%")
                 
-                # Formulario de guardado al final del examen
-                st.markdown("---")
-                st.markdown("### 📚 Guardar Examen en Biblioteca")
-                st.info("💾 ¿Olvidaste guardar? No te preocupes, puedes guardar el examen ahora para consultarlo más tarde.")
-                
-                with st.expander("📤 Guardar en Biblioteca", expanded=st.session_state.get('mostrar_formulario_guardado', False)):
-                    with st.form("form_guardar_examen_test", clear_on_submit=True):
-                        titulo = st.text_input(
-                            "Título del Examen *",
-                            placeholder="Ej: Examen Final Marketing 2024",
-                            help="Nombre descriptivo del examen"
-                        )
-                        descripcion = st.text_area(
-                            "Descripción/Tema *",
-                            placeholder="Ej: Examen de Dirección de Marketing - Tema 1: Producto",
-                            height=100,
-                            help="Descripción detallada del contenido del examen"
-                        )
-                        
-                        col_submit, col_spacer = st.columns([1, 3])
-                        with col_submit:
-                            publicar = st.form_submit_button("📤 Publicar en la Biblioteca", type="primary", use_container_width=True)
-                        
-                        if publicar:
-                            if not titulo or not descripcion:
-                                st.error("❌ Por favor, completa todos los campos obligatorios (Título y Descripción).")
-                            elif len(preguntas_planas) == 0:
-                                st.error("❌ No hay preguntas para guardar.")
-                            else:
-                                with st.spinner("📤 Subiendo examen a GitHub..."):
-                                    # Aplanar preguntas para guardar (sin estructura de casos)
-                                    preguntas_para_guardar = aplanar_preguntas_con_casos(st.session_state.preguntas)
-                                    if guardar_examen_github(titulo, descripcion, preguntas_para_guardar):
-                                        st.success(f"✅ Examen '{titulo}' guardado exitosamente en GitHub!")
-                                        st.balloons()
-                                        st.info("💡 El examen se ha subido a la carpeta /biblioteca de tu repositorio de GitHub.")
-                                        st.session_state.mostrar_formulario_guardado = False
-                                    else:
-                                        st.error("❌ Error al guardar el examen en GitHub. Verifica la configuración de st.secrets.")
+                # En modo test no se permite guardar examen
                 
                 # Botón de exportación JSON
                 st.markdown("---")
