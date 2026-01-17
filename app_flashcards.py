@@ -2088,7 +2088,6 @@ def mostrar_pantalla_inicial():
         Sube un PDF con preguntas para:
         - Revisar y editar las preguntas extraídas
         - Guardar el examen en la biblioteca
-        - Después podrás realizar el test
         """)
         if st.button("📁 Cargar PDF", use_container_width=True, type="primary", key="btn_cargar_pdf"):
             st.session_state.vista_actual = 'revision'
@@ -2118,20 +2117,13 @@ def mostrar_pantalla_inicial():
 
 
 def main():
-    # Asegurar que siempre empezamos en 'inicio' si no hay preguntas cargadas
-    if not st.session_state.preguntas and st.session_state.get('vista_actual') != 'inicio':
-        st.session_state.vista_actual = 'inicio'
-    
     # Determinar qué vista mostrar según el estado
     vista_actual = st.session_state.get('vista_actual', 'inicio')
     
     if vista_actual == 'inicio':
         # Pantalla inicial: elegir entre cargar PDF o biblioteca
         mostrar_pantalla_inicial()
-        
-        # Si hay un PDF cargado pero no se ha iniciado revisión, no mostrar sidebar
-        if not st.session_state.preguntas:
-            return
+        return
     
     elif vista_actual == 'revision':
         # Vista de revisión: cargar PDF y revisar
