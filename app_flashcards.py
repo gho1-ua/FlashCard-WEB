@@ -7,6 +7,7 @@ import json
 from datetime import datetime
 import os
 import base64
+import random
 from github import Github
 from github.GithubException import GithubException
 
@@ -38,6 +39,18 @@ if 'subrayado_detectado' not in st.session_state:
     st.session_state.subrayado_detectado = {}  # Dict para rastrear qué preguntas tienen subrayado
 if 'vista_actual' not in st.session_state:
     st.session_state.vista_actual = 'revision'  # 'revision', 'test', 'biblioteca'
+if 'preguntas_desordenadas_test' not in st.session_state:
+    st.session_state.preguntas_desordenadas_test = []
+if 'mapeo_indices_preguntas' not in st.session_state:
+    st.session_state.mapeo_indices_preguntas = {}  # índice_desordenado -> índice_original
+if 'mapeo_opciones_preguntas' not in st.session_state:
+    st.session_state.mapeo_opciones_preguntas = {}  # {índice_pregunta_desordenado: {índice_desordenado: índice_original}}
+if 'preguntas_desordenadas_test' not in st.session_state:
+    st.session_state.preguntas_desordenadas_test = []
+if 'mapeo_indices_preguntas' not in st.session_state:
+    st.session_state.mapeo_indices_preguntas = {}  # índice_desordenado -> índice_original
+if 'mapeo_opciones_preguntas' not in st.session_state:
+    st.session_state.mapeo_opciones_preguntas = {}  # {índice_pregunta: {índice_desordenado -> índice_original}}
 
 
 def es_ruido_pagina(texto: str) -> bool:
@@ -1105,6 +1118,56 @@ def aplanar_preguntas_con_casos(preguntas_estructuradas):
     return preguntas_planas
 
 
+def desordenar_preguntas_para_test(preguntas_planas: List[Dict]) -> tuple:
+    """
+    Desordena las preguntas y las opciones de cada pregunta para el modo test.
+    Retorna:
+    - preguntas_desordenadas: lista de preguntas desordenadas con opciones desordenadas
+    - mapeo_indices: dict {índice_desordenado: índice_original}
+    - mapeo_opciones: dict {índice_pregunta_desordenado: {índice_desordenado: índice_original}}
+    """
+    # Crear copias profundas para no modificar las originales
+    import copy
+    preguntas_copia = copy.deepcopy(preguntas_planas)
+    
+    # Desordenar las preguntas
+    indices_originales = list(range(len(preguntas_copia)))
+    random.shuffle(indices_originales)
+    
+    preguntas_desordenadas = [preguntas_copia[i] for i in indices_originales]
+    mapeo_indices = {idx_desordenado: idx_original for idx_desordenado, idx_original in enumerate(indices_originales)}
+    
+    # Desordenar las opciones de cada pregunta y actualizar la respuesta correcta
+    mapeo_opciones = {}
+    for idx_desordenado, pregunta in enumerate(preguntas_desordenadas):
+        # Solo desordenar si tiene opciones (no es V/F)
+        opciones = pregunta.get('opciones', [])
+        if len(opciones) > 0:
+            # Crear lista de índices y desordenarla
+            indices_opciones = list(range(len(opciones)))
+            random.shuffle(indices_opciones)
+            
+            # Guardar el mapeo
+            mapeo_opciones[idx_desordenado] = {
+                idx_desordenado_nuevo: idx_original_opcion 
+                for idx_desordenado_nuevo, idx_original_opcion in enumerate(indices_opciones)
+            }
+            
+            # Reordenar las opciones
+            opciones_originales = opciones.copy()
+            opciones_desordenadas = [opciones_originales[i] for i in indices_opciones]
+            pregunta['opciones'] = opciones_desordenadas
+            
+            # Actualizar el índice de la respuesta correcta
+            respuesta_correcta_original = pregunta.get('correcta', 0)
+            if respuesta_correcta_original is not None and respuesta_correcta_original < len(indices_opciones):
+                # Encontrar en qué posición quedó la opción correcta después del desordenamiento
+                nueva_posicion = indices_opciones.index(respuesta_correcta_original)
+                pregunta['correcta'] = nueva_posicion
+    
+    return preguntas_desordenadas, mapeo_indices, mapeo_opciones
+
+
 def mostrar_modo_revision():
     """
     Interfaz compacta de revisión con vista por defecto optimizada.
@@ -1849,6 +1912,15 @@ def mostrar_vista_principal():
                     st.session_state.modo_revision = False
                     st.session_state.revision_completada = True
                     st.session_state.pregunta_actual = 0
+                    # Desordenar preguntas al entrar al modo test
+                    preguntas_estructuradas = st.session_state.preguntas
+                    preguntas_planas = aplanar_preguntas_con_casos(preguntas_estructuradas)
+                    preguntas_desordenadas, mapeo_indices, mapeo_opciones = desordenar_preguntas_para_test(preguntas_planas)
+                    st.session_state.preguntas_desordenadas_test = preguntas_desordenadas
+                    st.session_state.mapeo_indices_preguntas = mapeo_indices
+                    st.session_state.mapeo_opciones_preguntas = mapeo_opciones
+                    st.session_state.respuestas_usuario = {}
+                    st.session_state.verificaciones = {}
                     st.rerun()
             else:
                 if st.button("✏️ Volver a Revisión", use_container_width=True):
@@ -1884,6 +1956,10 @@ def mostrar_vista_principal():
                 if st.button("✏️ Volver a Revisión", use_container_width=True, 
                            help="Vuelve al modo revisión para editar o guardar el examen"):
                     st.session_state.modo_revision = True
+                    # Limpiar preguntas desordenadas al volver a revisión
+                    st.session_state.preguntas_desordenadas_test = []
+                    st.session_state.mapeo_indices_preguntas = {}
+                    st.session_state.mapeo_opciones_preguntas = {}
                     st.rerun()
             with col_guardar:
                 if st.button("💾 Guardar Examen", use_container_width=True, type="secondary",
@@ -1894,8 +1970,18 @@ def mostrar_vista_principal():
             st.markdown("---")
         
         preguntas_estructuradas = st.session_state.preguntas
-        # Aplanar preguntas para el test (incluye preguntas de casos)
-        preguntas_planas = aplanar_preguntas_con_casos(preguntas_estructuradas)
+        # Usar preguntas desordenadas si están disponibles, sino desordenarlas ahora
+        if len(st.session_state.preguntas_desordenadas_test) > 0:
+            preguntas_planas = st.session_state.preguntas_desordenadas_test
+        else:
+            # Aplanar preguntas para el test (incluye preguntas de casos)
+            preguntas_planas_originales = aplanar_preguntas_con_casos(preguntas_estructuradas)
+            # Desordenar las preguntas
+            preguntas_desordenadas, mapeo_indices, mapeo_opciones = desordenar_preguntas_para_test(preguntas_planas_originales)
+            st.session_state.preguntas_desordenadas_test = preguntas_desordenadas
+            st.session_state.mapeo_indices_preguntas = mapeo_indices
+            st.session_state.mapeo_opciones_preguntas = mapeo_opciones
+            preguntas_planas = preguntas_desordenadas
         idx_actual = st.session_state.pregunta_actual
         
         if idx_actual < len(preguntas_planas):
@@ -1940,28 +2026,29 @@ def mostrar_vista_principal():
                 st.markdown("**Tipo: Verdadero/Falso**")
                 st.markdown("---")
                 respuesta_anterior = st.session_state.respuestas_usuario.get(idx_actual)
-                respuesta_seleccionada = st.radio(
-                    "**Selecciona tu respuesta:**",
-                    options=['Verdadero', 'Falso'],
-                    key=f"respuesta_{idx_actual}",
-                    index=respuesta_anterior if respuesta_anterior is not None else None,
-                    horizontal=True
-                )
                 
-                # Solo procesar si hay una respuesta seleccionada
-                if respuesta_seleccionada is not None:
-                    # Convertir a índice numérico (0 = Verdadero, 1 = Falso)
-                    respuesta_idx = 0 if respuesta_seleccionada == 'Verdadero' else 1
+                # Si ya hay una respuesta guardada, mostrarla de forma estática (no modificable)
+                if respuesta_anterior is not None:
+                    respuesta_texto = "Verdadero" if respuesta_anterior == 0 else "Falso"
+                    st.info(f"**Respuesta seleccionada:** {respuesta_texto} (no se puede modificar)")
+                else:
+                    respuesta_seleccionada = st.radio(
+                        "**Selecciona tu respuesta:**",
+                        options=['Verdadero', 'Falso'],
+                        key=f"respuesta_{idx_actual}",
+                        index=None,
+                        horizontal=True
+                    )
                     
-                    # Verificar automáticamente si la respuesta cambió
-                    if respuesta_anterior != respuesta_idx:
+                    # Solo procesar si hay una respuesta seleccionada
+                    if respuesta_seleccionada is not None:
+                        # Convertir a índice numérico (0 = Verdadero, 1 = Falso)
+                        respuesta_idx = 0 if respuesta_seleccionada == 'Verdadero' else 1
                         st.session_state.respuestas_usuario[idx_actual] = respuesta_idx
                         respuesta_correcta_idx = pregunta_data.get('correcta', 0)
                         es_correcta = respuesta_idx == respuesta_correcta_idx
                         st.session_state.verificaciones[idx_actual] = es_correcta
                         st.rerun()
-                    else:
-                        st.session_state.respuestas_usuario[idx_actual] = respuesta_idx
             else:
                 # Pregunta de opción múltiple - Botones grandes y claros (texto limpio)
                 st.markdown("**Selecciona tu respuesta:**")
@@ -1970,26 +2057,28 @@ def mostrar_vista_principal():
                 opciones_labels = [f"**{chr(65+i)}.** {opcion}" for i, opcion in enumerate(pregunta_data['opciones'])]
                 
                 respuesta_anterior = st.session_state.respuestas_usuario.get(idx_actual)
-                respuesta_seleccionada = st.radio(
-                    "",
-                    options=list(range(len(pregunta_data['opciones']))),
-                    format_func=lambda x: opciones_labels[x],
-                    key=f"respuesta_{idx_actual}",
-                    index=respuesta_anterior if respuesta_anterior is not None and respuesta_anterior < len(opciones_labels) else None,
-                    label_visibility="collapsed"
-                )
                 
-                # Solo procesar si hay una respuesta seleccionada
-                if respuesta_seleccionada is not None:
-                    # Verificar automáticamente si la respuesta cambió
-                    if respuesta_anterior != respuesta_seleccionada:
+                # Si ya hay una respuesta guardada, mostrarla de forma estática (no modificable)
+                if respuesta_anterior is not None and respuesta_anterior < len(opciones_labels):
+                    respuesta_texto = opciones_labels[respuesta_anterior]
+                    st.info(f"**Respuesta seleccionada:** {respuesta_texto} (no se puede modificar)")
+                else:
+                    respuesta_seleccionada = st.radio(
+                        "",
+                        options=list(range(len(pregunta_data['opciones']))),
+                        format_func=lambda x: opciones_labels[x],
+                        key=f"respuesta_{idx_actual}",
+                        index=None,
+                        label_visibility="collapsed"
+                    )
+                    
+                    # Solo procesar si hay una respuesta seleccionada
+                    if respuesta_seleccionada is not None:
                         st.session_state.respuestas_usuario[idx_actual] = respuesta_seleccionada
                         respuesta_correcta_idx = pregunta_data.get('correcta', 0)
                         es_correcta = respuesta_seleccionada == respuesta_correcta_idx
                         st.session_state.verificaciones[idx_actual] = es_correcta
                         st.rerun()
-                    else:
-                        st.session_state.respuestas_usuario[idx_actual] = respuesta_seleccionada
             
             # Mostrar resultado de verificación automáticamente
             if idx_actual in st.session_state.verificaciones:
@@ -2016,6 +2105,19 @@ def mostrar_vista_principal():
                         st.rerun()
                     else:
                         st.info("📝 Has llegado al final del examen.")
+            
+            # Botón para reiniciar examen (desordenar de nuevo)
+            with col_spacer:
+                if st.button("🔄 Reiniciar y Desordenar de Nuevo", use_container_width=True):
+                    preguntas_planas_originales = aplanar_preguntas_con_casos(preguntas_estructuradas)
+                    preguntas_desordenadas, mapeo_indices, mapeo_opciones = desordenar_preguntas_para_test(preguntas_planas_originales)
+                    st.session_state.preguntas_desordenadas_test = preguntas_desordenadas
+                    st.session_state.mapeo_indices_preguntas = mapeo_indices
+                    st.session_state.mapeo_opciones_preguntas = mapeo_opciones
+                    st.session_state.pregunta_actual = 0
+                    st.session_state.respuestas_usuario = {}
+                    st.session_state.verificaciones = {}
+                    st.rerun()
             
             # Resumen al final
             if idx_actual == len(preguntas_planas) - 1:
