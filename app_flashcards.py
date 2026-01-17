@@ -1150,9 +1150,6 @@ def mostrar_modo_revision():
     Permite edición profunda solo cuando el usuario lo solicita.
     Todos los expanders se abren por defecto para facilitar la revisión rápida.
     """
-    st.header("⚡ Revisión Rápida - Validación de Datos")
-    st.markdown("---")
-    st.info("🎯 **Vista Compacta**: Todas las preguntas están expandidas por defecto. Usa '🔧 Editar contenido' solo cuando necesites corregir el texto.")
     
     preguntas = st.session_state.preguntas
     preguntas_planas = aplanar_preguntas_con_casos(preguntas)
@@ -1617,43 +1614,6 @@ def mostrar_modo_revision_completo():
     if preguntas_sin_respuesta_count > 0:
         st.warning(f"⚠️ **{preguntas_sin_respuesta_count} pregunta(s) sin respuesta marcada.** Revisa las preguntas destacadas en amarillo/naranja arriba.")
     
-    # Botones de acción rápida
-    col1, col2, col3 = st.columns([1, 1, 1])
-    
-    with col1:
-        if st.button("✅ Marcar Todas como Revisadas", use_container_width=True, 
-                    help="Marca todas las preguntas como revisadas y pasa al test"):
-            # Asegurar que todas tengan al menos una respuesta por defecto
-            preguntas_planas_para_marcar = aplanar_preguntas_con_casos(st.session_state.preguntas)
-            for pregunta_data in preguntas_planas_para_marcar:
-                if pregunta_data.get('correcta', None) is None:
-                    if pregunta_data.get('tipo') == 'V/F' or len(pregunta_data.get('opciones', [])) == 0:
-                        pregunta_data['correcta'] = 0
-                    elif len(pregunta_data.get('opciones', [])) > 0:
-                        pregunta_data['correcta'] = 0
-            
-            st.session_state.modo_revision = False
-            st.session_state.revision_completada = True
-            st.session_state.pregunta_actual = 0
-            st.session_state.respuestas_usuario = {}
-            st.session_state.verificaciones = {}
-            st.rerun()
-    
-    with col2:
-        if st.button("🎮 Ir al Test", type="primary", use_container_width=True,
-                    help="Comienza el simulador de flashcards"):
-            st.session_state.modo_revision = False
-            st.session_state.revision_completada = True
-            st.session_state.pregunta_actual = 0
-            st.session_state.respuestas_usuario = {}
-            st.session_state.verificaciones = {}
-            st.rerun()
-    
-    with col3:
-        if st.button("🔄 Recargar Vista", use_container_width=True,
-                    help="Actualiza la vista de revisión"):
-            st.rerun()
-    
     # Formulario de guardado en biblioteca
     st.markdown("---")
     st.subheader("📚 Guardar en Biblioteca")
@@ -1687,8 +1647,31 @@ def mostrar_modo_revision_completo():
                         st.success(f"✅ Examen '{titulo}' guardado exitosamente en GitHub!")
                         st.balloons()
                         st.info("💡 El examen se ha subido a la carpeta /biblioteca de tu repositorio de GitHub.")
+                        # Marcar que el examen se guardó exitosamente
+                        st.session_state.examen_guardado_exitosamente = True
                     else:
                         st.error("❌ Error al guardar el examen en GitHub. Verifica la configuración de st.secrets.")
+                        st.session_state.examen_guardado_exitosamente = False
+    
+    # Mostrar botón "Ir al Test" solo después de guardar exitosamente
+    if st.session_state.get('examen_guardado_exitosamente', False):
+        st.markdown("---")
+        st.markdown("### 🎮 ¿Listo para comenzar el test?")
+        if st.button("🎮 Ir al Test", type="primary", use_container_width=True,
+                    help="Comienza el simulador de flashcards"):
+            st.session_state.modo_revision = False
+            st.session_state.revision_completada = True
+            st.session_state.pregunta_actual = 0
+            st.session_state.respuestas_usuario = {}
+            st.session_state.verificaciones = {}
+            # Desordenar preguntas al entrar al modo test
+            preguntas_estructuradas = st.session_state.preguntas
+            preguntas_planas_para_test = aplanar_preguntas_con_casos(preguntas_estructuradas)
+            preguntas_desordenadas, mapeo_indices, mapeo_opciones = desordenar_preguntas_para_test(preguntas_planas_para_test)
+            st.session_state.preguntas_desordenadas_test = preguntas_desordenadas
+            st.session_state.mapeo_indices_preguntas = mapeo_indices
+            st.session_state.mapeo_opciones_preguntas = mapeo_opciones
+            st.rerun()
     
     # Botón de exportación JSON
     st.markdown("---")
@@ -1839,12 +1822,7 @@ def mostrar_vista_principal():
                         st.session_state.pdf_cargado = True
                         st.session_state.modo_revision = True
                         st.session_state.revision_completada = False
-                        st.success(f"✅ {len(preguntas_extraidas)} preguntas encontradas")
-                        
-                        sin_subrayado = sum(1 for idx in range(len(preguntas_extraidas)) 
-                                          if not subrayado_info.get(idx, False))
-                        if sin_subrayado > 0:
-                            st.warning(f"⚠️ {sin_subrayado} sin respuesta detectada")
+                        st.session_state.examen_guardado_exitosamente = False
                     else:
                         st.error("❌ No se pudieron extraer preguntas")
         
@@ -1885,21 +1863,8 @@ def mostrar_vista_principal():
             st.markdown("---")
             st.subheader("⚡ Acciones")
             
-            if st.session_state.modo_revision:
-                if st.button("🎮 Ir al Test", use_container_width=True, type="primary"):
-                    st.session_state.modo_revision = False
-                    st.session_state.revision_completada = True
-                    st.session_state.pregunta_actual = 0
-                    # Desordenar preguntas al entrar al modo test
-                    preguntas_estructuradas = st.session_state.preguntas
-                    preguntas_planas = aplanar_preguntas_con_casos(preguntas_estructuradas)
-                    preguntas_desordenadas, mapeo_indices, mapeo_opciones = desordenar_preguntas_para_test(preguntas_planas)
-                    st.session_state.preguntas_desordenadas_test = preguntas_desordenadas
-                    st.session_state.mapeo_indices_preguntas = mapeo_indices
-                    st.session_state.mapeo_opciones_preguntas = mapeo_opciones
-                    st.session_state.respuestas_usuario = {}
-                    st.session_state.verificaciones = {}
-                    st.rerun()
+            # En modo revisión no se muestra el botón "Ir al Test" aquí
+            # Solo aparece después de guardar el examen exitosamente
             # En modo test no se permite volver a revisión ni guardar examen
             
             # Botón para reiniciar
