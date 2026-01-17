@@ -1992,7 +1992,6 @@ def mostrar_vista_test():
                 else:
                     respuesta_correcta_texto = pregunta_data['opciones'][respuesta_correcta_idx]
                     st.error(f"❌ **Incorrecto.** La respuesta correcta es: **{chr(65 + respuesta_correcta_idx)}. {respuesta_correcta_texto}**")
-            st.markdown("---")
         
         # Botón para siguiente pregunta
         total_preguntas = len(preguntas_planas)
