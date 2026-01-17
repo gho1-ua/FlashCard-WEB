@@ -1711,7 +1711,6 @@ def mostrar_biblioteca():
     Muestra la biblioteca de exámenes guardados en GitHub con opción de cargar.
     """
     st.markdown("### 📚 Biblioteca de Exámenes")
-    st.markdown("---")
     
     # Barra superior con información y botón de actualizar
     col_info, col_btn = st.columns([3, 1])
@@ -1791,7 +1790,6 @@ def mostrar_biblioteca():
 
 def main():
     st.title("📚 Simulador de Exámenes Interactivo")
-    st.markdown("---")
     
     # Navegación principal con tabs
     tab1, tab2, tab3 = st.tabs(["📝 Revisión y Test", "📚 Biblioteca", "ℹ️ Información"])
@@ -1946,11 +1944,7 @@ def mostrar_vista_principal():
     elif st.session_state.modo_revision and not st.session_state.revision_completada:
         # Mostrar modo de revisión
         mostrar_modo_revision()
-    else:
-        # Modo test - Sin mostrar progreso arriba
-        if not st.session_state.modo_revision:
-            st.markdown("---")
-        
+    else:    
         preguntas_estructuradas = st.session_state.preguntas
         # Usar preguntas desordenadas si están disponibles, sino desordenarlas ahora
         if len(st.session_state.preguntas_desordenadas_test) > 0:
