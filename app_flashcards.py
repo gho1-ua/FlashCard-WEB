@@ -1809,8 +1809,8 @@ def mostrar_biblioteca():
                 
                 st.markdown("---")
                 
-                # Botones de acción
-                col_cargar, col_eliminar, col_spacer = st.columns([1, 1, 2])
+                # Botón de acción (solo cargar)
+                col_cargar, col_spacer = st.columns([1, 3])
                 
                 with col_cargar:
                     if st.button("📥 Cargar Examen", key=f"cargar_{idx}", use_container_width=True, type="primary"):
@@ -1829,14 +1829,6 @@ def mostrar_biblioteca():
                             st.rerun()
                         else:
                             st.error("❌ Error al cargar el examen desde GitHub.")
-                
-                with col_eliminar:
-                    if st.button("🗑️ Eliminar", key=f"eliminar_{idx}", use_container_width=True):
-                        if eliminar_examen_github(examen['ruta'], examen['sha']):
-                            st.success(f"✅ Examen '{examen['titulo']}' eliminado de GitHub.")
-                            st.rerun()
-                        else:
-                            st.error("❌ Error al eliminar el examen.")
             
             # Separador entre exámenes (excepto el último)
             if idx < len(examenes) - 1:
