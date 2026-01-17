@@ -2185,11 +2185,11 @@ def main():
             st.title("📚 Biblioteca de Exámenes")
         with col_boton:
             st.markdown("")  # Espaciado vertical
+            st.markdown("")  # Espaciado vertical
             if st.button("🏠 Volver al Inicio", key="btn_volver_inicio_biblioteca", use_container_width=True):
                 st.session_state.vista_actual = 'inicio'
                 st.rerun()
         
-        st.markdown("---")
         mostrar_biblioteca()
         return
     
