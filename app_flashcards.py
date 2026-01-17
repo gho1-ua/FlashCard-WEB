@@ -1678,8 +1678,6 @@ def mostrar_biblioteca():
     """
     Muestra la biblioteca de exámenes guardados en GitHub con opción de cargar.
     """
-    st.markdown("### 📚 Biblioteca de Exámenes")
-    
     with st.spinner("📥 Cargando exámenes desde GitHub..."):
         examenes = obtener_examenes_github()
     
@@ -2181,12 +2179,16 @@ def main():
     
     elif vista_actual == 'biblioteca':
         # Vista de biblioteca: seleccionar examen para cargar
-        st.title("📚 Biblioteca de Exámenes")
-        
-        # Botón para volver al inicio
-        if st.button("🏠 Volver al Inicio", key="btn_volver_inicio_biblioteca"):
-            st.session_state.vista_actual = 'inicio'
-            st.rerun()
+        # Encabezado con título y botón de volver
+        col_titulo, col_boton = st.columns([3, 1])
+        with col_titulo:
+            st.title("📚 Biblioteca de Exámenes")
+        with col_boton:
+            st.markdown("")  # Espaciado vertical
+            st.markdown("")  # Espaciado vertical
+            if st.button("🏠 Volver al Inicio", key="btn_volver_inicio_biblioteca", use_container_width=True):
+                st.session_state.vista_actual = 'inicio'
+                st.rerun()
         
         st.markdown("---")
         mostrar_biblioteca()
