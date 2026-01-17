@@ -1712,14 +1712,6 @@ def mostrar_biblioteca():
     """
     st.markdown("### 📚 Biblioteca de Exámenes")
     
-    # Barra superior con información y botón de actualizar
-    col_info, col_btn = st.columns([3, 1])
-    with col_info:
-        st.info("💡 Selecciona un examen de la biblioteca para cargarlo y comenzar a estudiar.")
-    with col_btn:
-        if st.button("🔄 Actualizar Lista", use_container_width=True, help="Actualiza la lista de exámenes desde GitHub"):
-            st.rerun()
-    
     with st.spinner("📥 Cargando exámenes desde GitHub..."):
         examenes = obtener_examenes_github()
     
