@@ -39,6 +39,10 @@ if 'subrayado_detectado' not in st.session_state:
     st.session_state.subrayado_detectado = {}  # Dict para rastrear qué preguntas tienen subrayado
 if 'vista_actual' not in st.session_state:
     st.session_state.vista_actual = 'revision'  # 'revision', 'test', 'biblioteca'
+if 'examen_guardado_exitosamente' not in st.session_state:
+    st.session_state.examen_guardado_exitosamente = False
+if 'examen_subido_por_usuario' not in st.session_state:
+    st.session_state.examen_subido_por_usuario = False  # True si fue subido por el usuario, False si fue cargado desde biblioteca
 if 'preguntas_desordenadas_test' not in st.session_state:
     st.session_state.preguntas_desordenadas_test = []
 if 'mapeo_indices_preguntas' not in st.session_state:
@@ -1747,11 +1751,19 @@ def mostrar_biblioteca():
                         st.session_state.respuestas_usuario = {}
                         st.session_state.verificaciones = {}
                         st.session_state.pdf_cargado = True
-                        st.session_state.modo_revision = True
-                        st.session_state.revision_completada = False
+                        st.session_state.examen_subido_por_usuario = False  # Cargado desde biblioteca
+                        st.session_state.modo_revision = False
+                        st.session_state.revision_completada = True
                         st.session_state.examen_guardado_exitosamente = False
                         st.session_state.preguntas_desordenadas_test = []
-                        st.success(f"✅ Examen '{examen['titulo']}' cargado exitosamente! Ve a la pestaña 'Revisión' para revisarlo o 'Test' para comenzar.")
+                        # Desordenar preguntas al cargar desde biblioteca
+                        preguntas_estructuradas = preguntas_cargadas
+                        preguntas_planas_para_test = aplanar_preguntas_con_casos(preguntas_estructuradas)
+                        preguntas_desordenadas, mapeo_indices, mapeo_opciones = desordenar_preguntas_para_test(preguntas_planas_para_test)
+                        st.session_state.preguntas_desordenadas_test = preguntas_desordenadas
+                        st.session_state.mapeo_indices_preguntas = mapeo_indices
+                        st.session_state.mapeo_opciones_preguntas = mapeo_opciones
+                        st.success(f"✅ Examen '{examen['titulo']}' cargado exitosamente! Ve a la pestaña 'Test' para comenzar.")
                         st.rerun()
                     else:
                         st.error("❌ Error al cargar el examen desde GitHub.")
@@ -1769,6 +1781,21 @@ def mostrar_sidebar_comun():
             help="PDF con preguntas de opción múltiple"
         )
         
+        # Detectar si se eliminó el archivo (había preguntas pero ahora uploaded_file es None)
+        if uploaded_file is None and st.session_state.preguntas and st.session_state.examen_subido_por_usuario:
+            # El usuario eliminó el archivo, limpiar el estado
+            st.session_state.preguntas = []
+            st.session_state.pregunta_actual = 0
+            st.session_state.respuestas_usuario = {}
+            st.session_state.verificaciones = {}
+            st.session_state.pdf_cargado = False
+            st.session_state.examen_subido_por_usuario = False
+            st.session_state.modo_revision = True
+            st.session_state.revision_completada = False
+            st.session_state.examen_guardado_exitosamente = False
+            st.session_state.preguntas_desordenadas_test = []
+            st.rerun()
+        
         if uploaded_file is not None:
             if not st.session_state.pdf_cargado or st.session_state.preguntas == []:
                 with st.spinner("Procesando PDF..."):
@@ -1782,9 +1809,11 @@ def mostrar_sidebar_comun():
                         st.session_state.respuestas_usuario = {}
                         st.session_state.verificaciones = {}
                         st.session_state.pdf_cargado = True
+                        st.session_state.examen_subido_por_usuario = True  # Marcado como subido por usuario
                         st.session_state.modo_revision = True
                         st.session_state.revision_completada = False
                         st.session_state.examen_guardado_exitosamente = False
+                        st.session_state.preguntas_desordenadas_test = []
                     else:
                         st.error("❌ No se pudieron extraer preguntas")
         
@@ -1830,6 +1859,7 @@ def mostrar_sidebar_comun():
 def mostrar_vista_revision():
     """
     Muestra la vista de revisión de preguntas.
+    Solo disponible para exámenes subidos por el usuario, no para los cargados desde biblioteca.
     """
     mostrar_sidebar_comun()
     
@@ -1843,8 +1873,17 @@ def mostrar_vista_revision():
         4. **Fase de Revisión**: Después de cargar, revisa y edita las preguntas extraídas
         5. **Guardar**: Una vez revisado, guarda el examen en la biblioteca
         """)
+    elif not st.session_state.get('examen_subido_por_usuario', False):
+        # Examen cargado desde biblioteca, no se puede revisar
+        st.info("ℹ️ Este examen fue cargado desde la biblioteca. Para revisar y editar preguntas, debes subir tu propio PDF desde el panel lateral.")
+        st.markdown("""
+        ### ¿Qué puedes hacer?
+        - **Ir a Test**: Ve a la pestaña "🎮 Test" para responder las preguntas de este examen
+        - **Cargar otro examen**: Usa la biblioteca para cargar otro examen
+        - **Subir tu PDF**: Si quieres revisar y editar, sube tu propio PDF desde el panel lateral
+        """)
     else:
-        # Mostrar modo de revisión
+        # Mostrar modo de revisión (solo para exámenes subidos por el usuario)
         mostrar_modo_revision()
 
 
