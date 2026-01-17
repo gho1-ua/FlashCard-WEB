@@ -1943,11 +1943,9 @@ def mostrar_vista_test():
         if idx_actual < len(preguntas_planas):
             pregunta_data = preguntas_planas[idx_actual]
             
-            # Generar un identificador único para esta pregunta (incluye índice, tipo y hash del texto)
-            tipo_pregunta = pregunta_data.get('tipo', 'opcion_multiple')
-            texto_pregunta = pregunta_data.get('pregunta', '')
-            hash_texto = abs(hash(texto_pregunta)) % 100000
-            pregunta_id = f"test_{idx_actual}_{tipo_pregunta}_{hash_texto}"
+            # Generar un identificador único para esta pregunta
+            # Usar solo el índice actual ya que cada pregunta tiene un índice único
+            pregunta_id = f"test_pregunta_{idx_actual}"
             
             # Verificar si la pregunta pertenece a un caso
             caso_num = pregunta_data.get('caso')
