@@ -2069,7 +2069,7 @@ def mostrar_vista_principal():
                     for i, opcion_label in enumerate(opciones_labels):
                         if i == respuesta_anterior:
                             st.success(f"✅ {opcion_label} (Tu respuesta)")
-                    else:
+                        else:
                             st.info(opcion_label)
                     st.caption("💡 Puedes leer la pregunta y ver todas las opciones, pero no puedes cambiar tu respuesta.")
                 else:
@@ -2105,7 +2105,7 @@ def mostrar_vista_principal():
                     else:
                         respuesta_correcta_texto = pregunta_data['opciones'][respuesta_correcta_idx]
                         st.error(f"❌ **Incorrecto.** La respuesta correcta es: **{chr(65 + respuesta_correcta_idx)}. {respuesta_correcta_texto}**")
-                        st.markdown("---")
+                st.markdown("---")
             
             # Botón para siguiente pregunta
             total_preguntas = len(preguntas_planas)
@@ -2130,9 +2130,10 @@ def mostrar_vista_principal():
                 # Si no están todas contestadas, mostrar botón de siguiente
                 col_siguiente, col_spacer = st.columns([1, 3])
                 with col_siguiente:
-                    if st.button("➡️ Siguiente", use_container_width=True, type="primary"):
+                    if st.button("➡️ Siguiente", use_container_width=True, type="primary", key=f"siguiente_{idx_actual}"):
                         if idx_actual < len(preguntas_planas) - 1:
                             st.session_state.pregunta_actual = idx_actual + 1
+                            # Limpiar widgets de la pregunta anterior para evitar que se muestren
                             st.rerun()
                         else:
                             st.info("📝 Has llegado al final del examen.")
