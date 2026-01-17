@@ -1918,7 +1918,6 @@ def mostrar_vista_test():
             
             # Si ya hay una respuesta guardada, mostrar todas las opciones pero sin permitir cambiar
             if respuesta_anterior is not None:
-                st.markdown("**Opciones disponibles:**")
                 col_v, col_f = st.columns(2)
                 with col_v:
                     if respuesta_anterior == 0:
@@ -1955,13 +1954,11 @@ def mostrar_vista_test():
             
             # Si ya hay una respuesta guardada, mostrar todas las opciones pero sin permitir cambiar
             if respuesta_anterior is not None and respuesta_anterior < len(opciones_labels):
-                st.markdown("**Opciones disponibles:**")
                 for i, opcion_label in enumerate(opciones_labels):
                     if i == respuesta_anterior:
                         st.success(f"✅ {opcion_label} (Tu respuesta)")
                     else:
                         st.info(opcion_label)
-                st.caption("💡 Puedes leer la pregunta y ver todas las opciones, pero no puedes cambiar tu respuesta.")
             else:
                 respuesta_seleccionada = st.radio(
                     "",
