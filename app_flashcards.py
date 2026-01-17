@@ -1839,52 +1839,6 @@ def mostrar_vista_test():
     """
     Muestra la vista del modo test.
     """
-    # Actualizar estadísticas del progreso en el sidebar (solo en modo test)
-    if st.session_state.preguntas:
-        with st.sidebar:
-            preguntas_planas = aplanar_preguntas_con_casos(st.session_state.preguntas)
-            total = len(preguntas_planas)
-            idx_actual = st.session_state.pregunta_actual
-            
-            st.markdown("---")
-            st.subheader("🎯 Progreso")
-            st.metric("Pregunta actual", f"{idx_actual + 1}/{total}")
-            
-            # Estadísticas útiles (solo en modo test)
-            st.markdown("---")
-            st.subheader("📊 Estadísticas")
-            
-            preguntas_vf = sum(1 for p in preguntas_planas 
-                             if p.get('tipo') == 'V/F' or len(p.get('opciones', [])) == 0)
-            preguntas_multiple = total - preguntas_vf
-            
-            st.metric("Total", total)
-            st.metric("Opción Múltiple", preguntas_multiple)
-            st.metric("Verdadero/Falso", preguntas_vf)
-            
-            respuestas_completadas = len([k for k in st.session_state.respuestas_usuario.keys() 
-                                             if k < total])
-            st.metric("Respondidas", respuestas_completadas)
-                
-            if respuestas_completadas > 0:
-                verificadas = len(st.session_state.verificaciones)
-                correctas = sum(1 for v in st.session_state.verificaciones.values() if v)
-                if verificadas > 0:
-                    porcentaje = (correctas / verificadas) * 100
-                    st.metric("Aciertos", f"{correctas}/{verificadas}")
-                    st.metric("Porcentaje", f"{porcentaje:.1f}%")
-            
-            # Acciones rápidas
-            st.markdown("---")
-            st.subheader("⚡ Acciones")
-            
-            # Botón para reiniciar
-            if st.button("🔄 Reiniciar Examen", use_container_width=True, key="reiniciar_test"):
-                st.session_state.pregunta_actual = 0
-                st.session_state.respuestas_usuario = {}
-                st.session_state.verificaciones = {}
-                st.rerun()
-    
     # Área principal
     if not st.session_state.preguntas:
         st.markdown("""
@@ -1926,6 +1880,51 @@ def mostrar_vista_test():
                 2. O sube tu propio PDF y guárdalo en la biblioteca
                 """)
             return
+        
+        # Actualizar estadísticas del progreso en el sidebar (solo si se puede realizar el test)
+        with st.sidebar:
+            preguntas_planas_stats = aplanar_preguntas_con_casos(st.session_state.preguntas)
+            total = len(preguntas_planas_stats)
+            idx_actual = st.session_state.pregunta_actual
+            
+            st.markdown("---")
+            st.subheader("🎯 Progreso")
+            st.metric("Pregunta actual", f"{idx_actual + 1}/{total}")
+            
+            # Estadísticas útiles (solo en modo test)
+            st.markdown("---")
+            st.subheader("📊 Estadísticas")
+            
+            preguntas_vf = sum(1 for p in preguntas_planas_stats 
+                             if p.get('tipo') == 'V/F' or len(p.get('opciones', [])) == 0)
+            preguntas_multiple = total - preguntas_vf
+            
+            st.metric("Total", total)
+            st.metric("Opción Múltiple", preguntas_multiple)
+            st.metric("Verdadero/Falso", preguntas_vf)
+            
+            respuestas_completadas = len([k for k in st.session_state.respuestas_usuario.keys() 
+                                             if k < total])
+            st.metric("Respondidas", respuestas_completadas)
+                
+            if respuestas_completadas > 0:
+                verificadas = len(st.session_state.verificaciones)
+                correctas = sum(1 for v in st.session_state.verificaciones.values() if v)
+                if verificadas > 0:
+                    porcentaje = (correctas / verificadas) * 100
+                    st.metric("Aciertos", f"{correctas}/{verificadas}")
+                    st.metric("Porcentaje", f"{porcentaje:.1f}%")
+            
+            # Acciones rápidas
+            st.markdown("---")
+            st.subheader("⚡ Acciones")
+            
+            # Botón para reiniciar
+            if st.button("🔄 Reiniciar Examen", use_container_width=True, key="reiniciar_test"):
+                st.session_state.pregunta_actual = 0
+                st.session_state.respuestas_usuario = {}
+                st.session_state.verificaciones = {}
+                st.rerun()
         preguntas_estructuradas = st.session_state.preguntas
         # Usar preguntas desordenadas si están disponibles, sino desordenarlas ahora
         if len(st.session_state.preguntas_desordenadas_test) > 0:
@@ -1944,8 +1943,11 @@ def mostrar_vista_test():
         if idx_actual < len(preguntas_planas):
             pregunta_data = preguntas_planas[idx_actual]
             
-            # Generar un identificador único para esta pregunta (incluye índice y hash del texto)
-            pregunta_id = f"{idx_actual}_{hash(pregunta_data.get('pregunta', '')) % 10000}"
+            # Generar un identificador único para esta pregunta (incluye índice, tipo y hash del texto)
+            tipo_pregunta = pregunta_data.get('tipo', 'opcion_multiple')
+            texto_pregunta = pregunta_data.get('pregunta', '')
+            hash_texto = abs(hash(texto_pregunta)) % 100000
+            pregunta_id = f"test_{idx_actual}_{tipo_pregunta}_{hash_texto}"
             
             # Verificar si la pregunta pertenece a un caso
             caso_num = pregunta_data.get('caso')
