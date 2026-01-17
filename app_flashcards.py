@@ -1789,6 +1789,51 @@ def mostrar_vista_test():
     """
     Muestra la vista del modo test.
     """
+    # Actualizar estadísticas del progreso en el sidebar (solo si se puede realizar el test)
+    with st.sidebar:
+        preguntas_planas_stats = aplanar_preguntas_con_casos(st.session_state.preguntas)
+        total = len(preguntas_planas_stats)
+        idx_actual = st.session_state.pregunta_actual
+        
+        st.markdown("---")
+        st.subheader("🎯 Progreso")
+        st.metric("Pregunta actual", f"{idx_actual + 1}/{total}")
+        
+        # Estadísticas útiles (solo en modo test)
+        st.markdown("---")
+        st.subheader("📊 Estadísticas")
+        
+        preguntas_vf = sum(1 for p in preguntas_planas_stats 
+                         if p.get('tipo') == 'V/F' or len(p.get('opciones', [])) == 0)
+        preguntas_multiple = total - preguntas_vf
+        
+        st.metric("Total", total)
+        st.metric("Opción Múltiple", preguntas_multiple)
+        st.metric("Verdadero/Falso", preguntas_vf)
+        
+        respuestas_completadas = len([k for k in st.session_state.respuestas_usuario.keys() 
+                                         if k < total])
+        st.metric("Respondidas", respuestas_completadas)
+            
+        if respuestas_completadas > 0:
+            verificadas = len(st.session_state.verificaciones)
+            correctas = sum(1 for v in st.session_state.verificaciones.values() if v)
+            if verificadas > 0:
+                porcentaje = (correctas / verificadas) * 100
+                st.metric("Aciertos", f"{correctas}/{verificadas}")
+                st.metric("Porcentaje", f"{porcentaje:.1f}%")
+        
+        # Acciones rápidas
+        st.markdown("---")
+        st.subheader("⚡ Acciones")
+        
+        # Botón para reiniciar
+        if st.button("🔄 Reiniciar Examen", use_container_width=True, key="reiniciar_test"):
+            st.session_state.pregunta_actual = 0
+            st.session_state.respuestas_usuario = {}
+            st.session_state.verificaciones = {}
+            st.rerun()
+    
     # Área principal
     if not st.session_state.preguntas:
         st.warning("⚠️ **No hay preguntas disponibles**")
@@ -1799,276 +1844,231 @@ def mostrar_vista_test():
         3. Carga un examen guardado
         """)
         return
+    
+    preguntas_estructuradas = st.session_state.preguntas
+    # Usar preguntas desordenadas si están disponibles, sino desordenarlas ahora
+    if len(st.session_state.preguntas_desordenadas_test) > 0:
+        preguntas_planas = st.session_state.preguntas_desordenadas_test
+    else:
+        # Aplanar preguntas para el test (incluye preguntas de casos)
+        preguntas_planas_originales = aplanar_preguntas_con_casos(preguntas_estructuradas)
+        # Desordenar las preguntas
+        preguntas_desordenadas, mapeo_indices, mapeo_opciones = desordenar_preguntas_para_test(preguntas_planas_originales)
+        st.session_state.preguntas_desordenadas_test = preguntas_desordenadas
+        st.session_state.mapeo_indices_preguntas = mapeo_indices
+        st.session_state.mapeo_opciones_preguntas = mapeo_opciones
+        preguntas_planas = preguntas_desordenadas
+    idx_actual = st.session_state.pregunta_actual
+    
+    if idx_actual < len(preguntas_planas):
+        pregunta_data = preguntas_planas[idx_actual]
         
-        # Actualizar estadísticas del progreso en el sidebar (solo si se puede realizar el test)
-        with st.sidebar:
-            preguntas_planas_stats = aplanar_preguntas_con_casos(st.session_state.preguntas)
-            total = len(preguntas_planas_stats)
-            idx_actual = st.session_state.pregunta_actual
+        # Generar un identificador único para esta pregunta
+        # Usar índice, tipo y un identificador único del contenido
+        tipo_pregunta = pregunta_data.get('tipo', 'opcion_multiple')
+        texto_pregunta = str(pregunta_data.get('pregunta', ''))[:50]  # Primeros 50 caracteres
+        hash_texto = abs(hash(texto_pregunta)) % 1000000
+        pregunta_id = f"test_{idx_actual}_{tipo_pregunta}_{hash_texto}"
+        
+        # Verificar si la pregunta pertenece a un caso
+        caso_num = pregunta_data.get('caso')
+        if caso_num:
+            # Buscar el caso en la estructura
+            caso_info = None
+            for item in preguntas_estructuradas:
+                if item.get('tipo') == 'caso' and item.get('numero_caso') == caso_num:
+                    caso_info = item
+                    break
             
-            st.markdown("---")
-            st.subheader("🎯 Progreso")
-            st.metric("Pregunta actual", f"{idx_actual + 1}/{total}")
-            
-            # Estadísticas útiles (solo en modo test)
-            st.markdown("---")
-            st.subheader("📊 Estadísticas")
-            
-            preguntas_vf = sum(1 for p in preguntas_planas_stats 
-                             if p.get('tipo') == 'V/F' or len(p.get('opciones', [])) == 0)
-            preguntas_multiple = total - preguntas_vf
-            
-            st.metric("Total", total)
-            st.metric("Opción Múltiple", preguntas_multiple)
-            st.metric("Verdadero/Falso", preguntas_vf)
-            
-            respuestas_completadas = len([k for k in st.session_state.respuestas_usuario.keys() 
-                                             if k < total])
-            st.metric("Respondidas", respuestas_completadas)
-                
-            if respuestas_completadas > 0:
-                verificadas = len(st.session_state.verificaciones)
-                correctas = sum(1 for v in st.session_state.verificaciones.values() if v)
-                if verificadas > 0:
-                    porcentaje = (correctas / verificadas) * 100
-                    st.metric("Aciertos", f"{correctas}/{verificadas}")
-                    st.metric("Porcentaje", f"{porcentaje:.1f}%")
-            
-            # Acciones rápidas
-            st.markdown("---")
-            st.subheader("⚡ Acciones")
-            
-            # Botón para reiniciar
-            if st.button("🔄 Reiniciar Examen", use_container_width=True, key="reiniciar_test"):
-                st.session_state.pregunta_actual = 0
-                st.session_state.respuestas_usuario = {}
-                st.session_state.verificaciones = {}
-                st.rerun()
-        preguntas_estructuradas = st.session_state.preguntas
-        # Usar preguntas desordenadas si están disponibles, sino desordenarlas ahora
-        if len(st.session_state.preguntas_desordenadas_test) > 0:
-            preguntas_planas = st.session_state.preguntas_desordenadas_test
+            if caso_info:
+                # Mostrar el caso primero
+                st.markdown("---")
+                st.markdown(f"### 📋 Caso {caso_num}")
+                st.info(f"{caso_info.get('texto_caso', '')}")
+        st.markdown("---")
+        
+        # Mostrar pregunta con mejor formato
+        pregunta_num = idx_actual + 1
+        total_preguntas = len(preguntas_planas)
+        
+        # Encabezado de pregunta
+        if caso_num:
+            # Encontrar el índice local dentro del caso comparando el texto de la pregunta
+            # (no podemos usar == porque son objetos diferentes después de deepcopy)
+            preguntas_del_caso = caso_info.get('preguntas_caso', [])
+            texto_pregunta_actual = pregunta_data.get('pregunta', '')
+            pregunta_local_idx = next(
+                (i for i, p in enumerate(preguntas_del_caso) 
+                 if p.get('pregunta', '') == texto_pregunta_actual and p.get('caso') == caso_num), 
+                0
+            )
+            st.markdown(f"#### 📝 Pregunta {pregunta_local_idx + 1} del Caso {caso_num} ({pregunta_num} de {total_preguntas} total)")
         else:
-            # Aplanar preguntas para el test (incluye preguntas de casos)
-            preguntas_planas_originales = aplanar_preguntas_con_casos(preguntas_estructuradas)
-            # Desordenar las preguntas
-            preguntas_desordenadas, mapeo_indices, mapeo_opciones = desordenar_preguntas_para_test(preguntas_planas_originales)
-            st.session_state.preguntas_desordenadas_test = preguntas_desordenadas
-            st.session_state.mapeo_indices_preguntas = mapeo_indices
-            st.session_state.mapeo_opciones_preguntas = mapeo_opciones
-            preguntas_planas = preguntas_desordenadas
-        idx_actual = st.session_state.pregunta_actual
+            st.markdown(f"#### 📝 Pregunta {pregunta_num} de {total_preguntas}")
         
-        if idx_actual < len(preguntas_planas):
-            pregunta_data = preguntas_planas[idx_actual]
+        st.markdown("---")
+        
+        # Mostrar el texto de la pregunta (texto limpio, sin etiquetas)
+        st.markdown(f"**{pregunta_data['pregunta']}**")
+        st.markdown("")
+        
+        # Determinar tipo de pregunta
+        tipo_pregunta = pregunta_data.get('tipo', 'opcion_multiple')
+        es_vf = tipo_pregunta == 'V/F' or len(pregunta_data.get('opciones', [])) == 0
+        
+        if es_vf:
+            # Pregunta Verdadero/Falso - Interfaz dinámica con botones grandes
+            respuesta_anterior = st.session_state.respuestas_usuario.get(idx_actual)
             
-            # Generar un identificador único para esta pregunta
-            # Usar índice, tipo y un identificador único del contenido
-            tipo_pregunta = pregunta_data.get('tipo', 'opcion_multiple')
-            texto_pregunta = str(pregunta_data.get('pregunta', ''))[:50]  # Primeros 50 caracteres
-            hash_texto = abs(hash(texto_pregunta)) % 1000000
-            pregunta_id = f"test_{idx_actual}_{tipo_pregunta}_{hash_texto}"
-            
-            # Verificar si la pregunta pertenece a un caso
-            caso_num = pregunta_data.get('caso')
-            if caso_num:
-                # Buscar el caso en la estructura
-                caso_info = None
-                for item in preguntas_estructuradas:
-                    if item.get('tipo') == 'caso' and item.get('numero_caso') == caso_num:
-                        caso_info = item
-                        break
-                
-                if caso_info:
-                    # Mostrar el caso primero
-                    st.markdown("---")
-                    st.markdown(f"### 📋 Caso {caso_num}")
-                    st.info(f"{caso_info.get('texto_caso', '')}")
-            st.markdown("---")
-            
-            # Mostrar pregunta con mejor formato
-            pregunta_num = idx_actual + 1
-            total_preguntas = len(preguntas_planas)
-            
-            # Encabezado de pregunta
-            if caso_num:
-                # Encontrar el índice local dentro del caso comparando el texto de la pregunta
-                # (no podemos usar == porque son objetos diferentes después de deepcopy)
-                preguntas_del_caso = caso_info.get('preguntas_caso', [])
-                texto_pregunta_actual = pregunta_data.get('pregunta', '')
-                pregunta_local_idx = next(
-                    (i for i, p in enumerate(preguntas_del_caso) 
-                     if p.get('pregunta', '') == texto_pregunta_actual and p.get('caso') == caso_num), 
-                    0
-                )
-                st.markdown(f"#### 📝 Pregunta {pregunta_local_idx + 1} del Caso {caso_num} ({pregunta_num} de {total_preguntas} total)")
-            else:
-                st.markdown(f"#### 📝 Pregunta {pregunta_num} de {total_preguntas}")
-            
-            st.markdown("---")
-            
-            # Mostrar el texto de la pregunta (texto limpio, sin etiquetas)
-            st.markdown(f"**{pregunta_data['pregunta']}**")
-            st.markdown("")
-            
-            # Determinar tipo de pregunta
-            tipo_pregunta = pregunta_data.get('tipo', 'opcion_multiple')
-            es_vf = tipo_pregunta == 'V/F' or len(pregunta_data.get('opciones', [])) == 0
-            
-            if es_vf:
-                # Pregunta Verdadero/Falso - Interfaz dinámica con botones grandes
-                respuesta_anterior = st.session_state.respuestas_usuario.get(idx_actual)
-                
-                # Si ya hay una respuesta guardada, mostrar todas las opciones pero sin permitir cambiar
-                if respuesta_anterior is not None:
-                    st.markdown("**Opciones disponibles:**")
-                    col_v, col_f = st.columns(2)
-                    with col_v:
-                        if respuesta_anterior == 0:
-                            st.success("✅ **Verdadero** (Tu respuesta)")
-                        else:
-                            st.info("Verdadero")
-                    with col_f:
-                        if respuesta_anterior == 1:
-                            st.success("✅ **Falso** (Tu respuesta)")
-                        else:
-                            st.info("Falso")
-                    st.caption("💡 Puedes leer la pregunta y ver todas las opciones, pero no puedes cambiar tu respuesta.")
-                else:
-                    respuesta_seleccionada = st.radio(
-                        "**Selecciona tu respuesta:**",
-                        options=['Verdadero', 'Falso'],
-                        key=f"test_respuesta_vf_{pregunta_id}",
-                        index=None,
-                        horizontal=True
-                    )
-                    
-                    # Solo procesar si hay una respuesta seleccionada
-                    if respuesta_seleccionada is not None:
-                        # Convertir a índice numérico (0 = Verdadero, 1 = Falso)
-                        respuesta_idx = 0 if respuesta_seleccionada == 'Verdadero' else 1
-                        st.session_state.respuestas_usuario[idx_actual] = respuesta_idx
-                        respuesta_correcta_idx = pregunta_data.get('correcta', 0)
-                        es_correcta = respuesta_idx == respuesta_correcta_idx
-                        st.session_state.verificaciones[idx_actual] = es_correcta
-                        st.rerun()
-            else:
-                # Pregunta de opción múltiple - Botones grandes y claros (texto limpio)
-                st.markdown("**Selecciona tu respuesta:**")
-                st.markdown("---")
-                # Las opciones ya están limpias (sin a., b), etc.)
-                opciones_labels = [f"**{chr(65+i)}.** {opcion}" for i, opcion in enumerate(pregunta_data['opciones'])]
-                
-                respuesta_anterior = st.session_state.respuestas_usuario.get(idx_actual)
-                
-                # Si ya hay una respuesta guardada, mostrar todas las opciones pero sin permitir cambiar
-                if respuesta_anterior is not None and respuesta_anterior < len(opciones_labels):
-                    st.markdown("**Opciones disponibles:**")
-                    for i, opcion_label in enumerate(opciones_labels):
-                        if i == respuesta_anterior:
-                            st.success(f"✅ {opcion_label} (Tu respuesta)")
-                        else:
-                            st.info(opcion_label)
-                    st.caption("💡 Puedes leer la pregunta y ver todas las opciones, pero no puedes cambiar tu respuesta.")
-                else:
-                    respuesta_seleccionada = st.radio(
-                        "",
-                        options=list(range(len(pregunta_data['opciones']))),
-                        format_func=lambda x: opciones_labels[x],
-                        key=f"test_respuesta_multiple_{pregunta_id}",
-                        index=None,
-                        label_visibility="collapsed"
-                    )
-                    
-                    # Solo procesar si hay una respuesta seleccionada
-                    if respuesta_seleccionada is not None:
-                        st.session_state.respuestas_usuario[idx_actual] = respuesta_seleccionada
-                        respuesta_correcta_idx = pregunta_data.get('correcta', 0)
-                        es_correcta = respuesta_seleccionada == respuesta_correcta_idx
-                        st.session_state.verificaciones[idx_actual] = es_correcta
-                        st.rerun()
-            
-            # Mostrar resultado de verificación automáticamente
-            if idx_actual in st.session_state.verificaciones:
-                st.markdown("---")
-                es_correcta = st.session_state.verificaciones[idx_actual]
-                respuesta_correcta_idx = pregunta_data.get('correcta', 0)
-                
-                if es_correcta:
-                    st.success("🎉 ¡Correcto! Has acertado la respuesta.")
-                else:
-                    if es_vf:
-                        respuesta_correcta_texto = "Verdadero" if respuesta_correcta_idx == 0 else "Falso"
-                        st.error(f"❌ **Incorrecto.** La respuesta correcta es: **{respuesta_correcta_texto}**")
+            # Si ya hay una respuesta guardada, mostrar todas las opciones pero sin permitir cambiar
+            if respuesta_anterior is not None:
+                st.markdown("**Opciones disponibles:**")
+                col_v, col_f = st.columns(2)
+                with col_v:
+                    if respuesta_anterior == 0:
+                        st.success("✅ **Verdadero** (Tu respuesta)")
                     else:
-                        respuesta_correcta_texto = pregunta_data['opciones'][respuesta_correcta_idx]
-                        st.error(f"❌ **Incorrecto.** La respuesta correcta es: **{chr(65 + respuesta_correcta_idx)}. {respuesta_correcta_texto}**")
-                st.markdown("---")
-            
-            # Botón para siguiente pregunta
-            total_preguntas = len(preguntas_planas)
-            respuestas_completadas = len(st.session_state.respuestas_usuario)
-            todas_contestadas = respuestas_completadas == total_preguntas
-            
-            # Si todas las preguntas están contestadas, mostrar botón de reiniciar
-            if todas_contestadas:
-                col_reiniciar, col_spacer = st.columns([1, 3])
-                with col_reiniciar:
-                    if st.button("🔄 Reiniciar y Desordenar de Nuevo", use_container_width=True, type="primary"):
-                        preguntas_planas_originales = aplanar_preguntas_con_casos(preguntas_estructuradas)
-                        preguntas_desordenadas, mapeo_indices, mapeo_opciones = desordenar_preguntas_para_test(preguntas_planas_originales)
-                        st.session_state.preguntas_desordenadas_test = preguntas_desordenadas
-                        st.session_state.mapeo_indices_preguntas = mapeo_indices
-                        st.session_state.mapeo_opciones_preguntas = mapeo_opciones
-                        st.session_state.pregunta_actual = 0
-                        st.session_state.respuestas_usuario = {}
-                        st.session_state.verificaciones = {}
-                        st.rerun()
+                        st.info("Verdadero")
+                with col_f:
+                    if respuesta_anterior == 1:
+                        st.success("✅ **Falso** (Tu respuesta)")
+                    else:
+                        st.info("Falso")
+                st.caption("💡 Puedes leer la pregunta y ver todas las opciones, pero no puedes cambiar tu respuesta.")
             else:
-                # Si no están todas contestadas, mostrar botón de siguiente
-                col_siguiente, col_spacer = st.columns([1, 3])
-                with col_siguiente:
-                    if st.button("➡️ Siguiente", use_container_width=True, type="primary", key=f"test_siguiente_{idx_actual}"):
-                        if idx_actual < len(preguntas_planas) - 1:
-                            st.session_state.pregunta_actual = idx_actual + 1
-                            # Limpiar widgets de la pregunta anterior para evitar que se muestren
-                            st.rerun()
-                        else:
-                            st.info("📝 Has llegado al final del examen.")
+                respuesta_seleccionada = st.radio(
+                    "**Selecciona tu respuesta:**",
+                    options=['Verdadero', 'Falso'],
+                    key=f"test_respuesta_vf_{pregunta_id}",
+                    index=None,
+                    horizontal=True
+                )
                 
-            
-            # Resumen al final (solo si todas las preguntas están contestadas)
-            if todas_contestadas and idx_actual == len(preguntas_planas) - 1:
-                st.markdown("---")
-                st.markdown("### 📊 Resumen del Examen")
-                respuestas_verificadas = len(st.session_state.verificaciones)
-                respuestas_correctas = sum(1 for v in st.session_state.verificaciones.values() if v)
-                
-                if respuestas_verificadas > 0:
-                    porcentaje = (respuestas_correctas / respuestas_verificadas) * 100
-                    col_metric1, col_metric2 = st.columns(2)
-                    with col_metric1:
-                        st.metric("✅ Respuestas correctas", f"{respuestas_correctas}/{respuestas_verificadas}")
-                    with col_metric2:
-                        st.metric("📈 Porcentaje de aciertos", f"{porcentaje:.1f}%")
-                
-                # En modo test no se permite guardar examen
-                
-                # Botón de exportación JSON
-                st.markdown("---")
-                if st.button("📥 Descargar JSON", use_container_width=True,
-                            help="Descarga una copia local del examen en formato JSON"):
-                    preguntas_json = json.dumps(preguntas_planas, ensure_ascii=False, indent=2)
-                    st.download_button(
-                        label="⬇️ Descargar archivo JSON",
-                        data=preguntas_json,
-                        file_name=f"examen_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json",
-                        mime="application/json",
-                        use_container_width=True
-                    )
-        
+                # Solo procesar si hay una respuesta seleccionada
+                if respuesta_seleccionada is not None:
+                    # Convertir a índice numérico (0 = Verdadero, 1 = Falso)
+                    respuesta_idx = 0 if respuesta_seleccionada == 'Verdadero' else 1
+                    st.session_state.respuestas_usuario[idx_actual] = respuesta_idx
+                    respuesta_correcta_idx = pregunta_data.get('correcta', 0)
+                    es_correcta = respuesta_idx == respuesta_correcta_idx
+                    st.session_state.verificaciones[idx_actual] = es_correcta
+                    st.rerun()
         else:
-            st.info("No hay más preguntas disponibles.")
+            # Pregunta de opción múltiple - Botones grandes y claros (texto limpio)
+            st.markdown("**Selecciona tu respuesta:**")
+            st.markdown("---")
+            # Las opciones ya están limpias (sin a., b), etc.)
+            opciones_labels = [f"**{chr(65+i)}.** {opcion}" for i, opcion in enumerate(pregunta_data['opciones'])]
+            
+            respuesta_anterior = st.session_state.respuestas_usuario.get(idx_actual)
+            
+            # Si ya hay una respuesta guardada, mostrar todas las opciones pero sin permitir cambiar
+            if respuesta_anterior is not None and respuesta_anterior < len(opciones_labels):
+                st.markdown("**Opciones disponibles:**")
+                for i, opcion_label in enumerate(opciones_labels):
+                    if i == respuesta_anterior:
+                        st.success(f"✅ {opcion_label} (Tu respuesta)")
+                    else:
+                        st.info(opcion_label)
+                st.caption("💡 Puedes leer la pregunta y ver todas las opciones, pero no puedes cambiar tu respuesta.")
+            else:
+                respuesta_seleccionada = st.radio(
+                    "",
+                    options=list(range(len(pregunta_data['opciones']))),
+                    format_func=lambda x: opciones_labels[x],
+                    key=f"test_respuesta_multiple_{pregunta_id}",
+                    index=None,
+                    label_visibility="collapsed"
+                )
+                
+                # Solo procesar si hay una respuesta seleccionada
+                if respuesta_seleccionada is not None:
+                    st.session_state.respuestas_usuario[idx_actual] = respuesta_seleccionada
+                    respuesta_correcta_idx = pregunta_data.get('correcta', 0)
+                    es_correcta = respuesta_seleccionada == respuesta_correcta_idx
+                    st.session_state.verificaciones[idx_actual] = es_correcta
+                    st.rerun()
+        
+        # Mostrar resultado de verificación automáticamente
+        if idx_actual in st.session_state.verificaciones:
+            st.markdown("---")
+            es_correcta = st.session_state.verificaciones[idx_actual]
+            respuesta_correcta_idx = pregunta_data.get('correcta', 0)
+            
+            if es_correcta:
+                st.success("🎉 ¡Correcto! Has acertado la respuesta.")
+            else:
+                if es_vf:
+                    respuesta_correcta_texto = "Verdadero" if respuesta_correcta_idx == 0 else "Falso"
+                    st.error(f"❌ **Incorrecto.** La respuesta correcta es: **{respuesta_correcta_texto}**")
+                else:
+                    respuesta_correcta_texto = pregunta_data['opciones'][respuesta_correcta_idx]
+                    st.error(f"❌ **Incorrecto.** La respuesta correcta es: **{chr(65 + respuesta_correcta_idx)}. {respuesta_correcta_texto}**")
+            st.markdown("---")
+        
+        # Botón para siguiente pregunta
+        total_preguntas = len(preguntas_planas)
+        respuestas_completadas = len(st.session_state.respuestas_usuario)
+        todas_contestadas = respuestas_completadas == total_preguntas
+        
+        # Si todas las preguntas están contestadas, mostrar botón de reiniciar
+        if todas_contestadas:
+            col_reiniciar, col_spacer = st.columns([1, 3])
+            with col_reiniciar:
+                if st.button("🔄 Reiniciar y Desordenar de Nuevo", use_container_width=True, type="primary"):
+                    preguntas_planas_originales = aplanar_preguntas_con_casos(preguntas_estructuradas)
+                    preguntas_desordenadas, mapeo_indices, mapeo_opciones = desordenar_preguntas_para_test(preguntas_planas_originales)
+                    st.session_state.preguntas_desordenadas_test = preguntas_desordenadas
+                    st.session_state.mapeo_indices_preguntas = mapeo_indices
+                    st.session_state.mapeo_opciones_preguntas = mapeo_opciones
+                    st.session_state.pregunta_actual = 0
+                    st.session_state.respuestas_usuario = {}
+                    st.session_state.verificaciones = {}
+                    st.rerun()
+        else:
+            # Si no están todas contestadas, mostrar botón de siguiente
+            col_siguiente, col_spacer = st.columns([1, 3])
+            with col_siguiente:
+                if st.button("➡️ Siguiente", use_container_width=True, type="primary", key=f"test_siguiente_{idx_actual}"):
+                    if idx_actual < len(preguntas_planas) - 1:
+                        st.session_state.pregunta_actual = idx_actual + 1
+                        # Limpiar widgets de la pregunta anterior para evitar que se muestren
+                        st.rerun()
+                    else:
+                        st.info("📝 Has llegado al final del examen.")
+            
+        
+        # Resumen al final (solo si todas las preguntas están contestadas)
+        if todas_contestadas and idx_actual == len(preguntas_planas) - 1:
+            st.markdown("---")
+            st.markdown("### 📊 Resumen del Examen")
+            respuestas_verificadas = len(st.session_state.verificaciones)
+            respuestas_correctas = sum(1 for v in st.session_state.verificaciones.values() if v)
+            
+            if respuestas_verificadas > 0:
+                porcentaje = (respuestas_correctas / respuestas_verificadas) * 100
+                col_metric1, col_metric2 = st.columns(2)
+                with col_metric1:
+                    st.metric("✅ Respuestas correctas", f"{respuestas_correctas}/{respuestas_verificadas}")
+                with col_metric2:
+                    st.metric("📈 Porcentaje de aciertos", f"{porcentaje:.1f}%")
+            
+            # En modo test no se permite guardar examen
+            
+            # Botón de exportación JSON
+            st.markdown("---")
+            if st.button("📥 Descargar JSON", use_container_width=True,
+                        help="Descarga una copia local del examen en formato JSON"):
+                preguntas_json = json.dumps(preguntas_planas, ensure_ascii=False, indent=2)
+                st.download_button(
+                    label="⬇️ Descargar archivo JSON",
+                    data=preguntas_json,
+                    file_name=f"examen_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json",
+                    mime="application/json",
+                    use_container_width=True
+                )
+    else:
+        st.info("No hay más preguntas disponibles.")
 
 
 def mostrar_pantalla_inicial():
@@ -2195,19 +2195,22 @@ def main():
     
     elif vista_actual == 'test':
         # Vista de test: realizar el examen
-        st.title("🎮 Modo Test")
+        # Encabezado con título y botón de volver
+        col_titulo, col_boton = st.columns([3, 1])
+        with col_titulo:
+            st.title("🎮 Modo Test")
+        with col_boton:
+            st.markdown("")  # Espaciado vertical
+            st.markdown("")  # Espaciado vertical
+            if st.button("🏠 Volver al Inicio", key="btn_volver_inicio_test", use_container_width=True):
+                st.session_state.vista_actual = 'inicio'
+                st.session_state.preguntas = []
+                st.session_state.pregunta_actual = 0
+                st.session_state.respuestas_usuario = {}
+                st.session_state.verificaciones = {}
+                st.session_state.preguntas_desordenadas_test = []
+                st.rerun()
         
-        # Botón para volver al inicio
-        if st.button("🏠 Volver al Inicio", key="btn_volver_inicio_test"):
-            st.session_state.vista_actual = 'inicio'
-            st.session_state.preguntas = []
-            st.session_state.pregunta_actual = 0
-            st.session_state.respuestas_usuario = {}
-            st.session_state.verificaciones = {}
-            st.session_state.preguntas_desordenadas_test = []
-            st.rerun()
-        
-        st.markdown("---")
         mostrar_vista_test()
         return
 
