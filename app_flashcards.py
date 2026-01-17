@@ -313,11 +313,12 @@ def detectar_subrayado_resaltado(span: dict) -> bool:
     Busca específicamente underline (línea por debajo) y resaltado (fondo de color).
     Retorna True si está marcado de alguna forma.
     """
+    
     flags = span.get("flags", 0)
     
     # Detectar underline (flag 4 y 8388608) - línea por debajo del texto
     is_underlined = (flags & 4) != 0 or (flags & 8388608) != 0
-    
+                    
     # Buscar atributo s_line o underline explícito
     if "s_line" in span or "underline" in span:
         is_underlined = True
@@ -709,14 +710,14 @@ def extraer_spans_con_formato(page):
     """
     texto_dict = page.get_text("dict")
     spans_info = []
-    
+            
     for block in texto_dict.get("blocks", []):
         if "lines" in block:
             for line in block["lines"]:
                 # Construir texto completo de la línea para verificar ruido
                 texto_linea_completo = ""
                 spans_linea = []
-                
+        
                 for span in line.get("spans", []):
                     texto = span.get("text", "").strip()
                     if texto:
@@ -731,12 +732,12 @@ def extraer_spans_con_formato(page):
                             'y': y_pos,
                             'x': x_pos
                         })
-                
-                # Filtrar ruido de página (solo si toda la línea es ruido)
-                texto_linea_completo = texto_linea_completo.strip()
-                if texto_linea_completo and not es_ruido_pagina(texto_linea_completo):
-                    # Agregar todos los spans de la línea (sin descartar textos cortos)
-                    spans_info.extend(spans_linea)
+        
+        # Filtrar ruido de página (solo si toda la línea es ruido)
+        texto_linea_completo = texto_linea_completo.strip()
+        if texto_linea_completo and not es_ruido_pagina(texto_linea_completo):
+            # Agregar todos los spans de la línea (sin descartar textos cortos)
+            spans_info.extend(spans_linea)
     
     # Ordenar por Y (arriba a abajo) y luego por X (izquierda a derecha)
     spans_info.sort(key=lambda s: (s['y'], s['x']))
@@ -1120,50 +1121,25 @@ def aplanar_preguntas_con_casos(preguntas_estructuradas):
 
 def desordenar_preguntas_para_test(preguntas_planas: List[Dict]) -> tuple:
     """
-    Desordena las preguntas y las opciones de cada pregunta para el modo test.
+    Desordena solo las preguntas para el modo test (NO desordena las opciones).
     Retorna:
-    - preguntas_desordenadas: lista de preguntas desordenadas con opciones desordenadas
+    - preguntas_desordenadas: lista de preguntas desordenadas (opciones sin desordenar)
     - mapeo_indices: dict {índice_desordenado: índice_original}
-    - mapeo_opciones: dict {índice_pregunta_desordenado: {índice_desordenado: índice_original}}
+    - mapeo_opciones: dict vacío (ya no se desordenan opciones)
     """
     # Crear copias profundas para no modificar las originales
     import copy
     preguntas_copia = copy.deepcopy(preguntas_planas)
     
-    # Desordenar las preguntas
+    # Desordenar solo las preguntas (NO las opciones)
     indices_originales = list(range(len(preguntas_copia)))
     random.shuffle(indices_originales)
     
     preguntas_desordenadas = [preguntas_copia[i] for i in indices_originales]
     mapeo_indices = {idx_desordenado: idx_original for idx_desordenado, idx_original in enumerate(indices_originales)}
     
-    # Desordenar las opciones de cada pregunta y actualizar la respuesta correcta
+    # No desordenar opciones - retornar mapeo vacío
     mapeo_opciones = {}
-    for idx_desordenado, pregunta in enumerate(preguntas_desordenadas):
-        # Solo desordenar si tiene opciones (no es V/F)
-        opciones = pregunta.get('opciones', [])
-        if len(opciones) > 0:
-            # Crear lista de índices y desordenarla
-            indices_opciones = list(range(len(opciones)))
-            random.shuffle(indices_opciones)
-            
-            # Guardar el mapeo
-            mapeo_opciones[idx_desordenado] = {
-                idx_desordenado_nuevo: idx_original_opcion 
-                for idx_desordenado_nuevo, idx_original_opcion in enumerate(indices_opciones)
-            }
-            
-            # Reordenar las opciones
-            opciones_originales = opciones.copy()
-            opciones_desordenadas = [opciones_originales[i] for i in indices_opciones]
-            pregunta['opciones'] = opciones_desordenadas
-            
-            # Actualizar el índice de la respuesta correcta
-            respuesta_correcta_original = pregunta.get('correcta', 0)
-            if respuesta_correcta_original is not None and respuesta_correcta_original < len(indices_opciones):
-                # Encontrar en qué posición quedó la opción correcta después del desordenamiento
-                nueva_posicion = indices_opciones.index(respuesta_correcta_original)
-                pregunta['correcta'] = nueva_posicion
     
     return preguntas_desordenadas, mapeo_indices, mapeo_opciones
 
@@ -1774,27 +1750,12 @@ def mostrar_biblioteca():
     else:
         # Estadísticas generales
         st.markdown("---")
-        col_total, col_preguntas, col_spacer = st.columns([1, 1, 2])
-        with col_total:
-            st.metric("📚 Total de Exámenes", len(examenes))
-        with col_preguntas:
-            total_preguntas = sum(examen.get('num_preguntas', 0) for examen in examenes)
-            st.metric("❓ Total de Preguntas", total_preguntas)
+        st.metric("📚 Total de Exámenes", len(examenes))
         st.markdown("---")
         
-        # Mostrar cada examen en una tarjeta mejorada
+        # Mostrar cada examen en un expander
         for idx, examen in enumerate(examenes):
-            # Crear una tarjeta visual con contenedor
-            with st.container():
-                # Encabezado de la tarjeta
-                col_titulo, col_badge = st.columns([4, 1])
-                with col_titulo:
-                    st.markdown(f"#### 📄 {examen['titulo']}")
-                with col_badge:
-                    st.markdown(f"**{examen['num_preguntas']} preguntas**")
-                
-                st.markdown("---")
-                
+            with st.expander(f"📄 {examen['titulo']} ({examen['num_preguntas']} preguntas)", expanded=False):
                 # Información del examen en columnas
                 col_desc, col_meta = st.columns([2, 1])
                 
@@ -1810,31 +1771,22 @@ def mostrar_biblioteca():
                 st.markdown("---")
                 
                 # Botón de acción (solo cargar)
-                col_cargar, col_spacer = st.columns([1, 3])
-                
-                with col_cargar:
-                    if st.button("📥 Cargar Examen", key=f"cargar_{idx}", use_container_width=True, type="primary"):
-                        with st.spinner("Cargando examen..."):
-                            preguntas_cargadas = cargar_examen_github(examen['ruta'])
-                        if preguntas_cargadas:
-                            st.session_state.preguntas = preguntas_cargadas
-                            st.session_state.pregunta_actual = 0
-                            st.session_state.respuestas_usuario = {}
-                            st.session_state.verificaciones = {}
-                            st.session_state.pdf_cargado = True
-                            st.session_state.modo_revision = False
-                            st.session_state.revision_completada = True
-                            st.session_state.vista_actual = 'test'
-                            st.success(f"✅ Examen '{examen['titulo']}' cargado exitosamente!")
-                            st.rerun()
-                        else:
-                            st.error("❌ Error al cargar el examen desde GitHub.")
-            
-            # Separador entre exámenes (excepto el último)
-            if idx < len(examenes) - 1:
-                st.markdown("")
-                st.markdown("---")
-                st.markdown("")
+                if st.button("📥 Cargar Examen", key=f"cargar_{idx}", use_container_width=True, type="primary"):
+                    with st.spinner("Cargando examen..."):
+                        preguntas_cargadas = cargar_examen_github(examen['ruta'])
+                    if preguntas_cargadas:
+                        st.session_state.preguntas = preguntas_cargadas
+                        st.session_state.pregunta_actual = 0
+                        st.session_state.respuestas_usuario = {}
+                        st.session_state.verificaciones = {}
+                        st.session_state.pdf_cargado = True
+                        st.session_state.modo_revision = False
+                        st.session_state.revision_completada = True
+                        st.session_state.vista_actual = 'test'
+                        st.success(f"✅ Examen '{examen['titulo']}' cargado exitosamente!")
+                        st.rerun()
+                    else:
+                        st.error("❌ Error al cargar el examen desde GitHub.")
 
 
 def main():
@@ -1927,17 +1879,17 @@ def mostrar_vista_principal():
                 idx_actual = st.session_state.pregunta_actual
                 st.metric("Pregunta actual", f"{idx_actual + 1}/{total}")
                 
-                respuestas_completadas = len([k for k in st.session_state.respuestas_usuario.keys() 
+            respuestas_completadas = len([k for k in st.session_state.respuestas_usuario.keys() 
                                              if k < total])
-                st.metric("Respondidas", respuestas_completadas)
+            st.metric("Respondidas", respuestas_completadas)
                 
-                if respuestas_completadas > 0:
-                    verificadas = len(st.session_state.verificaciones)
-                    correctas = sum(1 for v in st.session_state.verificaciones.values() if v)
-                    if verificadas > 0:
-                        porcentaje = (correctas / verificadas) * 100
-                        st.metric("Aciertos", f"{correctas}/{verificadas}")
-                        st.metric("Porcentaje", f"{porcentaje:.1f}%")
+            if respuestas_completadas > 0:
+                verificadas = len(st.session_state.verificaciones)
+                correctas = sum(1 for v in st.session_state.verificaciones.values() if v)
+                if verificadas > 0:
+                    porcentaje = (correctas / verificadas) * 100
+                    st.metric("Aciertos", f"{correctas}/{verificadas}")
+                    st.metric("Porcentaje", f"{porcentaje:.1f}%")
             
             # Acciones rápidas
             st.markdown("---")
@@ -1961,6 +1913,16 @@ def mostrar_vista_principal():
             else:
                 if st.button("✏️ Volver a Revisión", use_container_width=True):
                     st.session_state.modo_revision = True
+                    # Limpiar preguntas desordenadas al volver a revisión
+                    st.session_state.preguntas_desordenadas_test = []
+                    st.session_state.mapeo_indices_preguntas = {}
+                    st.session_state.mapeo_opciones_preguntas = {}
+                    st.rerun()
+                
+                if st.button("💾 Guardar Examen", use_container_width=True, type="secondary",
+                           help="Guarda el examen en la biblioteca de GitHub"):
+                    # Mostrar formulario de guardado en un expander
+                    st.session_state.mostrar_formulario_guardado = True
                     st.rerun()
             
             # Botón para reiniciar
@@ -1985,33 +1947,14 @@ def mostrar_vista_principal():
         # Mostrar modo de revisión
         mostrar_modo_revision()
     else:
-        # Modo test - Barra de navegación superior
+        # Modo test - Solo mostrar progreso
         if not st.session_state.modo_revision:
-            st.markdown("### 🎮 Modo Test")
-            st.markdown("---")
-            col_volver, col_guardar, col_progreso = st.columns([1, 1, 2])
-            with col_volver:
-                if st.button("✏️ Volver a Revisión", use_container_width=True, 
-                           help="Vuelve al modo revisión para editar o guardar el examen"):
-                    st.session_state.modo_revision = True
-                    # Limpiar preguntas desordenadas al volver a revisión
-                    st.session_state.preguntas_desordenadas_test = []
-                    st.session_state.mapeo_indices_preguntas = {}
-                    st.session_state.mapeo_opciones_preguntas = {}
-                    st.rerun()
-            with col_guardar:
-                if st.button("💾 Guardar Examen", use_container_width=True, type="secondary",
-                           help="Guarda el examen en la biblioteca de GitHub"):
-                    # Mostrar formulario de guardado en un expander
-                    st.session_state.mostrar_formulario_guardado = True
-                    st.rerun()
-            with col_progreso:
-                preguntas_planas_temp = st.session_state.preguntas_desordenadas_test if len(st.session_state.preguntas_desordenadas_test) > 0 else aplanar_preguntas_con_casos(st.session_state.preguntas)
-                total_preguntas_temp = len(preguntas_planas_temp)
-                respuestas_completadas_temp = len(st.session_state.respuestas_usuario)
-                porcentaje_progreso = (respuestas_completadas_temp / total_preguntas_temp * 100) if total_preguntas_temp > 0 else 0
-                st.progress(porcentaje_progreso / 100)
-                st.caption(f"📊 {respuestas_completadas_temp}/{total_preguntas_temp} preguntas contestadas ({porcentaje_progreso:.0f}%)")
+            preguntas_planas_temp = st.session_state.preguntas_desordenadas_test if len(st.session_state.preguntas_desordenadas_test) > 0 else aplanar_preguntas_con_casos(st.session_state.preguntas)
+            total_preguntas_temp = len(preguntas_planas_temp)
+            respuestas_completadas_temp = len(st.session_state.respuestas_usuario)
+            porcentaje_progreso = (respuestas_completadas_temp / total_preguntas_temp * 100) if total_preguntas_temp > 0 else 0
+            st.progress(porcentaje_progreso / 100)
+            st.caption(f"📊 {respuestas_completadas_temp}/{total_preguntas_temp} preguntas contestadas ({porcentaje_progreso:.0f}%)")
             st.markdown("---")
         
         preguntas_estructuradas = st.session_state.preguntas
@@ -2047,7 +1990,7 @@ def mostrar_vista_principal():
                     st.markdown("---")
                     st.markdown(f"### 📋 Caso {caso_num}")
                     st.info(f"{caso_info.get('texto_caso', '')}")
-                    st.markdown("---")
+            st.markdown("---")
             
             # Mostrar pregunta con mejor formato
             pregunta_num = idx_actual + 1
@@ -2126,7 +2069,7 @@ def mostrar_vista_principal():
                     for i, opcion_label in enumerate(opciones_labels):
                         if i == respuesta_anterior:
                             st.success(f"✅ {opcion_label} (Tu respuesta)")
-                        else:
+                    else:
                             st.info(opcion_label)
                     st.caption("💡 Puedes leer la pregunta y ver todas las opciones, pero no puedes cambiar tu respuesta.")
                 else:
@@ -2162,7 +2105,7 @@ def mostrar_vista_principal():
                     else:
                         respuesta_correcta_texto = pregunta_data['opciones'][respuesta_correcta_idx]
                         st.error(f"❌ **Incorrecto.** La respuesta correcta es: **{chr(65 + respuesta_correcta_idx)}. {respuesta_correcta_texto}**")
-                st.markdown("---")
+                        st.markdown("---")
             
             # Botón para siguiente pregunta
             total_preguntas = len(preguntas_planas)
