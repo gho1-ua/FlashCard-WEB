@@ -1916,17 +1916,32 @@ def mostrar_vista_test():
             
             # Si ya hay una respuesta guardada, mostrar todas las opciones pero sin permitir cambiar
             if respuesta_anterior is not None:
+                respuesta_correcta_idx = pregunta_data.get('correcta', 0)
+                es_correcta = st.session_state.verificaciones.get(idx_actual, False)
+                
                 col_v, col_f = st.columns(2)
                 with col_v:
                     if respuesta_anterior == 0:
-                        st.success("✅ **Verdadero** (Tu respuesta)")
+                        if es_correcta:
+                            st.success("✅ **Verdadero** (Tu respuesta)")
+                        else:
+                            st.error("❌ **Verdadero** (Tu respuesta)")
                     else:
-                        st.info("Verdadero")
+                        if respuesta_correcta_idx == 0 and not es_correcta:
+                            st.success("✅ **Verdadero** (Correcta)")
+                        else:
+                            st.info("Verdadero")
                 with col_f:
                     if respuesta_anterior == 1:
-                        st.success("✅ **Falso** (Tu respuesta)")
+                        if es_correcta:
+                            st.success("✅ **Falso** (Tu respuesta)")
+                        else:
+                            st.error("❌ **Falso** (Tu respuesta)")
                     else:
-                        st.info("Falso")
+                        if respuesta_correcta_idx == 1 and not es_correcta:
+                            st.success("✅ **Falso** (Correcta)")
+                        else:
+                            st.info("Falso")
             else:
                 respuesta_seleccionada = st.radio(
                     "**Selecciona tu respuesta:**",
@@ -1953,9 +1968,17 @@ def mostrar_vista_test():
             
             # Si ya hay una respuesta guardada, mostrar todas las opciones pero sin permitir cambiar
             if respuesta_anterior is not None and respuesta_anterior < len(opciones_labels):
+                respuesta_correcta_idx = pregunta_data.get('correcta', 0)
+                es_correcta = st.session_state.verificaciones.get(idx_actual, False)
+                
                 for i, opcion_label in enumerate(opciones_labels):
                     if i == respuesta_anterior:
-                        st.success(f"✅ {opcion_label} (Tu respuesta)")
+                        if es_correcta:
+                            st.success(f"✅ {opcion_label} (Tu respuesta)")
+                        else:
+                            st.error(f"❌ {opcion_label} (Tu respuesta)")
+                    elif i == respuesta_correcta_idx and not es_correcta:
+                        st.success(f"✅ {opcion_label} (Correcta)")
                     else:
                         st.info(opcion_label)
             else:
