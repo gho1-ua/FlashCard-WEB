@@ -2118,6 +2118,10 @@ def mostrar_pantalla_inicial():
 
 
 def main():
+    # Asegurar que siempre empezamos en 'inicio' si no hay preguntas cargadas
+    if not st.session_state.preguntas and st.session_state.get('vista_actual') != 'inicio':
+        st.session_state.vista_actual = 'inicio'
+    
     # Determinar qué vista mostrar según el estado
     vista_actual = st.session_state.get('vista_actual', 'inicio')
     
