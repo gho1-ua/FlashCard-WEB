@@ -1180,8 +1180,6 @@ def mostrar_modo_revision():
         preguntas_opcion_multiple = sum(1 for p in preguntas_planas if len(p.get('opciones', [])) > 0)
         st.metric("A/B/C/D", preguntas_opcion_multiple)
     
-    st.markdown("---")
-    
     # Lista de preguntas con diseño compacto usando expanders (todos abiertos por defecto)
     preguntas_sin_respuesta = []
     pregunta_global_idx = 0  # Índice global para preguntas (ignora casos)
@@ -1232,7 +1230,6 @@ def mostrar_modo_revision():
                         item['texto_caso'] = nuevo_texto_caso
                 else:
                     st.markdown(f"**{texto_caso}**")
-                st.markdown("---")
                 
                 # Mostrar todas las preguntas del caso
                 for pregunta_idx_local, pregunta_data in enumerate(preguntas_caso):
@@ -1419,8 +1416,6 @@ def mostrar_pregunta_revision(pregunta_data, idx_global, idx_local, numero_caso,
                     preguntas.insert(0, nuevo_caso)
                 st.rerun()
         
-        st.markdown("---")
-        
         # VISUALIZACIÓN: Texto simple por defecto, text_area si se activa edición
         enunciado_actual = pregunta_data.get('pregunta', '')
         
@@ -1450,8 +1445,6 @@ def mostrar_pregunta_revision(pregunta_data, idx_global, idx_local, numero_caso,
         if es_vf and tiene_patrones_opcion_en_texto(enunciado_actual):
             st.warning("⚠️ Posible error de detección de formato: El enunciado contiene patrones de opciones (a., b.), etc.)")
         
-        st.markdown("---")
-        
         # Opciones (si es opción múltiple)
         if not es_vf:
             opciones_actuales = pregunta_data.get('opciones', [])
@@ -1479,8 +1472,6 @@ def mostrar_pregunta_revision(pregunta_data, idx_global, idx_local, numero_caso,
                     for opcion_idx, opcion_texto in enumerate(opciones_actuales):
                         letra_opcion = chr(65 + opcion_idx)
                         st.markdown(f"**{letra_opcion}.** {opcion_texto}")
-                
-                st.markdown("---")
             else:
                 st.warning("⚠️ No hay opciones detectadas. Activa 'Editar contenido' para agregarlas.")
         
@@ -1493,7 +1484,7 @@ def mostrar_pregunta_revision(pregunta_data, idx_global, idx_local, numero_caso,
                 "Selecciona la respuesta correcta:",
                 options=['Verdadero', 'Falso'],
                 index=respuesta_actual if respuesta_actual is not None else 0,
-                key=f"respuesta_{idx_global}",
+                key=f"revision_respuesta_vf_{idx_global}",
                 horizontal=True,
                 label_visibility="collapsed"
             )
@@ -1509,7 +1500,7 @@ def mostrar_pregunta_revision(pregunta_data, idx_global, idx_local, numero_caso,
                     "Selecciona la respuesta correcta:",
                     options=opciones_labels,
                     index=respuesta_actual if respuesta_actual is not None and respuesta_actual < len(opciones_labels) else 0,
-                    key=f"respuesta_{idx_global}",
+                    key=f"revision_respuesta_multiple_{idx_global}",
                     label_visibility="collapsed"
                 )
                 
@@ -1517,8 +1508,6 @@ def mostrar_pregunta_revision(pregunta_data, idx_global, idx_local, numero_caso,
                 if respuesta_seleccionada != opciones_labels[respuesta_actual] if respuesta_actual is not None and respuesta_actual < len(opciones_labels) else opciones_labels[0]:
                     nueva_respuesta = opciones_labels.index(respuesta_seleccionada)
                     pregunta_data['correcta'] = nueva_respuesta
-        
-        st.markdown("---")
         
         # Botón para asignar a caso (al final para evitar conflictos con otros botones)
         col_asignar_caso, col_spacer_asignar = st.columns([2, 3])
@@ -1601,8 +1590,6 @@ def mostrar_pregunta_revision(pregunta_data, idx_global, idx_local, numero_caso,
             # Limpiar el flag de cambio pendiente
             del st.session_state[key_cambio_caso]
             st.rerun()
-        
-        st.markdown("---")
 
 
 def mostrar_modo_revision_completo():
@@ -1619,14 +1606,11 @@ def mostrar_modo_revision_completo():
         if not tiene_respuesta:
             preguntas_sin_respuesta_count += 1
     
-    st.markdown("---")
-    
     # Resumen y acciones finales
     if preguntas_sin_respuesta_count > 0:
         st.warning(f"⚠️ **{preguntas_sin_respuesta_count} pregunta(s) sin respuesta marcada.** Revisa las preguntas destacadas en amarillo/naranja arriba.")
     
     # Formulario de guardado en biblioteca
-    st.markdown("---")
     st.subheader("📚 Guardar en Biblioteca")
     st.info("💾 Guarda este examen revisado para consultarlo más tarde o compartirlo con otros usuarios.")
     
@@ -1664,14 +1648,7 @@ def mostrar_modo_revision_completo():
                         st.error("❌ Error al guardar el examen en GitHub. Verifica la configuración de st.secrets.")
                         st.session_state.examen_guardado_exitosamente = False
     
-    # Mostrar mensaje para ir al Test solo después de guardar exitosamente
-    if st.session_state.get('examen_guardado_exitosamente', False):
-        st.markdown("---")
-        st.markdown("### 🎮 ¿Listo para comenzar el test?")
-        st.success("✅ Examen guardado exitosamente. Ve a la pestaña **🎮 Test** para comenzar a responder las preguntas.")
-    
     # Botón de exportación JSON
-    st.markdown("---")
     st.subheader("💾 Exportar Datos")
     
     if st.button("📥 Descargar JSON", use_container_width=True,
@@ -1881,8 +1858,19 @@ def mostrar_vista_revision():
         - **Subir tu PDF**: Si quieres revisar y editar, sube tu propio PDF desde el panel lateral
         """)
     else:
-        # Mostrar modo de revisión (solo para exámenes subidos por el usuario)
-        mostrar_modo_revision()
+        # Verificar si el examen ya fue guardado
+        if st.session_state.get('examen_guardado_exitosamente', False):
+            st.success("✅ **Examen guardado exitosamente en la biblioteca**")
+            st.info("""
+            **El examen ya ha sido publicado y guardado.**
+            
+            - **Ir a Test**: Ve a la pestaña "🎮 Test" para responder las preguntas
+            - **Cargar otro examen**: Usa la biblioteca para cargar otro examen
+            - **Subir nuevo PDF**: Si quieres revisar otro examen, sube un nuevo PDF desde el panel lateral
+            """)
+        else:
+            # Mostrar modo de revisión (solo para exámenes subidos por el usuario que aún no están guardados)
+            mostrar_modo_revision()
 
 
 def mostrar_vista_test():
@@ -1908,6 +1896,38 @@ def mostrar_vista_test():
         3. **Comienza el test**: Una vez guardado, podrás responder las preguntas aquí
         """)
     else:
+        # Verificar si se puede realizar el test
+        examen_subido_por_usuario = st.session_state.get('examen_subido_por_usuario', False)
+        examen_guardado_exitosamente = st.session_state.get('examen_guardado_exitosamente', False)
+        revision_completada = st.session_state.get('revision_completada', False)
+        
+        # Si el examen fue subido por el usuario, debe estar guardado exitosamente
+        # Si el examen fue cargado desde biblioteca, debe estar completado (revision_completada = True)
+        puede_realizar_test = False
+        if examen_subido_por_usuario:
+            # Examen subido por usuario: requiere que esté guardado
+            puede_realizar_test = examen_guardado_exitosamente
+        else:
+            # Examen cargado desde biblioteca: ya está listo para test
+            puede_realizar_test = revision_completada
+        
+        if not puede_realizar_test:
+            if examen_subido_por_usuario:
+                st.warning("⚠️ **No puedes realizar el test aún**")
+                st.info("""
+                **Para realizar el test, primero debes:**
+                1. Revisar todas las preguntas en la pestaña "📝 Revisión"
+                2. Guardar el examen en la biblioteca usando el formulario al final de la revisión
+                3. Una vez guardado, podrás responder las preguntas aquí
+                """)
+            else:
+                st.warning("⚠️ **No puedes realizar el test aún**")
+                st.info("""
+                **Para realizar el test:**
+                1. Carga un examen desde la pestaña "📚 Biblioteca"
+                2. O sube tu propio PDF y guárdalo en la biblioteca
+                """)
+            return
         preguntas_estructuradas = st.session_state.preguntas
         # Usar preguntas desordenadas si están disponibles, sino desordenarlas ahora
         if len(st.session_state.preguntas_desordenadas_test) > 0:
@@ -1995,7 +2015,7 @@ def mostrar_vista_test():
                     respuesta_seleccionada = st.radio(
                         "**Selecciona tu respuesta:**",
                         options=['Verdadero', 'Falso'],
-                        key=f"respuesta_{idx_actual}",
+                        key=f"test_respuesta_vf_{idx_actual}",
                         index=None,
                         horizontal=True
                     )
@@ -2032,7 +2052,7 @@ def mostrar_vista_test():
                         "",
                         options=list(range(len(pregunta_data['opciones']))),
                         format_func=lambda x: opciones_labels[x],
-                        key=f"respuesta_{idx_actual}",
+                        key=f"test_respuesta_multiple_{idx_actual}",
                         index=None,
                         label_visibility="collapsed"
                     )
@@ -2085,7 +2105,7 @@ def mostrar_vista_test():
                 # Si no están todas contestadas, mostrar botón de siguiente
                 col_siguiente, col_spacer = st.columns([1, 3])
                 with col_siguiente:
-                    if st.button("➡️ Siguiente", use_container_width=True, type="primary", key=f"siguiente_{idx_actual}"):
+                    if st.button("➡️ Siguiente", use_container_width=True, type="primary", key=f"test_siguiente_{idx_actual}"):
                         if idx_actual < len(preguntas_planas) - 1:
                             st.session_state.pregunta_actual = idx_actual + 1
                             # Limpiar widgets de la pregunta anterior para evitar que se muestren
