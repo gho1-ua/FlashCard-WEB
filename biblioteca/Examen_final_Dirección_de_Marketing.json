@@ -675,7 +675,7 @@
         {
           "pregunta": "8. Ante la situación planteada en el \"Caso 1\", se puede afirmar que la empresa está empleando una acción de alianza de marca.",
           "opciones": [],
-          "correcta": 1,
+          "correcta": 0,
           "tipo": "V/F",
           "vf_detectado_enunciado": false,
           "caso": "Caso 1 (Marcas)"
@@ -2630,7 +2630,7 @@
         "Licencia de marca.",
         "Las respuestas a) y b) son correctas."
       ],
-      "correcta": 0,
+      "correcta": 3,
       "tipo": "opcion_multiple"
     },
     {
