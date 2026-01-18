@@ -2049,6 +2049,787 @@
       ],
       "correcta": 1,
       "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "1‐ A nivel MACROECONÓMICO, la distribución adquiere su importancia debido a que:",
+      "opciones": [
+        "Es imprescindible para la comercialización del producto",
+        "Contribuye al equilibrio entre oferta y demanda",
+        "Afecta al resto de variables de marketing",
+        "Es de difícil control para la empresa"
+      ],
+      "correcta": 1,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "2‐ Cuando el valor percibido de un cliente con respecto a una oferta es superior a sus expectativas de valor, se estaría ante el caso de:",
+      "opciones": [
+        "Un cliente algo satisfecho",
+        "Un cliente dudoso",
+        "Un cliente insatisfecho",
+        "Un cliente completamente satisfecho"
+      ],
+      "correcta": 3,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "3‐ De los siguientes criterios ¿cuál se corresponde con un criterio general de segmentación?",
+      "opciones": [
+        "El nivel educativo",
+        "La fidelidad a la marca",
+        "La frecuencia de compra",
+        "Los beneficios esperados"
+      ],
+      "correcta": 0,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "4‐ De los siguientes factores que actúan en el entorno de la empresa ¿cuál es objeto de estudio dentro del microentorno de marketing?:",
+      "opciones": [
+        "La renta",
+        "Los tipos de interés",
+        "La inflación",
+        "Los proveedores"
+      ],
+      "correcta": 3,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "5‐ De los siguientes elementos ¿cuál es considerado un componente de la marca?",
+      "opciones": [
+        "El precio",
+        "El logotipo",
+        "La etiqueta",
+        "La calidad"
+      ],
+      "correcta": 1,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "6‐ De entre las siguientes estrategias, señale cuál es considerada una estrategia basada en los consumidores:",
+      "opciones": [
+        "El posicionamiento competitivo",
+        "La diferenciación",
+        "La diversificación",
+        "La penetración en el mercado"
+      ],
+      "correcta": 3,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "7‐ En base a su destino o uso final, los productos se pueden clasificar en:",
+      "opciones": [
+        "Productos de consumo",
+        "Productos puros",
+        "Bienes",
+        "Servicios"
+      ],
+      "correcta": 0,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "8‐ De las siguientes afirmaciones ¿cuál podría corresponderse con la definición de “cartera de productos”?:",
+      "opciones": [
+        "El conjunto de productos que se ofrecen en un mercado",
+        "La agrupación homogénea de producto",
+        "El número de marcas ofrecidas",
+        "El conjunto total de productos‐servicios que una empresa ofrece"
+      ],
+      "correcta": 3,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "9‐ De las siguientes afirmaciones con respecto al precio, señale cuál podría considerarse VERDADERA:",
+      "opciones": [
+        "Es una variable con poca influencia sobre la imagen del producto",
+        "Es la única variable capaz de generar ingresos",
+        "No influye directamente sobre el beneficio de la empresa",
+        "No produce efectos sobre la demanda"
+      ],
+      "correcta": 1,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "10‐ Si una empresa fija el precio de su producto en base a las condiciones competitivas del mercado, estaría empleando un método de determinación de precios:",
+      "opciones": [
+        "En función de los costes",
+        "En función de la demanda",
+        "En función de objetivos de venta",
+        "En función del consumidor"
+      ],
+      "correcta": 2,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "11‐ ¿Cuál de los siguientes es considerado uno de los elementos que forman la estructura del precio?:",
+      "opciones": [
+        "Las medidas de valor",
+        "La segmentación óptima",
+        "El valor percibido",
+        "El precio competitivo"
+      ],
+      "correcta": 0,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "12‐ Señale la afirmación VERDADERA con respecto a los canales de distribución electrónicos:",
+      "opciones": [
+        "Es necesario el contacto directo con el cliente",
+        "Se ahorran costes",
+        "Apenas son utilizados actualmente",
+        "Disminuyen la calidad"
+      ],
+      "correcta": 1,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "13‐ ¿Cuál de los siguientes se corresponde con un canal de distribución en el que no hay intermediarios que ostenten la propiedad del producto?:",
+      "opciones": [
+        "Canal corto",
+        "Canal directo",
+        "Canal indirecto",
+        "Canal largo"
+      ],
+      "correcta": 1,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "14‐ ¿Cuál de las siguientes NO se corresponde con una función estratégica que realicen los vendedores?:",
+      "opciones": [
+        "Estrategia de comunicación",
+        "Estrategia de persuasión",
+        "Estrategia intensiva",
+        "Estrategias de gestión"
+      ],
+      "correcta": 2,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "15‐ De los siguientes elementos ¿cuáles intervienen en las acciones publicitarias de una empresa?:",
+      "opciones": [
+        "La publicidad",
+        "Los medios de comunicación",
+        "La fuerza de ventas",
+        "La cuota de mercado"
+      ],
+      "correcta": 1,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "16‐ De las siguientes herramientas de marketing ¿cuál NO es considerada una herramienta de Marketing Directo?:",
+      "opciones": [
+        "El Mailing",
+        "El Merchandising",
+        "El buzoneo",
+        "El telemarketing"
+      ],
+      "correcta": 1,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "17‐ De entre las siguientes ¿cuál NO es una característica de las franquicias?:",
+      "opciones": [
+        "Proporciona ingresos al franquiciador",
+        "La fidelidad del franquiciado es fácil de conseguir",
+        "La fidelidad del cliente la obtiene el franquiciado",
+        "Permite una homogeneidad en la prestación del servicio"
+      ],
+      "correcta": 1,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "18‐ De entre las siguientes ¿cuál NO es una tarea que los intermediarios suelan llevar a cabo?:",
+      "opciones": [
+        "Creación del surtido",
+        "Transmisión de la propiedad",
+        "Diseño del envase",
+        "Asunción de riesgos"
+      ],
+      "correcta": 2,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "19‐ Una de las razones por las que los fabricantes deciden distribuir sus productos mediante intermediarios es porque:",
+      "opciones": [
+        "Generan economías de escala",
+        "Permiten una bajada del precio del producto",
+        "Aumenta la calidad de fabricación",
+        "Reducen costes de producción"
+      ],
+      "correcta": 0,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "20‐ Dentro de las estrategias de comunicación en el canal, aquella en la que los esfuerzos de comunicación se orientan al consumidor se denomina:",
+      "opciones": [
+        "Estrategia de distribución exclusiva",
+        "Estrategia mixta",
+        "Estrategia de aspiración (pull)",
+        "Estrategia de presión (push)"
+      ],
+      "correcta": 2,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "21‐ De las siguientes ¿cuál NO es considerada una herramienta del mix de comunicación de la empresa?:",
+      "opciones": [
+        "La publicidad",
+        "La promoción de ventas",
+        "La venta personal",
+        "La investigación de mercados"
+      ],
+      "correcta": 3,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "22‐ Las actividades que generalmente NO lleva a cabo un vendedor son:",
+      "opciones": [
+        "El cierre de las negociaciones entre oferente y demandante",
+        "Ostenta la propiedad del producto",
+        "Sirve de canal abierto en dos direcciones",
+        "Es una fuente de información para el oferente"
+      ],
+      "correcta": 1,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "23‐ ¿Cuál de los siguientes NO es uno de los objetivos de la estrategia publicitaria?:",
+      "opciones": [
+        "Informar sobre el producto",
+        "Persuadir a la compra",
+        "Crear necesidades",
+        "Recordar la existencia del producto"
+      ],
+      "correcta": 2,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "24‐ Cuando una empresa patrocina un evento cultural, estaría llevando a cabo una actividad de:",
+      "opciones": [
+        "Marketing directo",
+        "Promoción de ventas",
+        "Publicidad",
+        "Relaciones públicas"
+      ],
+      "correcta": 3,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "25‐ El número de individuos expuestos a un medio o soporte publicitario se conoce como:",
+      "opciones": [
+        "Audiencia",
+        "Cobertura neta",
+        "Cobertura bruta",
+        "Frecuencia"
+      ],
+      "correcta": 0,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "1‐ Señale de las siguientes alternativas cuál podría considerarse VERDADERA con respecto a la oferta:",
+      "opciones": [
+        "Las empresas presentan sus ofertas con la finalidad exclusiva de vender",
+        "El valor percibido de una oferta se corresponde con las expectativas que de ella tiene el consumidor",
+        "Valor percibido y oferta es una misma cosa",
+        "Una marca es la oferta de una empresa concreta"
+      ],
+      "correcta": 3,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "2‐ Cuando las expectativas de valor de un cliente con respecto a una oferta superan el valor percibido que tiene de esta, podría considerarse un caso de cliente:",
+      "opciones": [
+        "Totalmente satisfecho",
+        "Insatisfecho",
+        "Satisfecho",
+        "Indiferente"
+      ],
+      "correcta": 1,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "3‐ Dentro del macroentorno de marketing ¿qué factores podrían estudiarse de entre los siguientes?",
+      "opciones": [
+        "Los proveedores",
+        "El público objetivo",
+        "Los patrones familiares",
+        "Los grupos de interés"
+      ],
+      "correcta": 2,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "4‐ ¿Cuál de entre las siguientes podría considerarse una estrategia basada en la competencia?:",
+      "opciones": [
+        "La ampliación del mercado objetivo",
+        "La segmentación",
+        "La diversificación",
+        "La penetración en el mercado"
+      ],
+      "correcta": 2,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "5‐ De los siguientes elementos ¿cuál suele completar la función identificador de la marca, interviniendo de manera conjunta?",
+      "opciones": [
+        "La publicidad",
+        "El sabor",
+        "El envase",
+        "El precio"
+      ],
+      "correcta": 2,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "6‐ En base a la compra en la que se ve implicado, el producto puede clasificarse en:",
+      "opciones": [
+        "Producto de consumo",
+        "Bien tangible",
+        "Producto de conveniencia",
+        "Servicio"
+      ],
+      "correcta": 2,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "7‐ Dentro de la cartera de productos de una empresa, el número de líneas de productos existente se denomina:",
+      "opciones": [
+        "La profundidad de la línea",
+        "La amplitud de la cartera",
+        "La profundidad de la cartera",
+        "La coherencia de la cartera"
+      ],
+      "correcta": 1,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "8‐ Señale la alternativa que podría considerarse FALSA:",
+      "opciones": [
+        "Una de las funciones del marketing es la de crear necesidades",
+        "A través del marketing se puede influir en los deseos del consumidor",
+        "Las demandas son deseos de productos específicos respaldados por una capacidad de pago",
+        "Los deseos pueden venir determinados por la sociedad en la que el individuo vive"
+      ],
+      "correcta": 0,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "9‐ ¿Cuál de los siguientes criterios de segmentación podría considerarse dentro de los denominados criterios psicográficos?",
+      "opciones": [
+        "La edad",
+        "El estilo de vida",
+        "El nivel educativo",
+        "El idioma"
+      ],
+      "correcta": 1,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "10‐ De los siguientes objetivos señale cuáles NO son considerados objetivos de la política de precios de la empresa:",
+      "opciones": [
+        "Objetivos de cambio de imagen",
+        "Objetivos de beneficios",
+        "Objetivos de cuota de mercado",
+        "Objetivos de volumen de ventas"
+      ],
+      "correcta": 0,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "11‐ ¿Cuál de las siguientes afirmaciones con respecto al precio puede considerarse FALSA?:",
+      "opciones": [
+        "Produce efectos inmediatos sobre la demanda",
+        "Influye directamente sobre el beneficio de la empresa",
+        "No influye sobre la percepción del producto",
+        "Es una de las herramientas más directas frente a la competencia"
+      ],
+      "correcta": 2,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "12‐ De los siguientes elementos ¿cuál forma parte de la estructura del precio?:",
+      "opciones": [
+        "El valor percibido",
+        "Las barreras de segmentación",
+        "La competencia",
+        "El mercado objetivo"
+      ],
+      "correcta": 1,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "13‐ De los siguientes elementos ¿cuál ha de tener en cuenta una empresa a la hora de diseñar un campaña publicitaria?:",
+      "opciones": [
+        "Los vendedores",
+        "El mensaje publicitario",
+        "La fuerza de ventas",
+        "El marketing directo"
+      ],
+      "correcta": 1,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "14‐ De los siguientes métodos ¿cuál NO se emplearía dentro de una estrategia de discriminación de precios?:",
+      "opciones": [
+        "Precio distinto para cada cliente",
+        "Descuentos en segundo mercado",
+        "Descuentos por volumen de compras",
+        "Mismo precio para todos los mercados"
+      ],
+      "correcta": 3,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "15‐ La distribución como variable de marketing adquiere su importancia a nivel MICROECONÓMICO porque:",
+      "opciones": [
+        "Contribuye a la eficiente asignación de recursos",
+        "Contribuye al equilibrio entre oferta y demanda",
+        "Afecta directamente al resto de variables de marketing",
+        "Evita que existan desequilibrios en el mercado"
+      ],
+      "correcta": 2,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "16‐ Señale la afirmación VERDADERA con respecto a la venta directa dentro de la distribución de servicios:",
+      "opciones": [
+        "Consiste en ofrecer el servicio con solo un intermediario",
+        "Se trata del canal más corto que puede existir",
+        "Se puede atender a un mercado muy amplio",
+        "El proveedor no está en contacto con la realidad del mercado"
+      ],
+      "correcta": 1,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "17‐ De entre las siguientes ¿cuál NO es una tarea que los intermediarios suelan llevar a cabo?:",
+      "opciones": [
+        "Traslado físico del producto",
+        "Diseño del producto",
+        "Actividades de merchandising",
+        "Financiación"
+      ],
+      "correcta": 1,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "18‐ Dentro de las estrategias de comunicación en el canal, aquella en la que los esfuerzos de comunicación se orientan sobre las empresas de distribución se denomina:",
+      "opciones": [
+        "Estrategia mixta",
+        "Estrategia intensiva",
+        "Estrategia de aspiración",
+        "Estrategia de presión (push)"
+      ],
+      "correcta": 3,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "19‐ De las siguientes ¿cuál es considerada una de las herramientas principales del mix de comunicación de la empresa?:",
+      "opciones": [
+        "La promoción de ventas",
+        "El marketing mix",
+        "La segmentación óptima",
+        "La investigación de mercados"
+      ],
+      "correcta": 0,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "20‐ De las siguientes figuras de vendedores ¿cuáles suelen intervenir en operaciones industriales o comerciales de gran envergadura?",
+      "opciones": [
+        "Los representantes",
+        "Los negociadores o ingenieros de negocios",
+        "Los promotores",
+        "Los técnicos-comerciales"
+      ],
+      "correcta": 1,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "21‐ Si una empresa por la compra de sus productos ofrece al comprador la participación en un sorteo para un viaje a las Islas Mauricio, estaría llevando a cabo una actividad de:",
+      "opciones": [
+        "Promoción de ventas",
+        "Marketing directo",
+        "Venta personal",
+        "Relaciones públicas"
+      ],
+      "correcta": 0,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "22‐ De los siguientes tipos de publicidad ¿cuál tiene como objetivo la creación de una demanda selectiva?:",
+      "opciones": [
+        "La publicidad agresiva",
+        "La publicidad informativa",
+        "La publicidad persuasiva",
+        "La publicidad recordatoria"
+      ],
+      "correcta": 2,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "23‐ El número de impactos en promedio que cada uno de los individuos de la audiencia recibe de un mensaje publicitario se denomina:",
+      "opciones": [
+        "Audiencia neta",
+        "Gross raiting points (GRP)",
+        "Cobertura bruta",
+        "Frecuencia"
+      ],
+      "correcta": 3,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "24‐ Señale cuál de los siguientes NO se identifica como un beneficio para la empresa derivado de la obtención de clientes fieles y consolidados:",
+      "opciones": [
+        "Aumento de costes de marketing para la competencia",
+        "Costes de transacción inferiores",
+        "Menores costes de marketing",
+        "Aumento de la elasticidad precio"
+      ],
+      "correcta": 3,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "25‐ Si una empresa fija el precio de su producto en función del cliente, estaría empleando un método de determinación de precios:",
+      "opciones": [
+        "En función de los costes",
+        "En función de la demanda",
+        "En función de objetivos de venta",
+        "En función de márgenes"
+      ],
+      "correcta": 1,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "Con relación al producto como instrumento del marketing‐mix, se puede afirmar que:",
+      "opciones": [
+        "La calidad latente de un producto aparece al comparar la calidad comunicada con la calidad prestada.",
+        "En la etapa de madurez del ciclo de vida estándar del producto, la estrategia de comunicación a emplear se centra en crear imagen de marca.",
+        "En la tercera etapa del modelo de Eckles para eliminación de productos, la empresa decide si elimina o no el producto débil.",
+        "Las respuestas a) y c) son correctas."
+      ],
+      "correcta": 2,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "Con relación al producto como instrumento del marketing‐mix, se puede afirmar que:",
+      "opciones": [
+        "El producto aumentado o ampliado de Kotler consiste en añadir al producto esperado un conjunto de prestaciones adicionales a las que el consumidor está habituado a recibir.",
+        "En la clasificación de productos de consumidores se encuentra un grupo de productos llamados productos reguladores.",
+        "Las funciones básicas que debe cumplir el envase de un producto son: protección, preservación, presentación, fácil uso y economía.",
+        "Las respuestas a) y c) son correctas."
+      ],
+      "correcta": 2,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "La empresa PTF, propietaria de las marcas SAR y ATO, lanza al mercado un nuevo producto bajo la marca SARATO. En este caso, se puede afirmar que la empresa está empleando:",
+      "opciones": [
+        "Cobranding.",
+        "Alianza de marca.",
+        "Licencia de marca.",
+        "Las respuestas a) y b) son correctas."
+      ],
+      "correcta": 0,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "Con respecto a la marca del distribuidor, se puede afirmar que:",
+      "opciones": [
+        "Disponer de capacidad productiva ociosa por parte de empresas fabricantes es uno de los factores que ha favorecido el crecimiento de la marca del distribuidor.",
+        "Entre los factores que han favorecido el crecimiento de la marca del distribuidor, en relación con el fabricante, se encuentra: ser amenazado con la exclusión del lineal.",
+        "Entre las ventajas que reporta al distribuidor la comercialización de la marca del distribuidor, se encuentran: una mayor fidelización de la clientela y un mayor control de la oferta.",
+        "Todas las respuestas anteriores son correctas."
+      ],
+      "correcta": 3,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "Suponga que una empresa que inicialmente vende conservas de verduras en latas de 300 gramos bajo la marca "Verdever" al segmento calidad/precio medio del mercado, sufre a lo largo del tiempo y por el orden establecido los siguientes cambios: Cambio 1: la empresa añade latas de verduras "Verdever" de 150 y 500 gramos a su cartera de productos. Cambio 2: la empresa introduce una nueva línea o categoría formada por conservas de frutas en latas de 150 y 500 gramos bajo la marca "Fruver". Cambio 3: la empresa introduce dentro de la línea de conserva de verduras, latas de 200 gramos de bioverduras dirigidas al segmento calidad/precio alto del mercado bajo la marca "VerBio". Ante la situación anterior y respecto a las estrategias de marca, se puede afirmar que:",
+      "opciones": [
+        "En el cambio 1 la empresa aplica la estrategia de extensión de marca.",
+        "En el cambio 2 la empresa aplica la estrategia de nueva marca y de rango de marcas.",
+        "En el cambio 3 la empresa aplica las estrategias de nueva marca y multimarca.",
+        "Ninguna de las respuestas anteriores es correcta."
+      ],
+      "correcta": 2,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "Suponga que una empresa que inicialmente vende conservas de verduras en latas de 300 gramos bajo la marca "Verdever" al segmento calidad/precio medio del mercado, sufre a lo largo del tiempo y por el orden establecido los siguientes cambios: Cambio 1: la empresa añade latas de verduras "Verdever" de 150 y 500 gramos a su cartera de productos. Cambio 2: la empresa introduce una nueva línea o categoría formada por conservas de frutas en latas de 150 y 500 gramos bajo la marca "Fruver". Cambio 3: la empresa introduce dentro de la línea de conserva de verduras, latas de 200 gramos de bioverduras dirigidas al segmento calidad/precio alto del mercado bajo la marca "VerBio". Con relación a las decisiones sobre su cartera de productos, se puede afirmar que:",
+      "opciones": [
+        "En el cambio 1 la empresa está aumentando la profundidad de una de sus líneas y, en concreto, está ampliando dicha línea.",
+        "En el cambio 2 la empresa está aumentando la anchura (variedad o amplitud) de su cartera de productos.",
+        "En el cambio 3 la empresa está completando la línea de conservas de verduras.",
+        "Todas las respuestas anteriores son correctas."
+      ],
+      "correcta": 1,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "Con relación al proceso de creación, desarrollo y lanzamiento de nuevos productos, se puede afirmar que:",
+      "opciones": [
+        "En la etapa de generación de ideas, la empresa puede recurrir a diversas técnicas de creatividad, como son: el análisis morfológico y el check list.",
+        "El proceso de difusión se divide en las siguientes fases: atención, interés, evaluación, prueba y adopción efectiva.",
+        "La aversión al riesgo es mayor en el grupo de primeros adoptantes que en el grupo de mayoría tardía.",
+        "Ninguna de las respuestas anteriores es correcta."
+      ],
+      "correcta": 3,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "Con relación al precio como instrumento del marketing‐mix, se puede afirmar que:",
+      "opciones": [
+        "En términos generales, tanto la variable precio como la variable producto se consideran variables tácticas.",
+        "Mientras que la demanda se considera un condicionante interno en la fijación de precios, la competencia se considera un condicionante externo.",
+        "Según los factores que afectan a la sensibilidad al precio, el consumidor es menos sensible al precio en aquellos productos que no puede almacenar.",
+        "Cuando la empresa aplica la técnica del 'coste máximo', sigue el proceso: 1) diseña el producto, 2) establece el coste, y 3) determina el precio."
+      ],
+      "correcta": 2,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "Con relación al precio como instrumento del marketing‐mix, se puede afirmar que:",
+      "opciones": [
+        "El objetivo de precios llamado 'maximización de la cifra de ventas' persigue maximizar la cuota de mercado en términos de unidades de venta.",
+        "El objetivo de precios basado en el beneficio y conocido como 'supervivencia' es un objetivo a corto plazo.",
+        "En el objetivo de precios 'explotar al máximo el mercado', la empresa explota al máximo el potencial de compra de varios segmentos del mercado.",
+        "Las respuestas a) y b) son correctas."
+      ],
+      "correcta": 2,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "Con relación al precio como instrumento del marketing‐mix, se puede afirmar que:",
+      "opciones": [
+        "Los descuentos por pronto pago acumulativos premian la lealtad del consumidor.",
+        "En la estrategia de precios primados, los productos de compra habitual se pueden emplear como productos de atracción.",
+        "En las rebajas la empresa emplea el 'efecto sorpresa'.",
+        "Uno de los inconvenientes del método del precio objetivo es que no tiene en cuenta la competencia."
+      ],
+      "correcta": 3,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "Un supermercado comunica del 22/01/11 al 4/02/11 que por la compra de 2 botes de ColaCao Classic habrá un descuento del 10%. En este caso:",
+      "opciones": [
+        "Se está llevando a cabo una estrategia de discriminación de precios por tiempo; es decir, una oferta.",
+        "Se está aplicando una promoción de ventas; incentivo monetario del minorista al consumidor.",
+        "Se está llevando a cabo una estrategia de discriminación de precios por 'descuento de segundo mercado'.",
+        "Las respuestas a) y b) son correctas."
+      ],
+      "correcta": 3,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "Con relación a la distribución como instrumento del marketing‐mix, se puede afirmar que:",
+      "opciones": [
+        "La franquicia de bienes se caracteriza por constituir una integración vertical administrada.",
+        "La cooperativa de consumidores se puede considerar una integración vertical administrada.",
+        "Si un fabricante adquiere la propiedad de establecimientos minoristas de su canal, es integración vertical corporativa hacia adelante.",
+        "Las respuestas a) y c) son correctas."
+      ],
+      "correcta": 2,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "Con relación a la distribución como instrumento del marketing‐mix, se puede afirmar que:",
+      "opciones": [
+        "La función de diversificación permite adaptar los lotes de producción a los lotes de consumo.",
+        "La tienda de descuento ofrece un elevado porcentaje de marcas poco conocidas y minimiza los servicios al consumidor.",
+        "Los brokers y los agentes comerciales no constituyen un nivel en el canal dado que el flujo físico no pasa por ellos.",
+        "Todas las respuestas anteriores son correctas."
+      ],
+      "correcta": 1,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "Un fabricante vende mediante 3 agentes. Dos van a 4 mayoristas tradicionales y 1 mayorista de cadena minorista. Estos van a 5 tiendas de descuento y 25 hipermercados. El otro agente va a 5 mayoristas 'cash‐and‐carry', y estos a 20 tiendas de descuento. Se afirma que:",
+      "opciones": [
+        "El fabricante está empleando un canal de distribución con dimensión vertical 3.",
+        "El fabricante emplea un sistema multicanal. Un canal tiene dimensión horizontal 1 (agente), 5 (mayorista) y 20 (minorista).",
+        "La cadena de minoristas patrocinada por un mayorista es una forma de integración vertical administrada.",
+        "Ninguna de las respuestas anteriores es correcta."
+      ],
+      "correcta": 0,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "En cuanto a la elección del canal de distribución y según el objetivo de cobertura:",
+      "opciones": [
+        "Si la empresa busca tener un elevado control de su política comercial, la distribución intensiva es poco adecuada.",
+        "La distribución selectiva implica un número de puntos de venta menor que la intensiva, pero mayor que la exclusiva.",
+        "La distribución exclusiva geográfica consiste en ofrecer el producto en un único punto de venta dentro de un área geográfica.",
+        "Todas las respuestas anteriores son correctas."
+      ],
+      "correcta": 3,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "Con relación a la distribución como instrumento del marketing‐mix, se puede afirmar que:",
+      "opciones": [
+        "Los factores condicionantes son: características de consumidores, producto, competencia y control del programa de marketing-mix.",
+        "La etapa de madurez del ciclo de vida se relaciona con la distribución selectiva.",
+        "En la estrategia de presión (push) los esfuerzos del fabricante se concentran sobre los intermediarios.",
+        "Todas las respuestas anteriores son correctas."
+      ],
+      "correcta": 3,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "Con relación a la distribución como instrumento del marketing‐mix, se puede afirmar que:",
+      "opciones": [
+        "Los productos de compra reflexiva deben colocarse distantes para incentivar al consumidor a recorrer más superficie.",
+        "Un conflicto entre un supermercado de un canal y una tienda de conveniencia de otro es un conflicto vertical intertipo.",
+        "Cuando un fabricante emplea el poder de experto con sus intermediarios, se produce una integración vertical administrada.",
+        "Ninguna de las respuestas anteriores es correcta."
+      ],
+      "correcta": 2,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "Con relación a la comunicación como instrumento del marketing‐mix, se puede afirmar que:",
+      "opciones": [
+        "Los fines básicos de la comunicación son: informar, promocionar y recordar.",
+        "Los instrumentos son: venta personal, promoción de ventas, relaciones públicas, publicity y marketing directo.",
+        "La 'interpretación' es el proceso de traducción del mensaje recibido por el receptor.",
+        "Ninguna de las respuestas anteriores es correcta."
+      ],
+      "correcta": 2,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "Con relación a la venta personal como instrumento de comunicación, se puede afirmar que:",
+      "opciones": [
+        "Al tratarse de una comunicación interpersonal, existe gran inclinación a un error de código.",
+        "Según el vínculo laboral, se distinguen tres grupos: propios, ajenos y representantes comerciales.",
+        "En la fase de persuasión destacan: preparación del contacto y presentación de la venta.",
+        "Ninguna de las respuestas anteriores es correcta."
+      ],
+      "correcta": 2,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "Con relación a la promoción de ventas como instrumento de comunicación, se puede afirmar que:",
+      "opciones": [
+        "La eficacia reside en que el valor añadido sea: conocido, comprendido, incentivador y alcanzable.",
+        "Cuando un mayorista realiza promociones a sus clientes, se denominan promociones de venta comerciales.",
+        "Las promociones de venta resultan ineficaces para premiar la lealtad hacia la marca.",
+        "Las respuestas a) y b) son correctas."
+      ],
+      "correcta": 3,
+      "tipo": "opcion_multiple"
+    },
+    {
+      "pregunta": "Con relación a la publicidad como instrumento de comunicación, se puede afirmar que:",
+      "opciones": [
+        "Fijar objetivos en función de ventas es ventajoso porque los efectos son retardados.",
+        "El mix‐publicitario incluye decisiones económicas, de creatividad, de difusión en medios y de eficacia.",
+        "En publicidad, promociones y publicity se emplean medios de comunicación de masas.",
+        "Las respuestas b) y c) son correctas."
+      ],
+      "correcta": 3,
+      "tipo": "opcion_multiple"
     }
   ]
 }
